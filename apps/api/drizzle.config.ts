@@ -1,7 +1,9 @@
 import { defineConfig } from "drizzle-kit";
 import { readFileSync } from "fs";
+import { resolve } from "path";
 
-const cert = readFileSync(".certs/postgre-certificate.pem", "utf-8");
+const certPath = resolve(process.cwd(), ".certs/postgre-certificate.pem");
+const cert = readFileSync(certPath, "utf-8");
 
 const dbUrl = new URL(process.env.DATABASE_URL!);
 
