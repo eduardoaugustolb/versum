@@ -1,0 +1,33 @@
+:root {
+  --scalar-font: "Libre Baskerville", serif;
+  --scalar-font-code: "Courier New", monospace;
+}
+
+.light-mode {
+  --scalar-color-1: #2b2b26;
+  --scalar-color-2: #5f5a4f;
+  --scalar-color-accent: #8b3f2f;
+  --scalar-background-1: #f8f3ea;
+  --scalar-background-2: #efe6d6;
+  --scalar-background-3: #e3d7c3;
+  --scalar-border-color: rgba(139, 63, 47, 0.18);
+}
+
+.dark-mode {
+  --scalar-color-1: #f3eadb;
+  --scalar-color-2: #d6c7a1;
+  --scalar-color-accent: #b86b2f;
+  --scalar-background-1: #1c170f;
+  --scalar-background-2: #241e14;
+  --scalar-background-3: #2e2619;
+  --scalar-border-color: rgba(184, 107, 47, 0.25);
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Cinzel", serif;
+  font-weight: 700;
+  color: var(--scalar-color-accent) !important;
+  letter-spacing: 0.5px;
+}

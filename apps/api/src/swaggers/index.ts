@@ -1,9 +1,0 @@
-import { Swagger } from "azurajs/swagger";
-
-export * from "./v1/public/bible/books/swagger";
-export * from "./v1/public/bible/books/chapters/swagger";
-export * from "./app.swagger";
-export * from "./seed-database.swagger";
-export * from "./v1/auth/magic-link/swagger";
-
-export type SwaggerConfigType = Parameters<typeof Swagger>[0];

@@ -1,0 +1,33 @@
+{
+  "name": "api",
+  "module": "src/server.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --watch src/server.ts",
+    "start": "bun run src/server.ts",
+    "lint": "biome lint src/**/*.ts",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/pg": "^8.20.0",
+    "biome": "^0.3.3",
+    "drizzle-kit": "^0.31.10",
+    "vitest": "^4.1.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@hono/zod-openapi": "^1.2.2",
+    "@scalar/hono-api-reference": "^0.10.4",
+    "argon2": "^0.44.0",
+    "dotenv": "^17.3.1",
+    "drizzle-orm": "^0.45.1",
+    "hono": "^4.12.8",
+    "ioredis": "^5.10.1",
+    "pg": "^8.20.0",
+    "resend": "^6.9.4",
+    "zod": "^4.3.6"
+  }
+}
