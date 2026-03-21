@@ -2,7 +2,7 @@ import { defineConfig } from "drizzle-kit";
 
 const cert = await Bun.file(".certs/postgre-certificate.pem").text();
 
-const dbUrl = new URL(Deno.env.get("DATABASE_URL")!);
+const dbUrl = new URL(Bun.env.DATABASE_URL!);
 
 export default defineConfig({
   out: "./drizzle",
