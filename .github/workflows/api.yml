@@ -60,4 +60,4 @@ jobs:
         run: cd apps/api && bun drizzle-kit generate
 
       - name: Run tests
-        run: cd apps/api ; bun test --reporter=verbose
+        run: cd apps/api ; bun test
