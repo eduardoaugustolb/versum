@@ -9,7 +9,8 @@
   "packageManager": "bun@1.3.10",
   "private": true,
   "scripts": {
-    "install-deps": "bun install --frozen-lockfile"
+    "install-deps": "bun install --frozen-lockfile",
+    "i-deps": "bun install --frozen-lockfile"
   },
   "workspaces": [
     "packages/*",

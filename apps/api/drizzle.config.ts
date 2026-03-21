@@ -1,8 +1,9 @@
 import { defineConfig } from "drizzle-kit";
+import { readFileSync } from "fs";
 
-const cert = await Bun.file(".certs/postgre-certificate.pem").text();
+const cert = readFileSync(".certs/postgre-certificate.pem", "utf-8");
 
-const dbUrl = new URL(Bun.env.DATABASE_URL!);
+const dbUrl = new URL(process.env.DATABASE_URL!);
 
 export default defineConfig({
   out: "./drizzle",
