@@ -1,6 +1,6 @@
 import { defineConfig } from "drizzle-kit";
 
-const cert = Deno.readTextFileSync(".certs/postgre-certificate.pem");
+const cert = await Bun.file(".certs/postgre-certificate.pem").text();
 
 const dbUrl = new URL(Deno.env.get("DATABASE_URL")!);
 
