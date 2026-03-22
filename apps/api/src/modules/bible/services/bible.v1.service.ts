@@ -3,26 +3,11 @@ import type {
   Book,
   Chapter,
   Verse,
+  PaginatedResult,
+  PaginationParams,
+  ChapterParams,
+  VerseParams,
 } from "../repositories/bible.types.repository.ts";
-
-interface PaginatedResult<T> {
-  data: T[];
-  total: number;
-}
-
-interface PaginationParams {
-  page: number;
-  limit: number;
-}
-
-interface ChaptersPaginationParams extends PaginationParams {
-  bookOrder: number;
-}
-
-interface VersesPaginationParams extends PaginationParams {
-  bookOrder: number;
-  chapterNumber: number;
-}
 
 export class BibleServiceV1 {
   private readonly repository: BibleRepository;
@@ -30,29 +15,15 @@ export class BibleServiceV1 {
   constructor({ repository }: { repository?: BibleRepository } = {}) {
     this.repository = repository ?? new BibleRepository();
   }
-  // ------------------------
-  // Books
-  // ------------------------
 
   async getBooksPaginated(
     params: PaginationParams,
   ): Promise<PaginatedResult<Book>> {
-    const books = await this.repository.findAllBooks();
-
-    const total = books.length;
-
-    const start = (params.page - 1) * params.limit;
-    const end = start + params.limit;
-
-    const data = books.slice(start, end);
-
-    return { data, total };
+    return this.repository.findBooksPaginated(params);
   }
 
-  async getBookByOrder({ order }: { order: number }) {
-    const book = await this.repository.findBookByOrder({
-      order,
-    });
+  async getBookByDynamicId({ dynamicId }: { dynamicId: string }) {
+    const book = await this.repository.findBookByDynamicId({ dynamicId });
 
     if (!book) {
       throw new Error("Book not found");
@@ -61,38 +32,27 @@ export class BibleServiceV1 {
     return book;
   }
 
-  // ------------------------
-  // Chapters
-  // ------------------------
-
   async getChaptersPaginated(
-    params: ChaptersPaginationParams,
+    params: PaginationParams & { dynamicId: string },
   ): Promise<PaginatedResult<Chapter>> {
-    const chapters = await this.repository.findChaptersByBookOrder(params);
+    const result = await this.repository.findChaptersPaginated(params);
 
-    if (!chapters.length) {
+    if (result.total === 0) {
       throw new Error("Book not found or no chapters available");
     }
 
-    const total = chapters.length;
-
-    const start = (params.page - 1) * params.limit;
-    const end = start + params.limit;
-
-    const data = chapters.slice(start, end);
-
-    return { data, total };
+    return result;
   }
 
   async getChapter({
-    bookOrder,
+    dynamicId,
     chapterNumber,
   }: {
-    bookOrder: number;
+    dynamicId: string;
     chapterNumber: number;
   }) {
-    const chapter = await this.repository.findChapterByNumberAndBookOrder({
-      bookOrder,
+    const chapter = await this.repository.findChapterByNumberAndDynamicId({
+      dynamicId,
       chapterNumber,
     });
 
@@ -103,34 +63,19 @@ export class BibleServiceV1 {
     return chapter;
   }
 
-  // ------------------------
-  // Verses
-  // ------------------------
-
   async getVersesPaginated(
-    params: VersesPaginationParams,
+    params: PaginationParams & Omit<VerseParams, "verseNumber">,
   ): Promise<PaginatedResult<Verse>> {
-    const verses = await this.repository.findVerses(params);
+    const result = await this.repository.findVersesPaginated(params);
 
-    if (!verses.length) {
+    if (result.total === 0) {
       throw new Error("Chapter not found or no verses available");
     }
 
-    const total = verses.length;
-
-    const start = (params.page - 1) * params.limit;
-    const end = start + params.limit;
-
-    const data = verses.slice(start, end);
-
-    return { data, total };
+    return result;
   }
 
-  async getVerse(params: {
-    bookOrder: number;
-    chapterNumber: number;
-    verseNumber: number;
-  }) {
+  async getVerse(params: VerseParams) {
     const verse = await this.repository.findVerse(params);
 
     if (!verse) {

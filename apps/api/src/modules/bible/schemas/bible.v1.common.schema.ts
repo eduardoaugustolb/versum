@@ -9,12 +9,8 @@ export class BibleCommonSchemasV1 {
     .object({
       id: z.uuid().describe("ID único do livro"),
       name: z.string().max(100).describe("Nome do livro"),
-      order: z
-        .number()
-        .int()
-        .min(1)
-        .max(150)
-        .describe("Ordem do livro na Bíblia"),
+      slug: z.string().max(10).describe("Slug do livro"),
+      niceName: z.string().max(100).describe("Nome amigável do livro"),
       testament: BibleCommonSchemasV1.testamentEnum.describe(
         "Testamento ao qual o livro pertence",
       ),
@@ -107,18 +103,18 @@ export class BibleCommonSchemasV1 {
     });
   }
 
-  static readonly bookOrderParamSchema = z.object({
-    order: z
+  static readonly dynamicIdParamSchema = z.object({
+    dynamicId: z
       .string()
-      .regex(/^\d+$/, "Ordem do livro deve ser um inteiro positivo válido")
+      .min(1)
       .openapi({
         param: {
-          name: "order",
+          name: "dynamicId",
           in: "path",
           required: true,
         },
-        example: "1",
-        description: "Ordem do livro na Bíblia (1-150)",
+        example: "genesis",
+        description: "Slug ou nome do livro (ex: 'genesis' ou 'Gênesis')",
       }),
   });
 
@@ -190,7 +186,7 @@ export const paginationViewModelSchema =
   BibleCommonSchemasV1.paginationViewModelSchema;
 export const createSuccessResponseSchema =
   BibleCommonSchemasV1.createSuccessResponseSchema;
-export const bookOrderParamSchema = BibleCommonSchemasV1.bookOrderParamSchema;
+export const dynamicIdParamSchema = BibleCommonSchemasV1.dynamicIdParamSchema;
 export const chapterNumberParamSchema =
   BibleCommonSchemasV1.chapterNumberParamSchema;
 export const verseNumberParamSchema =

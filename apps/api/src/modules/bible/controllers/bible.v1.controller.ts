@@ -12,10 +12,6 @@ export class BibleControllerV1 {
     this.service = service ?? new BibleServiceV1();
   }
 
-  // ------------------------
-  // Books (paginated)
-  // ------------------------
-
   getBooks = async (c: Context) => {
     const { page, limit } = parsePagination(c.req.query());
 
@@ -37,15 +33,15 @@ export class BibleControllerV1 {
     );
   };
 
-  getBookByOrder = async (c: Context) => {
-    const order = this.parsePositiveInt(
-      c.req.param("order"),
-      "Book order",
-      150,
-    );
+  getBookByDynamicId = async (c: Context) => {
+    const dynamicId = c.req.param("dynamicId");
 
-    const book = await this.service.getBookByOrder({
-      order,
+    if (!dynamicId) {
+      throw new BadRequestError("Dynamic ID is required");
+    }
+
+    const book = await this.service.getBookByDynamicId({
+      dynamicId,
     });
 
     return c.json(
@@ -61,20 +57,16 @@ export class BibleControllerV1 {
     );
   };
 
-  // ------------------------
-  // Chapters
-  // ------------------------
-
   getChapters = async (c: Context) => {
-    const order = this.parsePositiveInt(
-      c.req.param("order"),
-      "Book order",
-      150,
-    );
+    const dynamicId = c.req.param("dynamicId");
     const { page, limit } = parsePagination(c.req.query());
 
+    if (!dynamicId) {
+      throw new BadRequestError("Dynamic ID is required");
+    }
+
     const result = await this.service.getChaptersPaginated({
-      bookOrder: order,
+      dynamicId,
       page,
       limit,
     });
@@ -93,45 +85,39 @@ export class BibleControllerV1 {
   };
 
   getChapter = async (c: Context) => {
-    const order = this.parsePositiveInt(
-      c.req.param("order"),
-      "Book order",
-      150,
-    );
-    const chapter_number = this.parsePositiveInt(
-      c.req.param("number"),
+    const dynamicId = c.req.param("dynamicId");
+    const chapterNumber = this.parsePositiveInt(
+      c.req.param("number")!,
       "Chapter number",
-      150,
     );
 
+    if (!dynamicId) {
+      throw new BadRequestError("Dynamic ID is required");
+    }
+
     const chapter = await this.service.getChapter({
-      bookOrder: order,
-      chapterNumber: chapter_number,
+      dynamicId,
+      chapterNumber,
     });
 
     return c.json(SuccessViewModel.create(chapter), 200);
   };
 
-  // ------------------------
-  // Verses
-  // ------------------------
-
   getVerses = async (c: Context) => {
-    const order = this.parsePositiveInt(
-      c.req.param("order"),
-      "Book order",
-      150,
-    );
-    const chapter_number = this.parsePositiveInt(
-      c.req.param("number"),
+    const dynamicId = c.req.param("dynamicId");
+    const chapterNumber = this.parsePositiveInt(
+      c.req.param("number")!,
       "Chapter number",
-      150,
     );
     const { page, limit } = parsePagination(c.req.query());
 
+    if (!dynamicId) {
+      throw new BadRequestError("Dynamic ID is required");
+    }
+
     const result = await this.service.getVersesPaginated({
-      bookOrder: order,
-      chapterNumber: chapter_number,
+      dynamicId,
+      chapterNumber,
       page,
       limit,
     });
@@ -150,36 +136,30 @@ export class BibleControllerV1 {
   };
 
   getVerse = async (c: Context) => {
-    const order = this.parsePositiveInt(
-      c.req.param("order"),
-      "Book order",
-      150,
-    );
-    const chapter_number = this.parsePositiveInt(
-      c.req.param("number"),
+    const dynamicId = c.req.param("dynamicId");
+    const chapterNumber = this.parsePositiveInt(
+      c.req.param("number")!,
       "Chapter number",
-      150,
     );
-    const verse_number = this.parsePositiveInt(
-      c.req.param("verse"),
+    const verseNumber = this.parsePositiveInt(
+      c.req.param("verse")!,
       "Verse number",
-      150,
     );
 
+    if (!dynamicId) {
+      throw new BadRequestError("Dynamic ID is required");
+    }
+
     const verse = await this.service.getVerse({
-      bookOrder: order,
-      chapterNumber: chapter_number,
-      verseNumber: verse_number,
+      dynamicId,
+      chapterNumber,
+      verseNumber,
     });
 
     return c.json(SuccessViewModel.create(verse), 200);
   };
 
-  // ------------------------
-  // Utils
-  // ------------------------
-
-  private parsePositiveInt(value: string, field: string, max: number): number {
+  private parsePositiveInt(value: string, field: string): number {
     if (!/^\d+$/.test(value)) {
       throw new BadRequestError(`${field} must be a valid positive integer`);
     }
@@ -190,8 +170,8 @@ export class BibleControllerV1 {
       throw new BadRequestError(`${field} is too large`);
     }
 
-    if (num < 1 || num > max) {
-      throw new BadRequestError(`${field} is out of allowed range`);
+    if (num < 1) {
+      throw new BadRequestError(`${field} must be a positive integer`);
     }
 
     return num;

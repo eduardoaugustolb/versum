@@ -9,31 +9,44 @@ export type Book = InferSelectModel<typeof books>;
 export type Chapter = InferSelectModel<typeof chapters>;
 export type Verse = InferSelectModel<typeof verses>;
 
+export interface PaginatedResult<T> {
+  data: T[];
+  total: number;
+}
+
+export interface PaginationParams {
+  page: number;
+  limit: number;
+}
+
+export type DynamicIdParams = {
+  dynamicId: string;
+};
+
+export type BookDynamicIdParams = DynamicIdParams;
+
 export type ChapterParams = {
-  bookOrder: number;
+  dynamicId: string;
   chapterNumber: number;
 };
 
 export type VerseParams = {
-  bookOrder: number;
+  dynamicId: string;
   chapterNumber: number;
   verseNumber: number;
 };
 
 export interface iBibleRepository {
-  findAllBooks(): Promise<Book[]>;
-  findBookByOrder(p: { order: number }): Promise<Book | null>;
+  findBooksPaginated(p: PaginationParams): Promise<PaginatedResult<Book>>;
+  findBookByDynamicId(p: BookDynamicIdParams): Promise<Book | null>;
 
-  findChaptersByBookOrder(
-    p: Omit<ChapterParams, "chapterNumber">,
-  ): Promise<Chapter[]>;
-  findChapterByNumberAndBookOrder(p: ChapterParams): Promise<Chapter | null>;
+  findChaptersPaginated(
+    p: PaginationParams & Omit<ChapterParams, "chapterNumber">,
+  ): Promise<PaginatedResult<Chapter>>;
+  findChapterByNumberAndDynamicId(p: ChapterParams): Promise<Chapter | null>;
 
-  findVerses(p: Omit<VerseParams, "verseNumber">): Promise<Verse[]>;
-
-  findVerse({
-    bookOrder,
-    chapterNumber,
-    verseNumber,
-  }: VerseParams): Promise<Verse | null>;
+  findVersesPaginated(
+    p: PaginationParams & Omit<VerseParams, "verseNumber">,
+  ): Promise<PaginatedResult<Verse>>;
+  findVerse(p: VerseParams): Promise<Verse | null>;
 }

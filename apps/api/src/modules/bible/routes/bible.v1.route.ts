@@ -2,14 +2,14 @@ import { BibleControllerV1 } from "../controllers/bible.v1.controller.ts";
 import { CacheMiddleware } from "../../../middlewares/cache.middleware.ts";
 import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
 import {
-  bookOrderParamSchema,
+  dynamicIdParamSchema,
   chapterNumberParamSchema,
   verseNumberParamSchema,
   paginationQuerySchema,
 } from "../schemas/bible.v1.common.schema.ts";
 import {
   getBooksResponses,
-  getBookByOrderResponses,
+  getBookByDynamicIdResponses,
 } from "../schemas/bible.v1.books.schema.ts";
 import {
   getChaptersResponses,
@@ -36,14 +36,13 @@ export const createBibleRoutesV1 = (controller: BibleControllerV1) => {
     }).middleware,
   );
 
-  // GET /books - List all books (paginated)
   const getBooksRoute = createRoute({
     method: "get",
     path: "/books",
     tags: ["Bíblia"],
     summary: "Listar livros da Bíblia",
     description:
-      "Retorna uma lista paginada de todos os livros da Bíblia, com informações como nome, ordem, testamento e número de capítulos.",
+      "Retorna uma lista paginada de todos os livros da Bíblia, com informações como nome, slug, testamento e número de capítulos.",
     request: {
       query: paginationQuerySchema,
     },
@@ -52,64 +51,61 @@ export const createBibleRoutesV1 = (controller: BibleControllerV1) => {
 
   router.openapi(getBooksRoute, controller.getBooks);
 
-  // GET /books/:order - Get book by order
-  const getBookByOrderRoute = createRoute({
+  const getBookByDynamicIdRoute = createRoute({
     method: "get",
-    path: "/books/{order}",
+    path: "/books/{dynamicId}",
     tags: ["Bíblia"],
-    summary: "Obter livro por ordem",
+    summary: "Obter livro por slug ou nome",
     description:
-      "Retorna um livro específico da Bíblia baseado em sua ordem numérica (1-150).",
+      "Retorna um livro específico da Bíblia baseado em seu slug (ex: 'genesis') ou nome (ex: 'Gênesis').",
     request: {
-      params: bookOrderParamSchema,
+      params: dynamicIdParamSchema,
     },
-    responses: getBookByOrderResponses,
+    responses: getBookByDynamicIdResponses,
   });
 
-  router.openapi(getBookByOrderRoute, controller.getBookByOrder);
+  router.openapi(getBookByDynamicIdRoute, controller.getBookByDynamicId);
 
-  // GET /books/:order/chapters - List chapters of a book
   const getChaptersRoute = createRoute({
     method: "get",
-    path: "/books/{order}/chapters",
+    path: "/books/{dynamicId}/chapters",
     tags: ["Bíblia"],
     summary: "Listar capítulos de um livro",
     description:
       "Retorna uma lista paginada de todos os capítulos de um livro específico da Bíblia.",
     request: {
-      params: bookOrderParamSchema,
+      params: dynamicIdParamSchema,
       query: paginationQuerySchema,
     },
     responses: getChaptersResponses,
   });
 
   router.openapi(getChaptersRoute, controller.getChapters);
-  // GET /books/:order/chapters/:number - Get chapter by number
+
   const getChapterRoute = createRoute({
     method: "get",
-    path: "/books/{order}/chapters/{number}",
+    path: "/books/{dynamicId}/chapters/{number}",
     tags: ["Bíblia"],
     summary: "Obter capítulo por número",
     description:
-      "Retorna um capítulo específico de um livro da Bíblia, identificado pela ordem do livro e número do capítulo.",
+      "Retorna um capítulo específico de um livro da Bíblia, identificado pelo slug/nome do livro e número do capítulo.",
     request: {
-      params: bookOrderParamSchema.merge(chapterNumberParamSchema),
+      params: dynamicIdParamSchema.merge(chapterNumberParamSchema),
     },
     responses: getChapterResponses,
   });
 
   router.openapi(getChapterRoute, controller.getChapter);
 
-  // GET /books/:order/chapters/:number/verses - List verses of a chapter
   const getVersesRoute = createRoute({
     method: "get",
-    path: "/books/{order}/chapters/{number}/verses",
+    path: "/books/{dynamicId}/chapters/{number}/verses",
     tags: ["Bíblia"],
     summary: "Listar versículos de um capítulo",
     description:
       "Retorna uma lista paginada de todos os versículos de um capítulo específico da Bíblia.",
     request: {
-      params: bookOrderParamSchema.merge(chapterNumberParamSchema),
+      params: dynamicIdParamSchema.merge(chapterNumberParamSchema),
       query: paginationQuerySchema,
     },
     responses: getVersesResponses,
@@ -117,16 +113,15 @@ export const createBibleRoutesV1 = (controller: BibleControllerV1) => {
 
   router.openapi(getVersesRoute, controller.getVerses);
 
-  // GET /books/:order/chapters/:number/verses/:verse - Get verse by number
   const getVerseRoute = createRoute({
     method: "get",
-    path: "/books/{order}/chapters/{number}/verses/{verse}",
+    path: "/books/{dynamicId}/chapters/{number}/verses/{verse}",
     tags: ["Bíblia"],
     summary: "Obter versículo por número",
     description:
-      "Retorna um versículo específico de um capítulo da Bíblia, identificado pela ordem do livro, número do capítulo e número do versículo.",
+      "Retorna um versículo específico de um capítulo da Bíblia, identificado pelo slug/nome do livro, número do capítulo e número do versículo.",
     request: {
-      params: bookOrderParamSchema
+      params: dynamicIdParamSchema
         .merge(chapterNumberParamSchema)
         .merge(verseNumberParamSchema),
     },
