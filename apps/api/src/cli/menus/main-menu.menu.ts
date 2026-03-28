@@ -10,6 +10,7 @@ export const mainMenu = async () =>
       { title: "Bíblia", value: "bible" },
       { title: "Database", value: "database" },
       { title: "Gerar Docs OpenAPI", value: "openapi-doc" },
+      { title: "Build", value: "build" },
       { title: "Sair", value: "exit" },
     ],
   });
