@@ -48,6 +48,7 @@ export class AuthControllerV1 {
     const sessionCookie = getCookie(c, "__Host-session");
     if (!sessionCookie) throw new BadRequestError("Session cookie not found");
     const sessionPublicId = sessionCookie.split(".")[0];
+    if (!sessionPublicId) throw new BadRequestError("Invalid session cookie");
     await this.service.revokeSession({ sessionPublicId });
     setCookie(c, "__Host-session", "", {
       httpOnly: true,

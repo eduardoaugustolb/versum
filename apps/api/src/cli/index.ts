@@ -1,17 +1,19 @@
 import { logger } from "@/utils/logger";
 import { mainMenu } from "./menus/main-menu.menu";
-import { validateBibleJsonAction } from "./modules/validate/bible-json/bible-json.action";
+import { bibleAction } from "./modules/bible/bible.action";
+import { databaseAction } from "./modules/db/database.action";
 
-async function main() {
-  console.clear();
+export async function initCli(clear = true) {
+  if (clear) console.clear();
   logger({ level: "info", color: "blue", icon: "" }, "Versum API CLI");
   const mainMenuResult = await mainMenu();
-  switch (mainMenuResult.main) {
-    case "seed":
 
+  switch (mainMenuResult.main) {
+    case "bible":
+      await bibleAction();
       break;
-    case "validate-bible":
-      await validateBibleJsonAction();
+    case "database":
+      await databaseAction();
       break;
     case "exit":
       process.exit(0);
@@ -19,4 +21,4 @@ async function main() {
   }
 }
 
-main();
+initCli();

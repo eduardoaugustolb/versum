@@ -1,5 +1,5 @@
 import { index, pgTable, smallint, uuid, varchar } from "drizzle-orm/pg-core";
-import { testamentEnum } from "./bible.enums.ts"; // Corrected import path
+import { testamentEnum } from "./bible.enums.ts";
 
 export const bibleBooks = pgTable(
   "bible_books",

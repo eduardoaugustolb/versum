@@ -1,0 +1,117 @@
+[
+  {
+    "book": "genesis",
+    "chapter": 18,
+    "verse": 4
+  },
+  {
+    "book": "josue",
+    "chapter": 15,
+    "verse": 19
+  },
+  {
+    "book": "juizes",
+    "chapter": 1,
+    "verse": 15
+  },
+  {
+    "book": "juizes",
+    "chapter": 4,
+    "verse": 19
+  },
+  {
+    "book": "i_samuel",
+    "chapter": 26,
+    "verse": 11
+  },
+  {
+    "book": "i_samuel",
+    "chapter": 26,
+    "verse": 12
+  },
+  {
+    "book": "i_samuel",
+    "chapter": 26,
+    "verse": 16
+  },
+  {
+    "book": "i_reis",
+    "chapter": 17,
+    "verse": 10
+  },
+  {
+    "book": "ii_reis",
+    "chapter": 3,
+    "verse": 19
+  },
+  {
+    "book": "ii_reis",
+    "chapter": 3,
+    "verse": 20
+  },
+  {
+    "book": "ii_reis",
+    "chapter": 3,
+    "verse": 25
+  },
+  {
+    "book": "jo",
+    "chapter": 28,
+    "verse": 11
+  },
+  {
+    "book": "salmos",
+    "chapter": 65,
+    "verse": 9
+  },
+  {
+    "book": "salmos",
+    "chapter": 65,
+    "verse": 10
+  },
+  {
+    "book": "proverbios",
+    "chapter": 8,
+    "verse": 24
+  },
+  {
+    "book": "proverbios",
+    "chapter": 30,
+    "verse": 16
+  },
+  {
+    "book": "isaias",
+    "chapter": 41,
+    "verse": 18
+  },
+  {
+    "book": "ezequiel",
+    "chapter": 34,
+    "verse": 13
+  },
+  {
+    "book": "ezequiel",
+    "chapter": 35,
+    "verse": 8
+  },
+  {
+    "book": "ezequiel",
+    "chapter": 36,
+    "verse": 4
+  },
+  {
+    "book": "ezequiel",
+    "chapter": 36,
+    "verse": 6
+  },
+  {
+    "book": "eclesiastico",
+    "chapter": 29,
+    "verse": 17
+  },
+  {
+    "book": "eclesiastico",
+    "chapter": 29,
+    "verse": 18
+  }
+]
