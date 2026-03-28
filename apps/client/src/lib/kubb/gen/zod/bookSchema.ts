@@ -14,5 +14,5 @@ export const bookSchema = z.object({
 "slug": z.string().max(10).describe("Slug do livro"),
 "niceName": z.string().max(100).describe("Nome amigável do livro"),
 "testament": z.enum(["OLD", "NEW"]).describe("Testamento ao qual o livro pertence"),
-"total_chapters": z.int().gt(0).describe("Número total de capítulos")
+"totalChapters": z.int().gt(0).describe("Número total de capítulos")
     }).describe("Livro da Bíblia")

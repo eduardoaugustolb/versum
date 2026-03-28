@@ -8,7 +8,7 @@ import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-cl
 import type { GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerseQueryResponse, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVersePathParams, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse400, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse404, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse500 } from "../models/GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse.ts";
 
 function getGetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerseUrl(dynamicId: GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVersePathParams["dynamicId"], number: GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVersePathParams["number"], verse: GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVersePathParams["verse"]) {
-  const res = { method: 'GET', url: `/api/v1/public/bible/books/${dynamicId}/chapters/${number}/verses/${verse}` as const }
+  const res = { method: 'GET', url: `https://versum-api.squareweb.app//api/v1/public/bible/books/${dynamicId}/chapters/${number}/verses/${verse}` as const }
   return res
 }
 

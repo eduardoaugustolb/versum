@@ -12,7 +12,7 @@ import { faker } from "@faker-js/faker";
 export function createUpdateAuthenticatedUserBody(data?: Partial<UpdateAuthenticatedUserBody>): UpdateAuthenticatedUserBody {
 
   return {
-    ...{"username": faker.string.alpha({ length: { min: 1, max: 50 } }),"name": faker.string.alpha({ length: { min: 1, max: 100 } }),"bio": faker.string.alpha({ length: 500 }),"picture_url": faker.string.alpha({ length: 500 })},
+    ...{"username": faker.string.alpha({ length: { min: 1, max: 50 } }),"name": faker.string.alpha({ length: { min: 1, max: 100 } }),"bio": faker.string.alpha({ length: 500 }),"pictureUrl": faker.string.alpha({ length: 500 })},
     ...data || {}
   }
 }

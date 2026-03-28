@@ -93,12 +93,12 @@ components:
           nullable: true
           maxLength: 500
           description: Biografia do usuário
-        picture_url:
+        pictureUrl:
           type: string
           nullable: true
           maxLength: 500
           description: URL da foto de perfil
-        created_at:
+        createdAt:
           type: string
           format: date-time
           description: Data/hora de criação da conta
@@ -108,8 +108,8 @@ components:
         - name
         - email
         - bio
-        - picture_url
-        - created_at
+        - pictureUrl
+        - createdAt
       description: Representação pública do usuário
     UpdateAuthenticatedUserResponse:
       type: object
@@ -137,7 +137,7 @@ components:
           nullable: true
           maxLength: 500
           description: Nova biografia
-        picture_url:
+        pictureUrl:
           type: string
           nullable: true
           maxLength: 500
@@ -186,7 +186,7 @@ components:
             - OLD
             - NEW
           description: Testamento ao qual o livro pertence
-        total_chapters:
+        totalChapters:
           type: integer
           minimum: 0
           exclusiveMinimum: true
@@ -197,43 +197,43 @@ components:
         - slug
         - niceName
         - testament
-        - total_chapters
+        - totalChapters
       description: Livro da Bíblia
     PaginationViewModel:
       type: object
       properties:
-        current_page:
+        currentPage:
           type: integer
           minimum: 0
           exclusiveMinimum: true
           description: Página atual
-        total_pages:
+        totalPages:
           type: integer
           minimum: 0
           exclusiveMinimum: true
           description: Número total de páginas
-        total_items:
+        totalItems:
           type: integer
           minimum: 0
           description: Número total de itens
-        items_per_page:
+        itemsPerPage:
           type: integer
           minimum: 0
           exclusiveMinimum: true
           description: Número de itens por página
-        has_next_page:
+        hasNextPage:
           type: boolean
           description: Indica se existe próxima página
-        has_prev_page:
+        hasPrevPage:
           type: boolean
           description: Indica se existe página anterior
       required:
-        - current_page
-        - total_pages
-        - total_items
-        - items_per_page
-        - has_next_page
-        - has_prev_page
+        - currentPage
+        - totalPages
+        - totalItems
+        - itemsPerPage
+        - hasNextPage
+        - hasPrevPage
       description: Informações de paginação
     GetBookByDynamicIdResponse:
       type: object
@@ -277,7 +277,7 @@ components:
           type: string
           format: uuid
           description: ID único do capítulo
-        book_id:
+        bookId:
           type: string
           format: uuid
           description: ID do livro ao qual o capítulo pertence
@@ -286,16 +286,16 @@ components:
           minimum: 0
           exclusiveMinimum: true
           description: Número do capítulo
-        total_verses:
+        totalVerses:
           type: integer
           minimum: 0
           exclusiveMinimum: true
           description: Número total de versículos
       required:
         - id
-        - book_id
+        - bookId
         - number
-        - total_verses
+        - totalVerses
       description: Capítulo de um livro da Bíblia
     GetChapterResponse:
       type: object
@@ -339,7 +339,7 @@ components:
           type: string
           format: uuid
           description: ID único do versículo
-        chapter_id:
+        chapterId:
           type: string
           format: uuid
           description: ID do capítulo ao qual o versículo pertence
@@ -353,7 +353,7 @@ components:
           description: Texto do versículo
       required:
         - id
-        - chapter_id
+        - chapterId
         - number
         - text
       description: Versículo de um capítulo da Bíblia
@@ -415,10 +415,10 @@ paths:
         - schema:
             type: string
             minLength: 1
-            description: Token do magic link (public_id.token)
+            description: Token do magic link (publicId.token)
             example: aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee.xxxxxxxxxxxxxx
           required: true
-          description: Token do magic link (public_id.token)
+          description: Token do magic link (publicId.token)
           name: token
           in: query
       responses:

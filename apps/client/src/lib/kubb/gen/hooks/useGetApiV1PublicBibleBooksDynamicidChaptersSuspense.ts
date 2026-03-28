@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import type { GetApiV1PublicBibleBooksDynamicidChaptersQueryResponse, GetApiV1PublicBibleBooksDynamicidChaptersPathParams, GetApiV1PublicBibleBooksDynamicidChaptersQueryParams, GetApiV1PublicBibleBooksDynamicidChapters400, GetApiV1PublicBibleBooksDynamicidChapters404, GetApiV1PublicBibleBooksDynamicidChapters500 } from "../models/GetApiV1PublicBibleBooksDynamicidChapters.ts";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";

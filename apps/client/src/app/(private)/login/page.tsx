@@ -1,14 +1,21 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardTitle } from "@/components/ui/card";
-import { Field, FieldDescription, FieldGroup, FieldLabel, FieldLegend, FieldSet } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { postApiV1AuthMagicLink } from "@/lib/kubb/gen";
 import { SignInIcon } from "@phosphor-icons/react";
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Card, CardTitle } from "@/components/ui/card";
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldLegend,
+  FieldSet,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { postApiV1AuthMagicLink } from "@/lib/kubb/gen";
 
 const formSchema = z.object({
   email: z.email("Digite um email válido"),
@@ -28,15 +35,19 @@ export default function LoginPage() {
       const toastId = toast.loading("Enviando magic link...");
 
       try {
-        const res = await postApiV1AuthMagicLink({ email: value.email }, {
-          baseURL: process.env.NEXT_PUBLIC_API_URL
-        });
+        const res = await postApiV1AuthMagicLink(
+          { email: value.email },
+          {
+            baseURL: process.env.NEXT_PUBLIC_API_URL,
+          },
+        );
         toast.success(res.message, { id: toastId });
         form.reset();
       } catch (error) {
-        const message = error instanceof Error
-          ? error.message
-          : "Ocorreu um erro desconhecido.";
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Ocorreu um erro desconhecido.";
         toast.error(message, { id: toastId });
       }
     },
@@ -46,16 +57,21 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center p-4 bg-background">
       <Card className="w-full max-w-md p-8 shadow-lg">
         <div className="text-center mb-2">
-          <CardTitle className="text-2xl font-semibold">Bem-vindo de volta</CardTitle>
+          <CardTitle className="text-2xl font-semibold">
+            Bem-vindo de volta
+          </CardTitle>
           <p className="text-sm text-muted-foreground">
             Enviaremos um link mágico para seu email
           </p>
         </div>
 
-        <form onSubmit={(e) => {
-          e.preventDefault();
-          form.handleSubmit();
-        }} className="space-y-6">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            form.handleSubmit();
+          }}
+          className="space-y-6"
+        >
           <FieldGroup>
             <FieldSet>
               <FieldLegend className="sr-only">
@@ -65,9 +81,7 @@ export default function LoginPage() {
               <form.Field name="email">
                 {(field) => (
                   <Field>
-                    <FieldLabel htmlFor={field.name}>
-                      Email
-                    </FieldLabel>
+                    <FieldLabel htmlFor={field.name}>Email</FieldLabel>
                     <Input
                       id={field.name}
                       name={field.name}
@@ -103,7 +117,8 @@ export default function LoginPage() {
         </form>
 
         <p className="text-xs text-center text-muted-foreground mt-6">
-          Ao continuar, você concorda com nossos termos de uso e política de privacidade
+          Ao continuar, você concorda com nossos termos de uso e política de
+          privacidade
         </p>
       </Card>
     </div>

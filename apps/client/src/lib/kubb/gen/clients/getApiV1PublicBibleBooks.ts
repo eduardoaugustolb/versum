@@ -8,7 +8,7 @@ import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-cl
 import type { GetApiV1PublicBibleBooksQueryResponse, GetApiV1PublicBibleBooksQueryParams, GetApiV1PublicBibleBooks400, GetApiV1PublicBibleBooks500 } from "../models/GetApiV1PublicBibleBooks.ts";
 
 function getGetApiV1PublicBibleBooksUrl() {
-  const res = { method: 'GET', url: `/api/v1/public/bible/books` as const }
+  const res = { method: 'GET', url: `https://versum-api.squareweb.app//api/v1/public/bible/books` as const }
   return res
 }
 

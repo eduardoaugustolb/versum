@@ -12,7 +12,7 @@ import { faker } from "@faker-js/faker";
 export function createVerse(data?: Partial<Verse>): Verse {
 
   return {
-    ...{"id": faker.string.uuid(),"chapter_id": faker.string.uuid(),"number": faker.number.int(),"text": faker.string.alpha()},
+    ...{"id": faker.string.uuid(),"chapterId": faker.string.uuid(),"number": faker.number.int(),"text": faker.string.alpha()},
     ...data || {}
   }
 }

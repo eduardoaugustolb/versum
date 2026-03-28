@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import type { PatchApiV1UsersMeMutationRequest, PatchApiV1UsersMeMutationResponse, PatchApiV1UsersMe400, PatchApiV1UsersMe401, PatchApiV1UsersMe404, PatchApiV1UsersMe500 } from "../models/PatchApiV1UsersMe.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";

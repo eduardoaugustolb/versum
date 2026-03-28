@@ -12,7 +12,7 @@ import { faker } from "@faker-js/faker";
 export function createUser(data?: Partial<User>): User {
 
   return {
-    ...{"id": faker.string.uuid(),"username": faker.string.alpha({ length: { min: 1, max: 50 } }),"name": faker.string.alpha({ length: { min: 1, max: 100 } }),"email": faker.internet.email(),"bio": faker.string.alpha({ length: 500 }),"picture_url": faker.string.alpha({ length: 500 }),"created_at": faker.date.anytime().toISOString()},
+    ...{"id": faker.string.uuid(),"username": faker.string.alpha({ length: { min: 1, max: 50 } }),"name": faker.string.alpha({ length: { min: 1, max: 100 } }),"email": faker.internet.email(),"bio": faker.string.alpha({ length: 500 }),"pictureUrl": faker.string.alpha({ length: 500 }),"createdAt": faker.date.anytime().toISOString()},
     ...data || {}
   }
 }

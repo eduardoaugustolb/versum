@@ -10,7 +10,7 @@ import { z } from "zod/v4";
  */
 export const verseSchema = z.object({
     "id": z.uuid().describe("ID único do versículo"),
-"chapter_id": z.uuid().describe("ID do capítulo ao qual o versículo pertence"),
+"chapterId": z.uuid().describe("ID do capítulo ao qual o versículo pertence"),
 "number": z.int().gt(0).describe("Número do versículo"),
 "text": z.string().describe("Texto do versículo")
     }).describe("Versículo de um capítulo da Bíblia")

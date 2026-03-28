@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import type { PostApiV1AuthLogoutMutationResponse, PostApiV1AuthLogout400, PostApiV1AuthLogout500 } from "../models/PostApiV1AuthLogout.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";

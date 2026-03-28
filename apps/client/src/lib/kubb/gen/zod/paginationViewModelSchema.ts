@@ -9,10 +9,10 @@ import { z } from "zod/v4";
  * @description Informações de paginação
  */
 export const paginationViewModelSchema = z.object({
-    "current_page": z.int().gt(0).describe("Página atual"),
-"total_pages": z.int().gt(0).describe("Número total de páginas"),
-"total_items": z.int().min(0).describe("Número total de itens"),
-"items_per_page": z.int().gt(0).describe("Número de itens por página"),
-"has_next_page": z.boolean().describe("Indica se existe próxima página"),
-"has_prev_page": z.boolean().describe("Indica se existe página anterior")
+    "currentPage": z.int().gt(0).describe("Página atual"),
+"totalPages": z.int().gt(0).describe("Número total de páginas"),
+"totalItems": z.int().min(0).describe("Número total de itens"),
+"itemsPerPage": z.int().gt(0).describe("Número de itens por página"),
+"hasNextPage": z.boolean().describe("Indica se existe próxima página"),
+"hasPrevPage": z.boolean().describe("Indica se existe página anterior")
     }).describe("Informações de paginação")

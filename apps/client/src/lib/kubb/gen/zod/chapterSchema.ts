@@ -10,7 +10,7 @@ import { z } from "zod/v4";
  */
 export const chapterSchema = z.object({
     "id": z.uuid().describe("ID único do capítulo"),
-"book_id": z.uuid().describe("ID do livro ao qual o capítulo pertence"),
+"bookId": z.uuid().describe("ID do livro ao qual o capítulo pertence"),
 "number": z.int().gt(0).describe("Número do capítulo"),
-"total_verses": z.int().gt(0).describe("Número total de versículos")
+"totalVerses": z.int().gt(0).describe("Número total de versículos")
     }).describe("Capítulo de um livro da Bíblia")

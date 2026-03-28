@@ -14,6 +14,6 @@ export const userSchema = z.object({
 "name": z.string().min(1).max(100).describe("Nome de exibição do usuário"),
 "email": z.email().describe("E-mail do usuário"),
 "bio": z.nullable(z.string().max(500).describe("Biografia do usuário")),
-"picture_url": z.nullable(z.string().max(500).describe("URL da foto de perfil")),
-"created_at": z.iso.datetime().describe("Data/hora de criação da conta")
+"pictureUrl": z.nullable(z.string().max(500).describe("URL da foto de perfil")),
+"createdAt": z.iso.datetime().describe("Data/hora de criação da conta")
     }).describe("Representação pública do usuário")

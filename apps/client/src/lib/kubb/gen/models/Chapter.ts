@@ -17,7 +17,7 @@ export type Chapter = {
      * @description ID do livro ao qual o capítulo pertence
      * @type string, uuid
     */
-    book_id: string;
+    bookId: string;
     /**
      * @description Número do capítulo
      * @type integer
@@ -27,5 +27,5 @@ export type Chapter = {
      * @description Número total de versículos
      * @type integer
     */
-    total_verses: number;
+    totalVerses: number;
 };

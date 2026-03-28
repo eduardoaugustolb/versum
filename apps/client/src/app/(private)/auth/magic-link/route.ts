@@ -1,6 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
+import type {
+  Client,
+  RequestConfig,
+  ResponseConfig,
+} from "@kubb/plugin-client/clients/fetch";
+import { type NextRequest, NextResponse } from "next/server";
 import { getApiV1AuthMagicLink } from "@/lib/kubb/gen";
-import type { Client, RequestConfig, ResponseConfig } from "@kubb/plugin-client/clients/fetch";
 
 export async function GET(req: NextRequest) {
   const authCookie = req.cookies.get("__Host-session");
@@ -24,10 +28,13 @@ export async function GET(req: NextRequest) {
   try {
     let rawResponse: Response | undefined;
 
-    const customClient: Client = async <T>(config: RequestConfig): Promise<ResponseConfig<T>> => {
+    const customClient: Client = async <T>(
+      config: RequestConfig,
+    ): Promise<ResponseConfig<T>> => {
       const normalizedParams = new URLSearchParams();
       Object.entries(config.params || {}).forEach(([key, value]) => {
-        if (value !== undefined) normalizedParams.append(key, value === null ? "null" : String(value));
+        if (value !== undefined)
+          normalizedParams.append(key, value === null ? "null" : String(value));
       });
 
       let targetUrl = [config.baseURL, config.url].filter(Boolean).join("");
@@ -40,19 +47,23 @@ export async function GET(req: NextRequest) {
       });
 
       return {
-        data: [204, 205, 304].includes(rawResponse.status) || !rawResponse.body
-          ? ({} as T)
-          : await rawResponse.json(),
+        data:
+          [204, 205, 304].includes(rawResponse.status) || !rawResponse.body
+            ? ({} as T)
+            : await rawResponse.json(),
         status: rawResponse.status,
         statusText: rawResponse.statusText,
         headers: rawResponse.headers,
       };
     };
 
-    await getApiV1AuthMagicLink({ token }, {
-      baseURL: process.env.NEXT_PUBLIC_API_URL,
-      client: customClient,
-    });
+    await getApiV1AuthMagicLink(
+      { token },
+      {
+        baseURL: process.env.NEXT_PUBLIC_API_URL,
+        client: customClient,
+      },
+    );
 
     const res = NextResponse.redirect(routeRedirect.toString());
 

@@ -8,7 +8,7 @@ import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-cl
 import type { GetApiV1UsersUsernameQueryResponse, GetApiV1UsersUsernamePathParams, GetApiV1UsersUsername404, GetApiV1UsersUsername500 } from "../models/GetApiV1UsersUsername.ts";
 
 function getGetApiV1UsersUsernameUrl(username: GetApiV1UsersUsernamePathParams["username"]) {
-  const res = { method: 'GET', url: `/api/v1/users/@${username}` as const }
+  const res = { method: 'GET', url: `https://versum-api.squareweb.app//api/v1/users/@${username}` as const }
   return res
 }
 

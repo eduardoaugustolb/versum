@@ -43,10 +43,10 @@ export type User = {
      * @maxLength 500
      * @type string
     */
-    picture_url: string | null;
+    pictureUrl: string | null;
     /**
      * @description Data/hora de criação da conta
      * @type string, date-time
     */
-    created_at: string;
+    createdAt: string;
 };

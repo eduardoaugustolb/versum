@@ -12,31 +12,31 @@ export type PaginationViewModel = {
      * @description Página atual
      * @type integer
     */
-    current_page: number;
+    currentPage: number;
     /**
      * @description Número total de páginas
      * @type integer
     */
-    total_pages: number;
+    totalPages: number;
     /**
      * @description Número total de itens
      * @minLength 0
      * @type integer
     */
-    total_items: number;
+    totalItems: number;
     /**
      * @description Número de itens por página
      * @type integer
     */
-    items_per_page: number;
+    itemsPerPage: number;
     /**
      * @description Indica se existe próxima página
      * @type boolean
     */
-    has_next_page: boolean;
+    hasNextPage: boolean;
     /**
      * @description Indica se existe página anterior
      * @type boolean
     */
-    has_prev_page: boolean;
+    hasPrevPage: boolean;
 };

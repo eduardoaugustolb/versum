@@ -12,7 +12,7 @@ import { faker } from "@faker-js/faker";
 export function createBook(data?: Partial<Book>): Book {
 
   return {
-    ...{"id": faker.string.uuid(),"name": faker.string.alpha({ length: 100 }),"slug": faker.string.alpha({ length: 10 }),"niceName": faker.string.alpha({ length: 100 }),"testament": faker.helpers.arrayElement<NonNullable<Book>["testament"]>(["OLD", "NEW"]),"total_chapters": faker.number.int()},
+    ...{"id": faker.string.uuid(),"name": faker.string.alpha({ length: 100 }),"slug": faker.string.alpha({ length: 10 }),"niceName": faker.string.alpha({ length: 100 }),"testament": faker.helpers.arrayElement<NonNullable<Book>["testament"]>(["OLD", "NEW"]),"totalChapters": faker.number.int()},
     ...data || {}
   }
 }

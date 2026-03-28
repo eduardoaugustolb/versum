@@ -12,7 +12,7 @@ import { faker } from "@faker-js/faker";
 export function createChapter(data?: Partial<Chapter>): Chapter {
 
   return {
-    ...{"id": faker.string.uuid(),"book_id": faker.string.uuid(),"number": faker.number.int(),"total_verses": faker.number.int()},
+    ...{"id": faker.string.uuid(),"bookId": faker.string.uuid(),"number": faker.number.int(),"totalVerses": faker.number.int()},
     ...data || {}
   }
 }

@@ -33,5 +33,5 @@ export type UpdateAuthenticatedUserBody = {
      * @maxLength 500
      * @type string
     */
-    picture_url?: string | null;
+    pictureUrl?: string | null;
 };

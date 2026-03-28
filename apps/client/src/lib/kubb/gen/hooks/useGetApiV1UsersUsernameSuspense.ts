@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import type { GetApiV1UsersUsernameQueryResponse, GetApiV1UsersUsernamePathParams, GetApiV1UsersUsername404, GetApiV1UsersUsername500 } from "../models/GetApiV1UsersUsername.ts";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";

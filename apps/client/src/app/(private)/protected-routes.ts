@@ -1,16 +1,17 @@
 type Route = {
   startWith: string;
   redirectTo: string;
-} & (
-  {  path: string;
-} | { startWith: string }
-);
+} & ({ path: string } | { startWith: string });
 
-type ProtectedRoute = Route & ({
-  requiresAuth: boolean;
-} | {
-  requiresGhest: boolean;
-});
+type ProtectedRoute = Route &
+  (
+    | {
+        requiresAuth: boolean;
+      }
+    | {
+        requiresGhest: boolean;
+      }
+  );
 
 export const protectedRoutes: ProtectedRoute[] = [
   {
@@ -26,5 +27,11 @@ export const protectedRoutes: ProtectedRoute[] = [
 ];
 
 export function findProtectedRoute({ pathname }: { pathname: string }) {
-  return protectedRoutes.find((r) => r.startWith ? pathname.startsWith(r.startWith) : "path" in r ? r.path === pathname : false)
+  return protectedRoutes.find((r) =>
+    r.startWith
+      ? pathname.startsWith(r.startWith)
+      : "path" in r
+        ? r.path === pathname
+        : false,
+  );
 }

@@ -8,7 +8,7 @@ import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-cl
 import type { PatchApiV1UsersMeMutationRequest, PatchApiV1UsersMeMutationResponse, PatchApiV1UsersMe400, PatchApiV1UsersMe401, PatchApiV1UsersMe404, PatchApiV1UsersMe500 } from "../models/PatchApiV1UsersMe.ts";
 
 function getPatchApiV1UsersMeUrl() {
-  const res = { method: 'PATCH', url: `/api/v1/users/@me` as const }
+  const res = { method: 'PATCH', url: `https://versum-api.squareweb.app//api/v1/users/@me` as const }
   return res
 }
 

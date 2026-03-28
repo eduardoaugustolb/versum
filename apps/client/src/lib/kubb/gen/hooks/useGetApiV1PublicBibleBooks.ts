@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import type { GetApiV1PublicBibleBooksQueryResponse, GetApiV1PublicBibleBooksQueryParams, GetApiV1PublicBibleBooks400, GetApiV1PublicBibleBooks500 } from "../models/GetApiV1PublicBibleBooks.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";

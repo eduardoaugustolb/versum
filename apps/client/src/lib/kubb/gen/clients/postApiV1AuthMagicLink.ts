@@ -8,7 +8,7 @@ import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-cl
 import type { PostApiV1AuthMagicLinkMutationRequest, PostApiV1AuthMagicLinkMutationResponse, PostApiV1AuthMagicLink400, PostApiV1AuthMagicLink500 } from "../models/PostApiV1AuthMagicLink.ts";
 
 function getPostApiV1AuthMagicLinkUrl() {
-  const res = { method: 'POST', url: `/api/v1/auth/magic-link` as const }
+  const res = { method: 'POST', url: `https://versum-api.squareweb.app//api/v1/auth/magic-link` as const }
   return res
 }
 

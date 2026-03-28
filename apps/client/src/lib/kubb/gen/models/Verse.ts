@@ -17,7 +17,7 @@ export type Verse = {
      * @description ID do capítulo ao qual o versículo pertence
      * @type string, uuid
     */
-    chapter_id: string;
+    chapterId: string;
     /**
      * @description Número do versículo
      * @type integer

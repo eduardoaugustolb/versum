@@ -1,9 +1,13 @@
-import { getCachedUserAuth } from "@/dal/auth/get-cached-session";
-import { headers, cookies } from "next/headers";
-import { findProtectedRoute, protectedRoutes } from "./protected-routes";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { getCachedUserAuth } from "@/dal/auth/get-cached-session";
+import { findProtectedRoute } from "./protected-routes";
 
-export default async function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const pathname = (await headers()).get("x-invoke-path");
   const sessionCookie = (await cookies()).get("__Host-session");
   console.debug("pathname", pathname, "sessionCookie", sessionCookie);
@@ -13,13 +17,13 @@ export default async function Layout({ children }: { children: React.ReactNode }
 
   if (!route) return null;
 
-  if (sessionCookie && ("requiresGhest" in route && route.requiresGhest)) {
+  if (sessionCookie && "requiresGhest" in route && route.requiresGhest) {
     redirect(route.redirectTo);
-  };
-  if (sessionCookie && ("requiresAuth" in route && route.requiresAuth)) {
+  }
+  if (sessionCookie && "requiresAuth" in route && route.requiresAuth) {
     try {
       const userAuth = await getCachedUserAuth();
-      if ((sessionCookie && !userAuth)) {
+      if (sessionCookie && !userAuth) {
         redirect(route.redirectTo);
       }
     } catch {

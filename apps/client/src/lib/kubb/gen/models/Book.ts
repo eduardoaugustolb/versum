@@ -47,5 +47,5 @@ export type Book = {
      * @description Número total de capítulos
      * @type integer
     */
-    total_chapters: number;
+    totalChapters: number;
 };

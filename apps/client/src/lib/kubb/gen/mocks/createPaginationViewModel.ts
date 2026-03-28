@@ -12,7 +12,7 @@ import { faker } from "@faker-js/faker";
 export function createPaginationViewModel(data?: Partial<PaginationViewModel>): PaginationViewModel {
 
   return {
-    ...{"current_page": faker.number.int(),"total_pages": faker.number.int(),"total_items": faker.number.int({ min: 0 }),"items_per_page": faker.number.int(),"has_next_page": faker.datatype.boolean(),"has_prev_page": faker.datatype.boolean()},
+    ...{"currentPage": faker.number.int(),"totalPages": faker.number.int(),"totalItems": faker.number.int({ min: 0 }),"itemsPerPage": faker.number.int(),"hasNextPage": faker.datatype.boolean(),"hasPrevPage": faker.datatype.boolean()},
     ...data || {}
   }
 }
