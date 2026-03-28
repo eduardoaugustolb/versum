@@ -49,7 +49,7 @@ Opções disponíveis:
 ## Documentação da API
 
 A documentação completa está disponível em:
-- [`src/cli/output/api-documentation.md`](./src/cli/output/api-documentation.md)
+- [`versum-api.squareweb.app/docs`](https://versum-api.squareweb.app/docs)
 
 ### Visão Geral
 
