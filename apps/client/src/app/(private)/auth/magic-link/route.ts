@@ -60,7 +60,6 @@ export async function GET(req: NextRequest) {
     await getApiV1AuthMagicLink(
       { token },
       {
-        baseURL: process.env.NEXT_PUBLIC_API_URL,
         client: customClient,
       },
     );

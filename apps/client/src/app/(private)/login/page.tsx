@@ -37,9 +37,6 @@ export default function LoginPage() {
       try {
         const res = await postApiV1AuthMagicLink(
           { email: value.email },
-          {
-            baseURL: process.env.NEXT_PUBLIC_API_URL,
-          },
         );
         toast.success(res.message, { id: toastId });
         form.reset();

@@ -102,7 +102,7 @@ Sem pressão.
 
 - **Frontend:** Next.js
 
-- **Backend / API REST:** AzuraJS
+- **Backend / API REST:** Hono
 
 - **Database:** PostgreSQL
 

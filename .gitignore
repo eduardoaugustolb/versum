@@ -2,3 +2,10 @@
 .certs
 node_modules
 *.zip
+.build
+
+# agents
+CLAUDE.md
+AGENTS.md
+QWEN.md
+GEMINI.md
