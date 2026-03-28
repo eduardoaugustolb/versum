@@ -5,11 +5,11 @@ import { relations } from "drizzle-orm";
 
 export const readingsRelations = relations(readings, ({ one }) => ({
   user: one(users, {
-    fields: [readings.user_id],
+    fields: [readings.userId],
     references: [users.id],
   }),
   verse: one(bibleVerses, {
-    fields: [readings.verse_id],
+    fields: [readings.verseId],
     references: [bibleVerses.id],
   }),
 }));

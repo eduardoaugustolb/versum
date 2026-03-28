@@ -14,7 +14,7 @@ export class BibleCommonSchemasV1 {
       testament: BibleCommonSchemasV1.testamentEnum.describe(
         "Testamento ao qual o livro pertence",
       ),
-      total_chapters: z
+      totalChapters: z
         .number()
         .int()
         .positive()
@@ -27,9 +27,9 @@ export class BibleCommonSchemasV1 {
   static readonly chapterSchema = z
     .object({
       id: z.uuid().describe("ID único do capítulo"),
-      book_id: z.uuid().describe("ID do livro ao qual o capítulo pertence"),
+      bookId: z.uuid().describe("ID do livro ao qual o capítulo pertence"),
       number: z.number().int().positive().describe("Número do capítulo"),
-      total_verses: z
+      totalVerses: z
         .number()
         .int()
         .positive()
@@ -42,7 +42,7 @@ export class BibleCommonSchemasV1 {
   static readonly verseSchema = z
     .object({
       id: z.uuid().describe("ID único do versículo"),
-      chapter_id: z
+      chapterId: z
         .uuid()
         .describe("ID do capítulo ao qual o versículo pertence"),
       number: z.number().int().positive().describe("Número do versículo"),
@@ -54,24 +54,24 @@ export class BibleCommonSchemasV1 {
 
   static readonly paginationViewModelSchema = z
     .object({
-      current_page: z.number().int().positive().describe("Página atual"),
-      total_pages: z
+      currentPage: z.number().int().positive().describe("Página atual"),
+      totalPages: z
         .number()
         .int()
         .positive()
         .describe("Número total de páginas"),
-      total_items: z
+      totalItems: z
         .number()
         .int()
         .nonnegative()
         .describe("Número total de itens"),
-      items_per_page: z
+      itemsPerPage: z
         .number()
         .int()
         .positive()
         .describe("Número de itens por página"),
-      has_next_page: z.boolean().describe("Indica se existe próxima página"),
-      has_prev_page: z.boolean().describe("Indica se existe página anterior"),
+      hasNextPage: z.boolean().describe("Indica se existe próxima página"),
+      hasPrevPage: z.boolean().describe("Indica se existe página anterior"),
     })
     .openapi("PaginationViewModel", {
       description: "Informações de paginação",

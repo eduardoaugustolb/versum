@@ -5,11 +5,11 @@ import { likes } from "./likes.table.ts";
 
 export const likesRelations = relations(likes, ({ one }) => ({
   user: one(users, {
-    fields: [likes.user_id],
+    fields: [likes.userId],
     references: [users.id],
   }),
   verse: one(bibleVerses, {
-    fields: [likes.verse_id],
+    fields: [likes.verseId],
     references: [bibleVerses.id],
   }),
 }));

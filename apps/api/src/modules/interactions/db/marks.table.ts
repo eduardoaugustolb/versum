@@ -13,20 +13,24 @@ export const marks = pgTable(
   "marks",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    user_id: uuid("user_id")
+    userId: uuid("user_id")
       .notNull()
       .references(() => users.id, {
         onDelete: "cascade",
       }),
-    verse_id: uuid("verse_id")
+    verseId: uuid("verse_id")
       .notNull()
       .references(() => bibleVerses.id, {
         onDelete: "cascade",
       }),
-    selected_text: text("selected_text").notNull(),
+    selectedVerseId: uuid("selected_verse_id")
+      .notNull()
+      .references(() => bibleVerses.id, {
+        onDelete: "cascade",
+      }),
     annotation: text("annotation"),
-    is_public: boolean("is_public").notNull().default(false),
-    created_at: timestamp("created_at", {
+    isPublic: boolean("is_public").notNull().default(false),
+    createdAt: timestamp("created_at", {
       precision: 3,
       withTimezone: true,
     })
@@ -35,10 +39,10 @@ export const marks = pgTable(
   },
   (table) => [
     index("marks_user_id_created_at_idx").on(
-      table.user_id,
-      table.created_at.desc(),
+      table.userId,
+      table.createdAt.desc(),
     ),
-    index("marks_verse_id_idx").on(table.verse_id),
-    index("marks_is_public_idx").on(table.is_public),
+    index("marks_verse_id_idx").on(table.verseId),
+    index("marks_is_public_idx").on(table.isPublic),
   ],
 );

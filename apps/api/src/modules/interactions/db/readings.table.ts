@@ -7,12 +7,12 @@ export const readings = pgTable(
   "readings",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    user_id: uuid("user_id")
+    userId: uuid("user_id")
       .notNull()
       .references(() => users.id, {
         onDelete: "cascade",
       }),
-    verse_id: uuid("verse_id")
+    verseId: uuid("verse_id")
       .notNull()
       .references(() => bibleVerses.id, {
         onDelete: "cascade",
@@ -27,9 +27,9 @@ export const readings = pgTable(
   },
   (table) => [
     index("readings_user_id_read_at_idx").on(
-      table.user_id,
+      table.userId,
       table.read_at.desc(),
     ),
-    index("readings_verse_id_idx").on(table.verse_id),
+    index("readings_verse_id_idx").on(table.verseId),
   ],
 );

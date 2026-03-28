@@ -1,3 +1,4 @@
+import type { InferSelectModel } from "drizzle-orm";
 import { db } from "../../../../infrastructure/db/index.ts";
 import { bibleBooks } from "../../../../modules/bible/db/books.table.ts";
 import { bibleChapters } from "../../../../modules/bible/db/chapters.table.ts";
@@ -8,6 +9,8 @@ import {
   normalizeBibleJsonForSeed,
   type NormalizedBook,
 } from "../bible-json-normalize.ts";
+
+type ExistingBook = InferSelectModel<typeof bibleBooks>;
 
 function slugify(text: string): string {
   return text
@@ -96,7 +99,7 @@ async function addLog(message: string) {
 async function processBook(
   bookData: NormalizedBook,
   testament: "OLD" | "NEW",
-  existingBooks: any[],
+  existingBooks: ExistingBook[],
   options: {
     insertBooks: boolean;
     insertChapters: boolean;
@@ -126,11 +129,11 @@ async function processBook(
           slug: slug,
           niceName: bookData.niceName || bookData.name,
           testament: testament,
-          total_chapters: bookData.chapters.length,
+          totalChapters: bookData.chapters.length,
         })
         .returning();
 
-      existingBooks.push(newBook);
+      if (newBook) existingBooks.push(newBook);
       counters.books++;
 
       await addLog(
@@ -155,7 +158,7 @@ async function processBook(
       .from(bibleChapters)
       .where(
         and(
-          eq(bibleChapters.book_id, book.id),
+          eq(bibleChapters.bookId, book.id),
           eq(bibleChapters.number, chapterData.chapter),
         ),
       );
@@ -166,9 +169,9 @@ async function processBook(
       const [newChapter] = await db
         .insert(bibleChapters)
         .values({
-          book_id: book.id,
+          bookId: book.id,
           number: chapterData.chapter,
-          total_verses: chapterData.verses.length,
+          totalVerses: chapterData.verses.length,
         })
         .returning();
 
@@ -179,15 +182,16 @@ async function processBook(
     if (!chapter) continue;
 
     if (options.insertVerses) {
+      const chapterId = chapter.id;
       const [countResult] = await db
         .select({ total: count() })
         .from(bibleVerses)
-        .where(eq(bibleVerses.chapter_id, chapter.id));
+        .where(eq(bibleVerses.chapterId, chapterId));
 
       const beforeCount = Number(countResult?.total ?? 0);
 
       const verses = chapterData.verses.map((vers) => ({
-        chapter_id: chapter!.id,
+        chapterId,
         number: vers.verse,
         groupStart: vers.group_start,
         groupEnd: vers.group_end,
@@ -204,7 +208,7 @@ async function processBook(
       const [afterCountResult] = await db
         .select({ total: count() })
         .from(bibleVerses)
-        .where(eq(bibleVerses.chapter_id, chapter!.id));
+        .where(eq(bibleVerses.chapterId, chapter.id));
 
       const afterCount = Number(afterCountResult?.total ?? 0);
       counters.verses += afterCount - beforeCount;
@@ -264,12 +268,13 @@ export async function seedBibleFromJson(
 
     logger("success", "Seed da bíblia concluído!");
     console.log("✅ FINALIZADO");
-  } catch (err: any) {
+  } catch (err: unknown) {
     hasError = true;
     endTime = new Date();
 
+    const errorMessage = err instanceof Error ? err.message : String(err);
     console.error("💀 ERRO:", err);
-    await addLog(`❌ ERRO: ${err.message}`);
-    logger("error", `Erro no seed: ${err.message}`);
+    await addLog(`❌ ERRO: ${errorMessage}`);
+    logger("error", `Erro no seed: ${errorMessage}`);
   }
 }

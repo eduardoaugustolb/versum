@@ -5,7 +5,7 @@ export const bibleVerses = pgTable(
   "bible_verses",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    chapter_id: uuid("chapter_id")
+    chapterId: uuid("chapter_id")
       .notNull()
       .references(() => bibleChapters.id, {
         onDelete: "cascade",
@@ -19,7 +19,7 @@ export const bibleVerses = pgTable(
     index("bible_verses_group_start_idx").on(table.groupStart),
     index("bible_verses_group_end_idx").on(table.groupEnd),
     unique("bible_verses_chapter_id_number_unique").on(
-      table.chapter_id,
+      table.chapterId,
       table.number,
     ),
   ],

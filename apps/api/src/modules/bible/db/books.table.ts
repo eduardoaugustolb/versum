@@ -9,7 +9,7 @@ export const bibleBooks = pgTable(
     slug: varchar("slug", { length: 10 }).notNull().unique(),
     niceName: varchar("nice_name", { length: 100 }).notNull(),
     testament: testamentEnum("testament").notNull(),
-    total_chapters: smallint("total_chapters").notNull(),
+    totalChapters: smallint("total_chapters").notNull(),
   },
   (table) => [
     index("bible_books_testament_slug_idx").on(table.testament, table.slug),

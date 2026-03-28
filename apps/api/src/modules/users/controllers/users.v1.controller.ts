@@ -28,7 +28,7 @@ export class UsersControllerV1 {
   updateAuthenticatedUser = async (c: Context) => {
     const session = c.get("session") as Session;
     const body = (await c.req.json()) as Partial<
-      Omit<User, "id" | "email" | "created_at" | "updated_at">
+      Omit<User, "id" | "email" | "createdAt">
     >;
 
     const updatedUser = await this.service.updateUser({

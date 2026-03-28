@@ -26,7 +26,7 @@ export class BibleControllerV1 {
         PaginationViewModel.create({
           page,
           limit,
-          total_items: result.total,
+          totalItems: result.total,
         }),
       ),
       200,
@@ -50,7 +50,7 @@ export class BibleControllerV1 {
         PaginationViewModel.create({
           page: 1,
           limit: 1,
-          total_items: 1,
+          totalItems: 1,
         }),
       ),
       200,
@@ -77,7 +77,7 @@ export class BibleControllerV1 {
         PaginationViewModel.create({
           page,
           limit,
-          total_items: result.total,
+          totalItems: result.total,
         }),
       ),
       200,
@@ -128,7 +128,7 @@ export class BibleControllerV1 {
         PaginationViewModel.create({
           page,
           limit,
-          total_items: result.total,
+          totalItems: result.total,
         }),
       ),
       200,

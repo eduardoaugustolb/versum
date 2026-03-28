@@ -8,8 +8,8 @@ export const users = pgTable(
     name: varchar("name", { length: 100 }).notNull(),
     email: varchar("email", { length: 255 }).notNull().unique(),
     bio: varchar("bio", { length: 500 }),
-    picture_url: varchar("picture_url", { length: 500 }),
-    created_at: timestamp("created_at", {
+    pictureUrl: varchar("picture_url", { length: 500 }),
+    createdAt: timestamp("created_at", {
       precision: 3,
       withTimezone: true,
     })

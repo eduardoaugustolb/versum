@@ -14,7 +14,7 @@ export const bibleChaptersRelations = relations(
   bibleChapters,
   ({ one, many }) => ({
     book: one(bibleBooks, {
-      fields: [bibleChapters.book_id],
+      fields: [bibleChapters.bookId],
       references: [bibleBooks.id],
     }),
     verses: many(bibleVerses),
@@ -23,7 +23,7 @@ export const bibleChaptersRelations = relations(
 
 export const bibleVersesRelations = relations(bibleVerses, ({ one, many }) => ({
   chapter: one(bibleChapters, {
-    fields: [bibleVerses.chapter_id],
+    fields: [bibleVerses.chapterId],
     references: [bibleChapters.id],
   }),
   readings: many(readings),

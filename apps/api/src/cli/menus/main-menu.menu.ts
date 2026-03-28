@@ -9,6 +9,7 @@ export const mainMenu = async () =>
     choices: [
       { title: "Bíblia", value: "bible" },
       { title: "Database", value: "database" },
+      { title: "Gerar Docs OpenAPI", value: "openapi-doc" },
       { title: "Sair", value: "exit" },
     ],
   });

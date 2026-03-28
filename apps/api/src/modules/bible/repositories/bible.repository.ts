@@ -72,20 +72,24 @@ export class BibleRepository implements iBibleRepository {
       return { data: [], total: 0 };
     }
 
-    const bookId = bookResult[0]!.id;
+    const book = bookResult[0];
+    if (!book) {
+      return { data: [], total: 0 };
+    }
+    const bookId = book.id;
 
     const [data, countResult] = await Promise.all([
       this.db
         .select()
         .from(chapters)
-        .where(eq(chapters.book_id, bookId))
+        .where(eq(chapters.bookId, bookId))
         .orderBy(chapters.number)
         .limit(limit)
         .offset(offset),
       this.db
         .select({ total: count() })
         .from(chapters)
-        .where(eq(chapters.book_id, bookId)),
+        .where(eq(chapters.bookId, bookId)),
     ]);
 
     const total = countResult[0]?.total ?? 0;
@@ -106,13 +110,17 @@ export class BibleRepository implements iBibleRepository {
       return null;
     }
 
-    const bookId = bookResult[0]!.id;
+    const book = bookResult[0];
+    if (!book) {
+      return null;
+    }
+    const bookId = book.id;
 
     const [chapter] = await this.db
       .select()
       .from(chapters)
       .where(
-        and(eq(chapters.book_id, bookId), eq(chapters.number, chapterNumber)),
+        and(eq(chapters.bookId, bookId), eq(chapters.number, chapterNumber)),
       );
 
     return chapter ?? null;
@@ -129,7 +137,7 @@ export class BibleRepository implements iBibleRepository {
     const chapterResult = await this.db
       .select({ id: chapters.id })
       .from(chapters)
-      .innerJoin(books, eq(chapters.book_id, books.id))
+      .innerJoin(books, eq(chapters.bookId, books.id))
       .where(
         and(
           or(eq(books.slug, dynamicId), eq(books.name, dynamicId)),
@@ -141,20 +149,24 @@ export class BibleRepository implements iBibleRepository {
       return { data: [], total: 0 };
     }
 
-    const chapterId = chapterResult[0]!.id;
+    const chapterResultItem = chapterResult[0];
+    if (!chapterResultItem) {
+      return { data: [], total: 0 };
+    }
+    const chapterId = chapterResultItem.id;
 
     const [data, countResult] = await Promise.all([
       this.db
         .select()
         .from(verses)
-        .where(eq(verses.chapter_id, chapterId))
+        .where(eq(verses.chapterId, chapterId))
         .orderBy(verses.number)
         .limit(limit)
         .offset(offset),
       this.db
         .select({ total: count() })
         .from(verses)
-        .where(eq(verses.chapter_id, chapterId)),
+        .where(eq(verses.chapterId, chapterId)),
     ]);
 
     const total = countResult[0]?.total ?? 0;
@@ -172,8 +184,8 @@ export class BibleRepository implements iBibleRepository {
         verse: verses,
       })
       .from(verses)
-      .innerJoin(chapters, eq(verses.chapter_id, chapters.id))
-      .innerJoin(books, eq(chapters.book_id, books.id))
+      .innerJoin(chapters, eq(verses.chapterId, chapters.id))
+      .innerJoin(books, eq(chapters.bookId, books.id))
       .where(
         and(
           or(eq(books.slug, dynamicId), eq(books.name, dynamicId)),

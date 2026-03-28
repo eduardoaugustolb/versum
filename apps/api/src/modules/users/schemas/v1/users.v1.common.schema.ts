@@ -8,12 +8,12 @@ export class UsersCommonSchemasV1 {
       name: z.string().min(1).max(100).describe("Nome de exibição do usuário"),
       email: z.email().describe("E-mail do usuário"),
       bio: z.string().max(500).nullable().describe("Biografia do usuário"),
-      picture_url: z
+      pictureUrl: z
         .string()
         .max(500)
         .nullable()
         .describe("URL da foto de perfil"),
-      created_at: z.iso.datetime().describe("Data/hora de criação da conta"),
+      createdAt: z.iso.datetime().describe("Data/hora de criação da conta"),
     })
     .openapi("User", {
       description: "Representação pública do usuário",
@@ -42,7 +42,7 @@ export class UsersCommonSchemasV1 {
         .optional()
         .describe("Novo nome de exibição"),
       bio: z.string().max(500).nullable().optional().describe("Nova biografia"),
-      picture_url: z
+      pictureUrl: z
         .string()
         .max(500)
         .nullable()
