@@ -348,6 +348,14 @@ components:
           minimum: 0
           exclusiveMinimum: true
           description: Número do versículo
+        groupStart:
+          type: integer
+          nullable: true
+          description: Início do grupo de versículos (para agrupamento)
+        groupEnd:
+          type: integer
+          nullable: true
+          description: Fim do grupo de versículos (para agrupamento)
         text:
           type: string
           description: Texto do versículo

@@ -193,8 +193,6 @@ async function processBook(
       const verses = chapterData.verses.map((vers) => ({
         chapterId,
         number: vers.verse,
-        groupStart: vers.group_start,
-        groupEnd: vers.group_end,
         text: vers.text,
       }));
 

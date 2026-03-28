@@ -45,6 +45,7 @@ Opções disponíveis:
 - **Bíblia** - Seed e gerenciamento da Bíblia
 - **Database** - Operações de banco de dados
 - **Gerar Docs OpenAPI** - Gera documentação da API em markdown
+- **Build** - Cria um zip do projeto
 
 ## Documentação da API
 
