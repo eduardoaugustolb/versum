@@ -5,12 +5,13 @@
   "scripts": {
     "dev": "bun run --watch src/server.ts",
     "start": "bun run src/server.ts",
-    "lint": "biome lint src/**/*.ts",
+    "lint": "biome lint",
     "test": "vitest",
     "cli": "bun run src/cli/index.ts",
     "generate:bible:json": "bun run generate-bible-json-from-parresia.ts"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.4.9",
     "@types/bun": "latest",
     "@types/pg": "^8.20.0",
     "biome": "^0.3.3",

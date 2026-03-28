@@ -2,7 +2,7 @@ import { and, eq, isNull } from "drizzle-orm";
 import { db as drizzle } from "../../../infrastructure/db/index.ts";
 import { magicLinks } from "../db/magic-links.table.ts";
 import { sessions } from "../db/sessions.table.ts";
-import {
+import type {
   CreateMagicLinkParams,
   CreateSessionParams,
   iAuthRepository,
@@ -18,15 +18,15 @@ export class AuthRepository implements iAuthRepository {
   }
   async createMagicLink({
     email,
-    expiresAt: expires_at,
-    tokenHash: token_hash,
-  }: CreateMagicLinkParams): Promise<MagicLink> {
+    expiresAt,
+    tokenHash,
+  }: CreateMagicLinkParams): Promise<MagicLink | undefined> {
     const [magicLink] = await this.db
       .insert(magicLinks)
       .values({
         email,
-        expires_at,
-        token_hash,
+        expiresAt,
+        tokenHash,
       })
       .returning();
     return magicLink;
@@ -36,16 +36,16 @@ export class AuthRepository implements iAuthRepository {
     ip,
     userAgent,
     userId,
-    tokenHash: token_hash,
-  }: CreateSessionParams): Promise<Session> {
+    tokenHash,
+  }: CreateSessionParams): Promise<Session | undefined> {
     const [session] = await this.db
       .insert(sessions)
       .values({
-        user_id: userId,
+        userId: userId,
         ip,
-        user_agent: userAgent,
-        token_hash,
-        expires_at: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30), // One month
+        userAgent,
+        tokenHash,
+        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30), // One month
       })
       .returning();
     return session;
@@ -57,7 +57,7 @@ export class AuthRepository implements iAuthRepository {
     tokenHash: string;
   }): Promise<Session | null> {
     const session = await this.db.query.sessions.findFirst({
-      where: (sessions, { eq }) => eq(sessions.token_hash, tokenHash),
+      where: (sessions, { eq }) => eq(sessions.tokenHash, tokenHash),
     });
     return session ?? null;
   }
@@ -75,7 +75,7 @@ export class AuthRepository implements iAuthRepository {
     publicId: string;
   }): Promise<Session | null> {
     const session = await this.db.query.sessions.findFirst({
-      where: (sessions, { eq }) => eq(sessions.public_id, publicId),
+      where: (sessions, { eq }) => eq(sessions.publicId, publicId),
     });
     return session ?? null;
   }
@@ -86,7 +86,7 @@ export class AuthRepository implements iAuthRepository {
     userId: string;
   }): Promise<Session[] | null> {
     const userSessions = await this.db.query.sessions.findMany({
-      where: (sessions, { eq }) => eq(sessions.user_id, userId),
+      where: (sessions, { eq }) => eq(sessions.userId, userId),
     });
     return userSessions.length > 0 ? userSessions : null;
   }
@@ -97,7 +97,7 @@ export class AuthRepository implements iAuthRepository {
     publicId: string;
   }): Promise<MagicLink | null> {
     const magicLink = await this.db.query.magicLinks.findFirst({
-      where: (magicLinks, { eq }) => eq(magicLinks.public_id, publicId),
+      where: (magicLinks, { eq }) => eq(magicLinks.publicId, publicId),
     });
     return magicLink ?? null;
   }
@@ -115,19 +115,19 @@ export class AuthRepository implements iAuthRepository {
 
   async updateMagicLink({
     publicId,
-    invalidated_at,
-    used_at,
+    invalidatedAt,
+    usedAt,
   }: {
     publicId: string;
-    invalidated_at?: Date;
-    used_at?: Date;
+    invalidatedAt?: Date;
+    usedAt?: Date;
   }): Promise<MagicLink | null> {
     const magicLink = await this.db.query.magicLinks.findFirst({
       where: (magicLinks, { eq }) =>
         and(
-          eq(magicLinks.public_id, publicId),
-          isNull(magicLinks.used_at),
-          isNull(magicLinks.invalidated_at),
+          eq(magicLinks.publicId, publicId),
+          isNull(magicLinks.usedAt),
+          isNull(magicLinks.invalidatedAt),
         ),
     });
     if (!magicLink) return null;
@@ -135,19 +135,19 @@ export class AuthRepository implements iAuthRepository {
     await this.db
       .update(magicLinks)
       .set({
-        invalidated_at,
-        used_at,
+        invalidatedAt,
+        usedAt,
       })
       .where(
         and(
-          eq(magicLinks.public_id, magicLink.public_id),
-          isNull(magicLinks.used_at),
-          isNull(magicLinks.invalidated_at),
+          eq(magicLinks.publicId, magicLink.publicId),
+          isNull(magicLinks.usedAt),
+          isNull(magicLinks.invalidatedAt),
         ),
       );
 
     const updatedMagicLink = await this.db.query.magicLinks.findFirst({
-      where: (magicLinks, { eq }) => eq(magicLinks.public_id, publicId),
+      where: (magicLinks, { eq }) => eq(magicLinks.publicId, publicId),
     });
 
     return updatedMagicLink ?? null;
@@ -156,25 +156,25 @@ export class AuthRepository implements iAuthRepository {
   async rotateSession({
     id,
     publicId,
-    expires_at,
-    token_hash,
+    expiresAt,
+    tokenHash,
   }: {
     id: string;
     publicId: string;
-    expires_at: Date;
-    token_hash: string;
+    expiresAt: Date;
+    tokenHash: string;
   }) {
     await this.db
       .update(sessions)
       .set({
-        token_hash,
-        expires_at,
+        tokenHash,
+        expiresAt,
       })
       .where(
         and(
-          eq(sessions.public_id, publicId),
+          eq(sessions.publicId, publicId),
           eq(sessions.id, id),
-          isNull(sessions.revoked_at),
+          isNull(sessions.revokedAt),
         ),
       );
   }
@@ -187,10 +187,10 @@ export class AuthRepository implements iAuthRepository {
     await this.db
       .update(sessions)
       .set({
-        revoked_at: new Date(),
+        revokedAt: new Date(),
       })
       .where(
-        and(eq(sessions.public_id, publicId), isNull(sessions.revoked_at)),
+        and(eq(sessions.publicId, publicId), isNull(sessions.revokedAt)),
       );
   }
 }

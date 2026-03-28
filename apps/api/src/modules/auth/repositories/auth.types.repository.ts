@@ -1,5 +1,5 @@
-import { InferSelectModel } from "drizzle-orm";
-import { magicLinks, sessions } from "../../../infrastructure/db/schema.ts";
+import type { InferSelectModel } from "drizzle-orm";
+import type { magicLinks, sessions } from "../../../infrastructure/db/schema.ts";
 
 export type MagicLink = InferSelectModel<typeof magicLinks>;
 export type Session = InferSelectModel<typeof sessions>;
@@ -18,8 +18,8 @@ export type CreateSessionParams = {
 };
 
 export interface iAuthRepository {
-  createMagicLink(params: CreateMagicLinkParams): Promise<MagicLink>;
-  createSession(params: CreateSessionParams): Promise<Session>;
+  createMagicLink(params: CreateMagicLinkParams): Promise<MagicLink | undefined>;
+  createSession(params: CreateSessionParams): Promise<Session | undefined>;
 
   getSessionByToken(params: { tokenHash: string }): Promise<Session | null>;
   getSessionById(params: { id: string }): Promise<Session | null>;
@@ -33,8 +33,8 @@ export interface iAuthRepository {
   rotateSession(params: {
     id: string;
     publicId: string;
-    expires_at: Date;
-    token_hash: string;
+    expiresAt: Date;
+    tokenHash: string;
   }): Promise<void>;
 
   revokeSessionByPublicId(params: { publicId: string }): Promise<void>;

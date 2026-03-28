@@ -12,7 +12,7 @@ export class SetupPlugins {
     this.app.use(cors({
       origin: [
         "http://localhost:3000",
-        "https://app.versum.vercel.app"
+        "https://app.versum.eduardoaugusto.work"
       ],
       credentials: true,
       allowHeaders: ["Content-Type", "Authorization"],

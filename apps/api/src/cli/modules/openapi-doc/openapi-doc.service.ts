@@ -1,5 +1,5 @@
-import * as fs from "fs";
-import * as path from "path";
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { resolve } from "node:path";
 import * as yaml from "yaml";
 import { cliOutputPath } from "../../constants";
 
@@ -133,7 +133,7 @@ function getSchemaRefName(schema: OpenApiSchema): string | null {
   return null;
 }
 
-function formatSchemaType(schema: OpenApiSchema | undefined, spec: OpenApiSpec): string {
+function formatSchemaType(schema: OpenApiSchema | undefined, _spec: OpenApiSpec): string {
   if (!schema) return "`any`";
 
   if (schema.$ref) {
@@ -154,20 +154,6 @@ function formatSchemaType(schema: OpenApiSchema | undefined, spec: OpenApiSpec):
 
 function toAnchorId(name: string): string {
   return name.toLowerCase().replace(/([A-Z])/g, "-$1").replace(/^-/, "");
-}
-
-function formatProperty(schema: OpenApiSchema, spec: OpenApiSpec, indent: number): string {
-  const spaces = "  ".repeat(indent);
-  const type = getSchemaType(schema);
-  let result = `\`${schema.type || type}\``;
-
-  if (schema.format) result += ` (${schema.format})`;
-  if (schema.nullable) result += " | null";
-  if (schema.enum) result += ` = ${schema.enum.map((e) => `\`${e}\``).join(" | ")}`;
-  if (schema.default !== undefined) result += ` = ${schema.default}`;
-  if (schema.description) result += `\n${spaces}  ${schema.description}`;
-
-  return result;
 }
 
 function generateSchemaDocs(schemaName: string, schema: OpenApiSchema, spec: OpenApiSpec): string {
@@ -266,13 +252,13 @@ function generateEndpointDocs(path: string, method: string, operation: OpenApiOp
 }
 
 export async function generateOpenApiDocs(): Promise<void> {
-  const openApiPath = path.resolve(process.cwd(), "..", "client", "openapi.yaml");
+  const openApiPath = resolve(process.cwd(), "..", "client", "openapi.yaml");
 
-  if (!fs.existsSync(openApiPath)) {
+  if (!existsSync(openApiPath)) {
     throw new Error(`OpenAPI file not found: ${openApiPath}`);
   }
 
-  const openApiContent = fs.readFileSync(openApiPath, "utf-8");
+  const openApiContent = readFileSync(openApiPath, "utf-8");
   const spec: OpenApiSpec = yaml.parse(openApiContent);
 
   const lines: string[] = [];
@@ -322,11 +308,11 @@ export async function generateOpenApiDocs(): Promise<void> {
     }
   }
 
-  const outputDir = path.resolve(process.cwd(), cliOutputPath);
-  if (!fs.existsSync(outputDir)) {
-    fs.mkdirSync(outputDir, { recursive: true });
+  const outputDir = resolve(process.cwd(), cliOutputPath);
+  if (!existsSync(outputDir)) {
+    mkdirSync(outputDir, { recursive: true });
   }
 
-  const outputFile = path.join(outputDir, "api-documentation.md");
-  fs.writeFileSync(outputFile, lines.join("\n"), "utf-8");
+  const outputFile = resolve(outputDir, "api-documentation.md");
+  writeFileSync(outputFile, lines.join("\n"), "utf-8");
 }

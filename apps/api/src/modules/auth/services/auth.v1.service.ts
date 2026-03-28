@@ -1,5 +1,6 @@
 import { EmailProvider } from "../../../infrastructure/resend/email-provider.ts";
 import {
+  InternalServerError,
   NotFoundError,
   UnauthorizedError,
 } from "../../../utils/app/errors/index.ts";
@@ -7,7 +8,7 @@ import { env } from "../../../utils/env/index.ts";
 import { UserRepository } from "../../users/repositoties/user.repository.ts";
 import { AuthRepository } from "../repositories/auth.repository.ts";
 import argon2 from "argon2";
-import { Session } from "../repositories/auth.types.repository.ts";
+import type { Session } from "../repositories/auth.types.repository.ts";
 import { ValidateSession } from "../helpers/validate-session.ts";
 
 export class AuthServiceV1 {
@@ -40,7 +41,7 @@ export class AuthServiceV1 {
       expiresAt: new Date(Date.now() + 1000 * 60 * 10), // 10 minutes
     });
 
-    const magicLinkTokenFormated = savedToken?.public_id + "." + token;
+    const magicLinkTokenFormated = `${savedToken?.publicId}.${token}`;
     const magicLinkUrl = new URL(env.WEB_CLIENT_APP_URL);
     magicLinkUrl.pathname = "/auth/magic-link/";
     magicLinkUrl.searchParams.set("token", magicLinkTokenFormated);
@@ -77,24 +78,28 @@ export class AuthServiceV1 {
   }) {
     const [magicLinkPublicId, magicLinkToken] = bruteMagicLinkToken.split(".");
 
+    if (!magicLinkPublicId || !magicLinkToken) {
+      throw new UnauthorizedError("Invalid magic link token!");
+    }
+
     const magicLink = await this.repository.getMagicLinkByPublicId({
       publicId: magicLinkPublicId,
     });
 
     if (!magicLink) throw new UnauthorizedError("Invalid magic link token!");
 
-    if (magicLink.expires_at.getTime() < new Date().getTime())
+    if (magicLink.expiresAt.getTime() < Date.now())
       throw new UnauthorizedError("Expired magic link token!");
     if (
-      magicLink.invalidated_at &&
-      magicLink.invalidated_at.getTime() < new Date().getTime()
+      magicLink.invalidatedAt &&
+      magicLink.invalidatedAt.getTime() < Date.now()
     )
       throw new UnauthorizedError("Invalidated magic link token!");
-    if (magicLink.used_at && magicLink.used_at.getTime() < new Date().getTime())
+    if (magicLink.usedAt && magicLink.usedAt.getTime() < Date.now())
       throw new UnauthorizedError("Used magic link token!");
 
     const tokenIsValid = await argon2.verify(
-      magicLink?.token_hash,
+      magicLink?.tokenHash,
       magicLinkToken,
     );
 
@@ -102,7 +107,7 @@ export class AuthServiceV1 {
 
     await this.repository.updateMagicLink({
       publicId: magicLinkPublicId,
-      invalidated_at: new Date(),
+      invalidatedAt: new Date(),
     });
 
     let user = await this.userRepository.findByEmail({
@@ -112,8 +117,8 @@ export class AuthServiceV1 {
     if (!user) {
       user = await this.userRepository.create({
         email: magicLink.email,
-        name: magicLink.email.split("@")[0],
-        username: magicLink.email.split("@")[0].toLowerCase(),
+        name: magicLink.email.split("@")[0] ?? magicLink.email,
+        username: magicLink.email.split("@")[0]?.toLowerCase() ?? magicLink.email.toLowerCase(),
       });
     }
 
@@ -128,7 +133,11 @@ export class AuthServiceV1 {
       tokenHash: sessionTokenHash,
     });
 
-    return session.public_id + "." + sessionToken;
+    if (!session) {
+      throw new InternalServerError("Failed to create session!");
+    }
+
+    return `${session.publicId}.${sessionToken}`;
   }
 
   async refreshSession({
@@ -150,7 +159,7 @@ export class AuthServiceV1 {
 
     const refreshWindowMs = 1000 * 60 * 60 * 24 * 10; // 10 days before expiration
     const timeUntilExpirationMs =
-      validatedSession.expires_at.getTime() - Date.now();
+      validatedSession.expiresAt.getTime() - Date.now();
 
     if (timeUntilExpirationMs > refreshWindowMs) {
       return {
@@ -163,9 +172,9 @@ export class AuthServiceV1 {
 
     await this.repository.rotateSession({
       id: validatedSession.id,
-      publicId: validatedSession.public_id,
-      expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-      token_hash: await argon2.hash(sessionToken),
+      publicId: validatedSession.publicId,
+      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      tokenHash: await argon2.hash(sessionToken),
     });
 
     const updatedSession = await this.repository.getSessionById({
@@ -175,7 +184,7 @@ export class AuthServiceV1 {
     if (!updatedSession) throw new NotFoundError("Session not found");
 
     return {
-      token: updatedSession.public_id + "." + sessionToken,
+      token: `${updatedSession.publicId}.${sessionToken}`,
       session: updatedSession,
       rotated: true,
     };
