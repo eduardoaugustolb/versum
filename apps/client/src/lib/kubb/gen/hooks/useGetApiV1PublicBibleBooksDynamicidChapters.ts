@@ -5,7 +5,7 @@
 
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import type { GetApiV1PublicBibleBooksDynamicidChaptersQueryResponse, GetApiV1PublicBibleBooksDynamicidChaptersPathParams, GetApiV1PublicBibleBooksDynamicidChaptersQueryParams, GetApiV1PublicBibleBooksDynamicidChapters400, GetApiV1PublicBibleBooksDynamicidChapters404, GetApiV1PublicBibleBooksDynamicidChapters500 } from "../models/GetApiV1PublicBibleBooksDynamicidChapters.ts";
+import type { GetApiV1PublicBibleBooksDynamicidChaptersQueryResponse, GetApiV1PublicBibleBooksDynamicidChaptersPathParams, GetApiV1PublicBibleBooksDynamicidChaptersQueryParams, GetApiV1PublicBibleBooksDynamicidChapters400, GetApiV1PublicBibleBooksDynamicidChapters404, GetApiV1PublicBibleBooksDynamicidChapters429, GetApiV1PublicBibleBooksDynamicidChapters500 } from "../models/GetApiV1PublicBibleBooksDynamicidChapters.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { getApiV1PublicBibleBooksDynamicidChapters } from "../clients/getApiV1PublicBibleBooksDynamicidChapters.ts";
 
@@ -16,7 +16,7 @@ export type GetApiV1PublicBibleBooksDynamicidChaptersQueryKey = ReturnType<typeo
 export function getApiV1PublicBibleBooksDynamicidChaptersQueryOptions(dynamicId: GetApiV1PublicBibleBooksDynamicidChaptersPathParams["dynamicId"], params?: GetApiV1PublicBibleBooksDynamicidChaptersQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getApiV1PublicBibleBooksDynamicidChaptersQueryKey(dynamicId, params)
-        return queryOptions<GetApiV1PublicBibleBooksDynamicidChaptersQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicidChapters400 | GetApiV1PublicBibleBooksDynamicidChapters404 | GetApiV1PublicBibleBooksDynamicidChapters500>, GetApiV1PublicBibleBooksDynamicidChaptersQueryResponse, typeof queryKey>({
+        return queryOptions<GetApiV1PublicBibleBooksDynamicidChaptersQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicidChapters400 | GetApiV1PublicBibleBooksDynamicidChapters404 | GetApiV1PublicBibleBooksDynamicidChapters429 | GetApiV1PublicBibleBooksDynamicidChapters500>, GetApiV1PublicBibleBooksDynamicidChaptersQueryResponse, typeof queryKey>({
          enabled: !!(dynamicId),
          queryKey,
          queryFn: async ({ signal }) => {
@@ -33,7 +33,7 @@ export function getApiV1PublicBibleBooksDynamicidChaptersQueryOptions(dynamicId:
  */
 export function useGetApiV1PublicBibleBooksDynamicidChapters<TData = GetApiV1PublicBibleBooksDynamicidChaptersQueryResponse, TQueryData = GetApiV1PublicBibleBooksDynamicidChaptersQueryResponse, TQueryKey extends QueryKey = GetApiV1PublicBibleBooksDynamicidChaptersQueryKey>(dynamicId: GetApiV1PublicBibleBooksDynamicidChaptersPathParams["dynamicId"], params?: GetApiV1PublicBibleBooksDynamicidChaptersQueryParams, options: 
 {
-  query?: Partial<QueryObserverOptions<GetApiV1PublicBibleBooksDynamicidChaptersQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicidChapters400 | GetApiV1PublicBibleBooksDynamicidChapters404 | GetApiV1PublicBibleBooksDynamicidChapters500>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  query?: Partial<QueryObserverOptions<GetApiV1PublicBibleBooksDynamicidChaptersQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicidChapters400 | GetApiV1PublicBibleBooksDynamicidChapters404 | GetApiV1PublicBibleBooksDynamicidChapters429 | GetApiV1PublicBibleBooksDynamicidChapters500>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }
 }
  = {}) {
@@ -47,7 +47,7 @@ export function useGetApiV1PublicBibleBooksDynamicidChapters<TData = GetApiV1Pub
           ...getApiV1PublicBibleBooksDynamicidChaptersQueryOptions(dynamicId, params, config),
           ...resolvedOptions,
           queryKey,
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicidChapters400 | GetApiV1PublicBibleBooksDynamicidChapters404 | GetApiV1PublicBibleBooksDynamicidChapters500>> & { queryKey: TQueryKey }
+         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicidChapters400 | GetApiV1PublicBibleBooksDynamicidChapters404 | GetApiV1PublicBibleBooksDynamicidChapters429 | GetApiV1PublicBibleBooksDynamicidChapters500>> & { queryKey: TQueryKey }
 
          query.queryKey = queryKey as TQueryKey
 

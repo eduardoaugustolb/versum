@@ -5,7 +5,7 @@
 
 import fetch from "@kubb/plugin-client/clients/fetch";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
-import type { GetApiV1UsersUsernameQueryResponse, GetApiV1UsersUsernamePathParams, GetApiV1UsersUsername404, GetApiV1UsersUsername500 } from "../models/GetApiV1UsersUsername.ts";
+import type { GetApiV1UsersUsernameQueryResponse, GetApiV1UsersUsernamePathParams, GetApiV1UsersUsername404, GetApiV1UsersUsername429, GetApiV1UsersUsername500 } from "../models/GetApiV1UsersUsername.ts";
 
 function getGetApiV1UsersUsernameUrl(username: GetApiV1UsersUsernamePathParams["username"]) {
   const res = { method: 'GET', url: `https://versum-api.squareweb.app//api/v1/users/@${username}` as const }
@@ -22,6 +22,6 @@ export async function getApiV1UsersUsername(username: GetApiV1UsersUsernamePathP
 
 
 
-  const res = await request<GetApiV1UsersUsernameQueryResponse, ResponseErrorConfig<GetApiV1UsersUsername404 | GetApiV1UsersUsername500>, unknown>({ method : "GET", url : getGetApiV1UsersUsernameUrl(username).url.toString(), ... requestConfig })
+  const res = await request<GetApiV1UsersUsernameQueryResponse, ResponseErrorConfig<GetApiV1UsersUsername404 | GetApiV1UsersUsername429 | GetApiV1UsersUsername500>, unknown>({ method : "GET", url : getGetApiV1UsersUsernameUrl(username).url.toString(), ... requestConfig })
   return res.data
 }

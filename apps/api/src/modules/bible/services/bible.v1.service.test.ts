@@ -1,7 +1,12 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { BibleServiceV1 } from "./bible.v1.service";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { BibleRepository } from "../repositories/bible.repository";
-import type { Book, Chapter, Verse, PaginatedResult } from "../repositories/bible.types.repository";
+import type {
+  Book,
+  Chapter,
+  PaginatedResult,
+  Verse,
+} from "../repositories/bible.types.repository";
+import { BibleServiceV1 } from "./bible.v1.service";
 
 describe("BibleServiceV1", () => {
   let service: BibleServiceV1;
@@ -42,7 +47,9 @@ describe("BibleServiceV1", () => {
 
   beforeEach(() => {
     const mockRepository = createMockRepository();
-    service = new BibleServiceV1({ repository: mockRepository as unknown as BibleRepository });
+    service = new BibleServiceV1({
+      repository: mockRepository as unknown as BibleRepository,
+    });
     vi.clearAllMocks();
   });
 
@@ -54,12 +61,17 @@ describe("BibleServiceV1", () => {
         total: 1,
       };
       mockRepository.findBooksPaginated.mockResolvedValue(paginatedResult);
-      service = new BibleServiceV1({ repository: mockRepository as unknown as BibleRepository });
+      service = new BibleServiceV1({
+        repository: mockRepository as unknown as BibleRepository,
+      });
 
       const result = await service.getBooksPaginated({ page: 1, limit: 10 });
 
       expect(result).toEqual(paginatedResult);
-      expect(mockRepository.findBooksPaginated).toHaveBeenCalledWith({ page: 1, limit: 10 });
+      expect(mockRepository.findBooksPaginated).toHaveBeenCalledWith({
+        page: 1,
+        limit: 10,
+      });
     });
 
     it("should return empty result when no books", async () => {
@@ -69,7 +81,9 @@ describe("BibleServiceV1", () => {
         total: 0,
       };
       mockRepository.findBooksPaginated.mockResolvedValue(paginatedResult);
-      service = new BibleServiceV1({ repository: mockRepository as unknown as BibleRepository });
+      service = new BibleServiceV1({
+        repository: mockRepository as unknown as BibleRepository,
+      });
 
       const result = await service.getBooksPaginated({ page: 1, limit: 10 });
 
@@ -82,21 +96,27 @@ describe("BibleServiceV1", () => {
     it("should return book when found", async () => {
       const mockRepository = createMockRepository();
       mockRepository.findBookByDynamicId.mockResolvedValue(mockBook);
-      service = new BibleServiceV1({ repository: mockRepository as unknown as BibleRepository });
+      service = new BibleServiceV1({
+        repository: mockRepository as unknown as BibleRepository,
+      });
 
       const result = await service.getBookByDynamicId({ dynamicId: "genesis" });
 
       expect(result).toEqual(mockBook);
-      expect(mockRepository.findBookByDynamicId).toHaveBeenCalledWith({ dynamicId: "genesis" });
+      expect(mockRepository.findBookByDynamicId).toHaveBeenCalledWith({
+        dynamicId: "genesis",
+      });
     });
 
     it("should throw error when book not found", async () => {
       const mockRepository = createMockRepository();
       mockRepository.findBookByDynamicId.mockResolvedValue(null);
-      service = new BibleServiceV1({ repository: mockRepository as unknown as BibleRepository });
+      service = new BibleServiceV1({
+        repository: mockRepository as unknown as BibleRepository,
+      });
 
       await expect(
-        service.getBookByDynamicId({ dynamicId: "nonexistent" })
+        service.getBookByDynamicId({ dynamicId: "nonexistent" }),
       ).rejects.toThrow("Book not found");
     });
   });
@@ -109,7 +129,9 @@ describe("BibleServiceV1", () => {
         total: 1,
       };
       mockRepository.findChaptersPaginated.mockResolvedValue(paginatedResult);
-      service = new BibleServiceV1({ repository: mockRepository as unknown as BibleRepository });
+      service = new BibleServiceV1({
+        repository: mockRepository as unknown as BibleRepository,
+      });
 
       const result = await service.getChaptersPaginated({
         dynamicId: "genesis",
@@ -127,14 +149,16 @@ describe("BibleServiceV1", () => {
         total: 0,
       };
       mockRepository.findChaptersPaginated.mockResolvedValue(paginatedResult);
-      service = new BibleServiceV1({ repository: mockRepository as unknown as BibleRepository });
+      service = new BibleServiceV1({
+        repository: mockRepository as unknown as BibleRepository,
+      });
 
       await expect(
         service.getChaptersPaginated({
           dynamicId: "nonexistent",
           page: 1,
           limit: 10,
-        })
+        }),
       ).rejects.toThrow("Book not found or no chapters available");
     });
   });
@@ -142,8 +166,12 @@ describe("BibleServiceV1", () => {
   describe("getChapter", () => {
     it("should return chapter when found", async () => {
       const mockRepository = createMockRepository();
-      mockRepository.findChapterByNumberAndDynamicId.mockResolvedValue(mockChapter);
-      service = new BibleServiceV1({ repository: mockRepository as unknown as BibleRepository });
+      mockRepository.findChapterByNumberAndDynamicId.mockResolvedValue(
+        mockChapter,
+      );
+      service = new BibleServiceV1({
+        repository: mockRepository as unknown as BibleRepository,
+      });
 
       const result = await service.getChapter({
         dynamicId: "genesis",
@@ -156,13 +184,15 @@ describe("BibleServiceV1", () => {
     it("should throw error when chapter not found", async () => {
       const mockRepository = createMockRepository();
       mockRepository.findChapterByNumberAndDynamicId.mockResolvedValue(null);
-      service = new BibleServiceV1({ repository: mockRepository as unknown as BibleRepository });
+      service = new BibleServiceV1({
+        repository: mockRepository as unknown as BibleRepository,
+      });
 
       await expect(
         service.getChapter({
           dynamicId: "genesis",
           chapterNumber: 999,
-        })
+        }),
       ).rejects.toThrow("Chapter not found");
     });
   });
@@ -175,7 +205,9 @@ describe("BibleServiceV1", () => {
         total: 1,
       };
       mockRepository.findVersesPaginated.mockResolvedValue(paginatedResult);
-      service = new BibleServiceV1({ repository: mockRepository as unknown as BibleRepository });
+      service = new BibleServiceV1({
+        repository: mockRepository as unknown as BibleRepository,
+      });
 
       const result = await service.getVersesPaginated({
         dynamicId: "genesis",
@@ -194,7 +226,9 @@ describe("BibleServiceV1", () => {
         total: 0,
       };
       mockRepository.findVersesPaginated.mockResolvedValue(paginatedResult);
-      service = new BibleServiceV1({ repository: mockRepository as unknown as BibleRepository });
+      service = new BibleServiceV1({
+        repository: mockRepository as unknown as BibleRepository,
+      });
 
       await expect(
         service.getVersesPaginated({
@@ -202,7 +236,7 @@ describe("BibleServiceV1", () => {
           chapterNumber: 999,
           page: 1,
           limit: 10,
-        })
+        }),
       ).rejects.toThrow("Chapter not found or no verses available");
     });
   });
@@ -211,7 +245,9 @@ describe("BibleServiceV1", () => {
     it("should return verse when found", async () => {
       const mockRepository = createMockRepository();
       mockRepository.findVerse.mockResolvedValue(mockVerse);
-      service = new BibleServiceV1({ repository: mockRepository as unknown as BibleRepository });
+      service = new BibleServiceV1({
+        repository: mockRepository as unknown as BibleRepository,
+      });
 
       const result = await service.getVerse({
         dynamicId: "genesis",
@@ -225,14 +261,16 @@ describe("BibleServiceV1", () => {
     it("should throw error when verse not found", async () => {
       const mockRepository = createMockRepository();
       mockRepository.findVerse.mockResolvedValue(null);
-      service = new BibleServiceV1({ repository: mockRepository as unknown as BibleRepository });
+      service = new BibleServiceV1({
+        repository: mockRepository as unknown as BibleRepository,
+      });
 
       await expect(
         service.getVerse({
           dynamicId: "genesis",
           chapterNumber: 1,
           verseNumber: 999,
-        })
+        }),
       ).rejects.toThrow("Verse not found");
     });
   });

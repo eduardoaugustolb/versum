@@ -5,7 +5,7 @@
 
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { InfiniteData, QueryKey, QueryClient, UseSuspenseInfiniteQueryOptions, UseSuspenseInfiniteQueryResult } from "@tanstack/react-query";
-import type { GetApiV1UsersUsernameQueryResponse, GetApiV1UsersUsernamePathParams, GetApiV1UsersUsername404, GetApiV1UsersUsername500 } from "../models/GetApiV1UsersUsername.ts";
+import type { GetApiV1UsersUsernameQueryResponse, GetApiV1UsersUsernamePathParams, GetApiV1UsersUsername404, GetApiV1UsersUsername429, GetApiV1UsersUsername500 } from "../models/GetApiV1UsersUsername.ts";
 import { infiniteQueryOptions, useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { getApiV1UsersUsername } from "../clients/getApiV1UsersUsername.ts";
 
@@ -16,7 +16,7 @@ export type GetApiV1UsersUsernameSuspenseInfiniteQueryKey = ReturnType<typeof ge
 export function getApiV1UsersUsernameSuspenseInfiniteQueryOptions(username: GetApiV1UsersUsernamePathParams["username"], config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getApiV1UsersUsernameSuspenseInfiniteQueryKey(username)
-        return infiniteQueryOptions<GetApiV1UsersUsernameQueryResponse, ResponseErrorConfig<GetApiV1UsersUsername404 | GetApiV1UsersUsername500>, InfiniteData<GetApiV1UsersUsernameQueryResponse>, typeof queryKey, number>({
+        return infiniteQueryOptions<GetApiV1UsersUsernameQueryResponse, ResponseErrorConfig<GetApiV1UsersUsername404 | GetApiV1UsersUsername429 | GetApiV1UsersUsername500>, InfiniteData<GetApiV1UsersUsernameQueryResponse>, typeof queryKey, number>({
          enabled: !!(username),
          queryKey,
          queryFn: async ({ signal }) => {
@@ -34,7 +34,7 @@ export function getApiV1UsersUsernameSuspenseInfiniteQueryOptions(username: GetA
  * @summary Obter usuário por username
  * {@link /api/v1/users/@:username}
  */
-export function useGetApiV1UsersUsernameSuspenseInfinite<TQueryFnData = GetApiV1UsersUsernameQueryResponse, TError = ResponseErrorConfig<GetApiV1UsersUsername404 | GetApiV1UsersUsername500>, TData = InfiniteData<TQueryFnData>, TQueryKey extends QueryKey = GetApiV1UsersUsernameSuspenseInfiniteQueryKey, TPageParam = number>(username: GetApiV1UsersUsernamePathParams["username"], options: 
+export function useGetApiV1UsersUsernameSuspenseInfinite<TQueryFnData = GetApiV1UsersUsernameQueryResponse, TError = ResponseErrorConfig<GetApiV1UsersUsername404 | GetApiV1UsersUsername429 | GetApiV1UsersUsername500>, TData = InfiniteData<TQueryFnData>, TQueryKey extends QueryKey = GetApiV1UsersUsernameSuspenseInfiniteQueryKey, TPageParam = number>(username: GetApiV1UsersUsernamePathParams["username"], options: 
 {
   query?: Partial<UseSuspenseInfiniteQueryOptions<TQueryFnData, TError, TData, TQueryKey, TPageParam>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }

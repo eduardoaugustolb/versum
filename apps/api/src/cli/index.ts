@@ -1,9 +1,9 @@
 import { logger } from "@/utils/logger";
 import { mainMenu } from "./menus/main-menu.menu";
 import { bibleAction } from "./modules/bible/bible.action";
+import { buildAction } from "./modules/build/build.action";
 import { databaseAction } from "./modules/db/database.action";
 import { openapiDocAction } from "./modules/openapi-doc/openapi-doc.action";
-import { buildAction } from "./modules/build/build.action";
 
 export async function initCli(clear = true) {
   if (clear) console.clear();

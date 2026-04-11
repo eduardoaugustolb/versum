@@ -1,4 +1,4 @@
-import { index, pgTable, smallint, text, unique, uuid } from "drizzle-orm/pg-core";
+import { pgTable, smallint, text, unique, uuid } from "drizzle-orm/pg-core";
 import { bibleChapters } from "./chapters.table.ts";
 
 export const bibleVerses = pgTable(

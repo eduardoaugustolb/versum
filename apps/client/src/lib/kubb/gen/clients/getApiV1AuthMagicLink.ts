@@ -5,7 +5,7 @@
 
 import fetch from "@kubb/plugin-client/clients/fetch";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
-import type { GetApiV1AuthMagicLinkQueryResponse, GetApiV1AuthMagicLinkQueryParams, GetApiV1AuthMagicLink400, GetApiV1AuthMagicLink401, GetApiV1AuthMagicLink500 } from "../models/GetApiV1AuthMagicLink.ts";
+import type { GetApiV1AuthMagicLinkQueryResponse, GetApiV1AuthMagicLinkQueryParams, GetApiV1AuthMagicLink400, GetApiV1AuthMagicLink401, GetApiV1AuthMagicLink429, GetApiV1AuthMagicLink500 } from "../models/GetApiV1AuthMagicLink.ts";
 
 function getGetApiV1AuthMagicLinkUrl() {
   const res = { method: 'GET', url: `https://versum-api.squareweb.app//api/v1/auth/magic-link` as const }
@@ -22,6 +22,6 @@ export async function getApiV1AuthMagicLink(params: GetApiV1AuthMagicLinkQueryPa
 
 
 
-  const res = await request<GetApiV1AuthMagicLinkQueryResponse, ResponseErrorConfig<GetApiV1AuthMagicLink400 | GetApiV1AuthMagicLink401 | GetApiV1AuthMagicLink500>, unknown>({ method : "GET", url : getGetApiV1AuthMagicLinkUrl().url.toString(), params, ... requestConfig })
+  const res = await request<GetApiV1AuthMagicLinkQueryResponse, ResponseErrorConfig<GetApiV1AuthMagicLink400 | GetApiV1AuthMagicLink401 | GetApiV1AuthMagicLink429 | GetApiV1AuthMagicLink500>, unknown>({ method : "GET", url : getGetApiV1AuthMagicLinkUrl().url.toString(), params, ... requestConfig })
   return res.data
 }

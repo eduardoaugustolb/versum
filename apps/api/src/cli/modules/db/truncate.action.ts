@@ -1,11 +1,11 @@
-import prompts from "prompts";
 import { sql } from "drizzle-orm";
+import prompts from "prompts";
 import { db } from "@/infrastructure/db/config.ts";
 import { logger } from "@/utils/logger";
 import {
   assertTruncatableTableNames,
-  type TruncatableTableName,
   TRUNCATE_PRESETS,
+  type TruncatableTableName,
 } from "./truncate.constants.ts";
 import {
   truncateConfirmPrompt,

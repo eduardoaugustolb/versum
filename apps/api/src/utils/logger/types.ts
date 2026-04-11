@@ -1,4 +1,4 @@
-import { colors, icons } from "./constants.ts";
+import type { colors, icons } from "./constants.ts";
 
 export type LoggerConfigLevel = "debug" | "info" | "warn" | "error" | "success";
 

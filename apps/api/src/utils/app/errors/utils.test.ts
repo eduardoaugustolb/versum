@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { isValidationError, extractErrorMessage } from "./utils";
+import { describe, expect, it } from "vitest";
+import { extractErrorMessage, isValidationError } from "./utils";
 
 describe("error utils", () => {
   describe("isValidationError", () => {
@@ -63,11 +63,15 @@ describe("error utils", () => {
 
   describe("extractErrorMessage", () => {
     it("should extract message from string error", () => {
-      expect(extractErrorMessage("Simple error message")).toBe("Simple error message");
+      expect(extractErrorMessage("Simple error message")).toBe(
+        "Simple error message",
+      );
     });
 
     it("should extract message from empty string error with fallback", () => {
-      expect(extractErrorMessage("", "Custom fallback")).toBe("Custom fallback");
+      expect(extractErrorMessage("", "Custom fallback")).toBe(
+        "Custom fallback",
+      );
     });
 
     it("should extract message from empty string without fallback", () => {
@@ -91,7 +95,9 @@ describe("error utils", () => {
 
     it("should use fallback for Error with empty message", () => {
       const error = new Error("");
-      expect(extractErrorMessage(error, "Custom fallback")).toBe("Custom fallback");
+      expect(extractErrorMessage(error, "Custom fallback")).toBe(
+        "Custom fallback",
+      );
     });
 
     it("should use default fallback for Error with empty message", () => {
@@ -115,7 +121,9 @@ describe("error utils", () => {
       const error = new Error('[{"invalid":"Field is required"}]');
       error.name = "ZodError";
 
-      expect(extractErrorMessage(error)).toBe('[{"invalid":"Field is required"}]');
+      expect(extractErrorMessage(error)).toBe(
+        '[{"invalid":"Field is required"}]',
+      );
     });
 
     it("should handle Error with ZodError name and empty array message", () => {
@@ -160,11 +168,15 @@ describe("error utils", () => {
     });
 
     it("should return fallback for null input", () => {
-      expect(extractErrorMessage(null, "Custom fallback")).toBe("Custom fallback");
+      expect(extractErrorMessage(null, "Custom fallback")).toBe(
+        "Custom fallback",
+      );
     });
 
     it("should return fallback for undefined input", () => {
-      expect(extractErrorMessage(undefined, "Custom fallback")).toBe("Custom fallback");
+      expect(extractErrorMessage(undefined, "Custom fallback")).toBe(
+        "Custom fallback",
+      );
     });
 
     it("should return default fallback for null input", () => {
@@ -176,17 +188,21 @@ describe("error utils", () => {
     });
 
     it("should return fallback for number input", () => {
-      expect(extractErrorMessage(0, "Fallback for number")).toBe("Fallback for number");
+      expect(extractErrorMessage(0, "Fallback for number")).toBe(
+        "Fallback for number",
+      );
     });
 
     it("should return fallback for object input", () => {
       expect(extractErrorMessage({}, "Fallback for object")).toBe(
-        "Fallback for object"
+        "Fallback for object",
       );
     });
 
     it("should return fallback for array input", () => {
-      expect(extractErrorMessage([], "Fallback for array")).toBe("Fallback for array");
+      expect(extractErrorMessage([], "Fallback for array")).toBe(
+        "Fallback for array",
+      );
     });
 
     it("should extract message from very long error", () => {
@@ -198,7 +214,9 @@ describe("error utils", () => {
 
     it("should handle Error with unicode characters", () => {
       const error = new Error("Erro com acentos: café, múltiplos");
-      expect(extractErrorMessage(error)).toBe("Erro com acentos: café, múltiplos");
+      expect(extractErrorMessage(error)).toBe(
+        "Erro com acentos: café, múltiplos",
+      );
     });
 
     it("should handle Error with special characters", () => {

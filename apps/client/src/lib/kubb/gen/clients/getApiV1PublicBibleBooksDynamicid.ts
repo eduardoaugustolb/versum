@@ -5,7 +5,7 @@
 
 import fetch from "@kubb/plugin-client/clients/fetch";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
-import type { GetApiV1PublicBibleBooksDynamicidQueryResponse, GetApiV1PublicBibleBooksDynamicidPathParams, GetApiV1PublicBibleBooksDynamicid400, GetApiV1PublicBibleBooksDynamicid404, GetApiV1PublicBibleBooksDynamicid500 } from "../models/GetApiV1PublicBibleBooksDynamicid.ts";
+import type { GetApiV1PublicBibleBooksDynamicidQueryResponse, GetApiV1PublicBibleBooksDynamicidPathParams, GetApiV1PublicBibleBooksDynamicid400, GetApiV1PublicBibleBooksDynamicid404, GetApiV1PublicBibleBooksDynamicid429, GetApiV1PublicBibleBooksDynamicid500 } from "../models/GetApiV1PublicBibleBooksDynamicid.ts";
 
 function getGetApiV1PublicBibleBooksDynamicidUrl(dynamicId: GetApiV1PublicBibleBooksDynamicidPathParams["dynamicId"]) {
   const res = { method: 'GET', url: `https://versum-api.squareweb.app//api/v1/public/bible/books/${dynamicId}` as const }
@@ -22,6 +22,6 @@ export async function getApiV1PublicBibleBooksDynamicid(dynamicId: GetApiV1Publi
 
 
 
-  const res = await request<GetApiV1PublicBibleBooksDynamicidQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicid400 | GetApiV1PublicBibleBooksDynamicid404 | GetApiV1PublicBibleBooksDynamicid500>, unknown>({ method : "GET", url : getGetApiV1PublicBibleBooksDynamicidUrl(dynamicId).url.toString(), ... requestConfig })
+  const res = await request<GetApiV1PublicBibleBooksDynamicidQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicid400 | GetApiV1PublicBibleBooksDynamicid404 | GetApiV1PublicBibleBooksDynamicid429 | GetApiV1PublicBibleBooksDynamicid500>, unknown>({ method : "GET", url : getGetApiV1PublicBibleBooksDynamicidUrl(dynamicId).url.toString(), ... requestConfig })
   return res.data
 }

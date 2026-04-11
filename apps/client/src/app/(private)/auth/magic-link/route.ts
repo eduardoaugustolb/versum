@@ -28,6 +28,11 @@ export async function GET(req: NextRequest) {
   try {
     let rawResponse: Response | undefined;
 
+    const forwardedFor = req.headers.get("x-forwarded-for");
+    const realIp = req.headers.get("x-real-ip");
+    const userAgent = req.headers.get("user-agent") ?? "unknown";
+    const clientIp = forwardedFor?.split(",")[0]?.trim() ?? realIp ?? "unknown";
+
     const customClient: Client = async <T>(
       config: RequestConfig,
     ): Promise<ResponseConfig<T>> => {
@@ -40,10 +45,15 @@ export async function GET(req: NextRequest) {
       let targetUrl = [config.baseURL, config.url].filter(Boolean).join("");
       if (config.params) targetUrl += `?${normalizedParams}`;
 
+      const headers = new Headers(config.headers);
+      headers.set("x-forwarded-for", clientIp);
+      headers.set("user-agent", userAgent);
+
       rawResponse = await fetch(targetUrl, {
         method: config.method?.toUpperCase(),
         signal: config.signal,
-        headers: config.headers,
+        headers,
+        credentials: "include",
       });
 
       return {

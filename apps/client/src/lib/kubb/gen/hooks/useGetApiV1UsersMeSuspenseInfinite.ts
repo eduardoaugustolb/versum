@@ -5,7 +5,7 @@
 
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { InfiniteData, QueryKey, QueryClient, UseSuspenseInfiniteQueryOptions, UseSuspenseInfiniteQueryResult } from "@tanstack/react-query";
-import type { GetApiV1UsersMeQueryResponse, GetApiV1UsersMe401, GetApiV1UsersMe404, GetApiV1UsersMe500 } from "../models/GetApiV1UsersMe.ts";
+import type { GetApiV1UsersMeQueryResponse, GetApiV1UsersMe401, GetApiV1UsersMe404, GetApiV1UsersMe429, GetApiV1UsersMe500 } from "../models/GetApiV1UsersMe.ts";
 import { infiniteQueryOptions, useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { getApiV1UsersMe } from "../clients/getApiV1UsersMe.ts";
 
@@ -16,7 +16,7 @@ export type GetApiV1UsersMeSuspenseInfiniteQueryKey = ReturnType<typeof getApiV1
 export function getApiV1UsersMeSuspenseInfiniteQueryOptions(config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getApiV1UsersMeSuspenseInfiniteQueryKey()
-        return infiniteQueryOptions<GetApiV1UsersMeQueryResponse, ResponseErrorConfig<GetApiV1UsersMe401 | GetApiV1UsersMe404 | GetApiV1UsersMe500>, InfiniteData<GetApiV1UsersMeQueryResponse>, typeof queryKey, number>({
+        return infiniteQueryOptions<GetApiV1UsersMeQueryResponse, ResponseErrorConfig<GetApiV1UsersMe401 | GetApiV1UsersMe404 | GetApiV1UsersMe429 | GetApiV1UsersMe500>, InfiniteData<GetApiV1UsersMeQueryResponse>, typeof queryKey, number>({
          
          queryKey,
          queryFn: async ({ signal }) => {
@@ -34,7 +34,7 @@ export function getApiV1UsersMeSuspenseInfiniteQueryOptions(config: Partial<Requ
  * @summary Obter usuário autenticado
  * {@link /api/v1/users/@me}
  */
-export function useGetApiV1UsersMeSuspenseInfinite<TQueryFnData = GetApiV1UsersMeQueryResponse, TError = ResponseErrorConfig<GetApiV1UsersMe401 | GetApiV1UsersMe404 | GetApiV1UsersMe500>, TData = InfiniteData<TQueryFnData>, TQueryKey extends QueryKey = GetApiV1UsersMeSuspenseInfiniteQueryKey, TPageParam = number>(options: 
+export function useGetApiV1UsersMeSuspenseInfinite<TQueryFnData = GetApiV1UsersMeQueryResponse, TError = ResponseErrorConfig<GetApiV1UsersMe401 | GetApiV1UsersMe404 | GetApiV1UsersMe429 | GetApiV1UsersMe500>, TData = InfiniteData<TQueryFnData>, TQueryKey extends QueryKey = GetApiV1UsersMeSuspenseInfiniteQueryKey, TPageParam = number>(options: 
 {
   query?: Partial<UseSuspenseInfiniteQueryOptions<TQueryFnData, TError, TData, TQueryKey, TPageParam>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }

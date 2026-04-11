@@ -1,6 +1,6 @@
 import { relations } from "drizzle-orm";
-import { sessions } from "./sessions.table.ts";
 import { users } from "../../../infrastructure/db/schema.ts";
+import { sessions } from "./sessions.table.ts";
 
 export const authRelations = relations(sessions, ({ one }) => ({
   user: one(users, {

@@ -6,7 +6,7 @@ export const envSchema = z.object({
   REDIS_DATABASE_URL: z.string(),
   REDIS_DATABASE_CERT_PATH: z.string(),
   PORT: z.string(),
-  DENO_ENV: z.string(),
+  BUN_ENV: z.string(),
   ENCRYPT_SECRET: z.string(),
   RESEND_API_KEY: z.string(),
   DEBUG: z.string().optional(),

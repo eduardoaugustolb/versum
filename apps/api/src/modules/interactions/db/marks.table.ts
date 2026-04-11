@@ -6,8 +6,8 @@ import {
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
-import { users } from "../../users/db/users.table.ts";
 import { bibleVerses } from "../../bible/db/verses.table.ts";
+import { users } from "../../users/db/users.table.ts";
 
 export const marks = pgTable(
   "marks",

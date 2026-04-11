@@ -37,6 +37,11 @@ export type GetApiV1PublicBibleBooksDynamicidChaptersNumber400 = ApiErrorRespons
 export type GetApiV1PublicBibleBooksDynamicidChaptersNumber404 = ApiErrorResponse;
 
 /**
+ * @description Muitas requisições
+*/
+export type GetApiV1PublicBibleBooksDynamicidChaptersNumber429 = ApiErrorResponse;
+
+/**
  * @description Erro interno do servidor
 */
 export type GetApiV1PublicBibleBooksDynamicidChaptersNumber500 = ApiErrorResponse;
@@ -46,5 +51,5 @@ export type GetApiV1PublicBibleBooksDynamicidChaptersNumberQueryResponse = GetAp
 export type GetApiV1PublicBibleBooksDynamicidChaptersNumberQuery = {
     Response: GetApiV1PublicBibleBooksDynamicidChaptersNumber200;
     PathParams: GetApiV1PublicBibleBooksDynamicidChaptersNumberPathParams;
-    Errors: GetApiV1PublicBibleBooksDynamicidChaptersNumber400 | GetApiV1PublicBibleBooksDynamicidChaptersNumber404 | GetApiV1PublicBibleBooksDynamicidChaptersNumber500;
+    Errors: GetApiV1PublicBibleBooksDynamicidChaptersNumber400 | GetApiV1PublicBibleBooksDynamicidChaptersNumber404 | GetApiV1PublicBibleBooksDynamicidChaptersNumber429 | GetApiV1PublicBibleBooksDynamicidChaptersNumber500;
 };

@@ -5,7 +5,7 @@
 
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { InfiniteData, QueryKey, QueryClient, UseSuspenseInfiniteQueryOptions, UseSuspenseInfiniteQueryResult } from "@tanstack/react-query";
-import type { GetApiV1PublicBibleBooksDynamicidQueryResponse, GetApiV1PublicBibleBooksDynamicidPathParams, GetApiV1PublicBibleBooksDynamicid400, GetApiV1PublicBibleBooksDynamicid404, GetApiV1PublicBibleBooksDynamicid500 } from "../models/GetApiV1PublicBibleBooksDynamicid.ts";
+import type { GetApiV1PublicBibleBooksDynamicidQueryResponse, GetApiV1PublicBibleBooksDynamicidPathParams, GetApiV1PublicBibleBooksDynamicid400, GetApiV1PublicBibleBooksDynamicid404, GetApiV1PublicBibleBooksDynamicid429, GetApiV1PublicBibleBooksDynamicid500 } from "../models/GetApiV1PublicBibleBooksDynamicid.ts";
 import { infiniteQueryOptions, useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { getApiV1PublicBibleBooksDynamicid } from "../clients/getApiV1PublicBibleBooksDynamicid.ts";
 
@@ -16,7 +16,7 @@ export type GetApiV1PublicBibleBooksDynamicidSuspenseInfiniteQueryKey = ReturnTy
 export function getApiV1PublicBibleBooksDynamicidSuspenseInfiniteQueryOptions(dynamicId: GetApiV1PublicBibleBooksDynamicidPathParams["dynamicId"], config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getApiV1PublicBibleBooksDynamicidSuspenseInfiniteQueryKey(dynamicId)
-        return infiniteQueryOptions<GetApiV1PublicBibleBooksDynamicidQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicid400 | GetApiV1PublicBibleBooksDynamicid404 | GetApiV1PublicBibleBooksDynamicid500>, InfiniteData<GetApiV1PublicBibleBooksDynamicidQueryResponse>, typeof queryKey, number>({
+        return infiniteQueryOptions<GetApiV1PublicBibleBooksDynamicidQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicid400 | GetApiV1PublicBibleBooksDynamicid404 | GetApiV1PublicBibleBooksDynamicid429 | GetApiV1PublicBibleBooksDynamicid500>, InfiniteData<GetApiV1PublicBibleBooksDynamicidQueryResponse>, typeof queryKey, number>({
          enabled: !!(dynamicId),
          queryKey,
          queryFn: async ({ signal }) => {
@@ -34,7 +34,7 @@ export function getApiV1PublicBibleBooksDynamicidSuspenseInfiniteQueryOptions(dy
  * @summary Obter livro por slug ou nome
  * {@link /api/v1/public/bible/books/:dynamicId}
  */
-export function useGetApiV1PublicBibleBooksDynamicidSuspenseInfinite<TQueryFnData = GetApiV1PublicBibleBooksDynamicidQueryResponse, TError = ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicid400 | GetApiV1PublicBibleBooksDynamicid404 | GetApiV1PublicBibleBooksDynamicid500>, TData = InfiniteData<TQueryFnData>, TQueryKey extends QueryKey = GetApiV1PublicBibleBooksDynamicidSuspenseInfiniteQueryKey, TPageParam = number>(dynamicId: GetApiV1PublicBibleBooksDynamicidPathParams["dynamicId"], options: 
+export function useGetApiV1PublicBibleBooksDynamicidSuspenseInfinite<TQueryFnData = GetApiV1PublicBibleBooksDynamicidQueryResponse, TError = ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicid400 | GetApiV1PublicBibleBooksDynamicid404 | GetApiV1PublicBibleBooksDynamicid429 | GetApiV1PublicBibleBooksDynamicid500>, TData = InfiniteData<TQueryFnData>, TQueryKey extends QueryKey = GetApiV1PublicBibleBooksDynamicidSuspenseInfiniteQueryKey, TPageParam = number>(dynamicId: GetApiV1PublicBibleBooksDynamicidPathParams["dynamicId"], options: 
 {
   query?: Partial<UseSuspenseInfiniteQueryOptions<TQueryFnData, TError, TData, TQueryKey, TPageParam>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }

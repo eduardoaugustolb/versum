@@ -5,7 +5,7 @@
 
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import type { PatchApiV1UsersMeMutationRequest, PatchApiV1UsersMeMutationResponse, PatchApiV1UsersMe400, PatchApiV1UsersMe401, PatchApiV1UsersMe404, PatchApiV1UsersMe500 } from "../models/PatchApiV1UsersMe.ts";
+import type { PatchApiV1UsersMeMutationRequest, PatchApiV1UsersMeMutationResponse, PatchApiV1UsersMe400, PatchApiV1UsersMe401, PatchApiV1UsersMe404, PatchApiV1UsersMe429, PatchApiV1UsersMe500 } from "../models/PatchApiV1UsersMe.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 import { patchApiV1UsersMe } from "../clients/patchApiV1UsersMe.ts";
 
@@ -16,7 +16,7 @@ export type PatchApiV1UsersMeMutationKey = ReturnType<typeof patchApiV1UsersMeMu
 export function patchApiV1UsersMeMutationOptions<TContext = unknown>(config: Partial<RequestConfig<PatchApiV1UsersMeMutationRequest>> & { client?: Client } = {}) {
 
         const mutationKey = patchApiV1UsersMeMutationKey()
-        return mutationOptions<PatchApiV1UsersMeMutationResponse, ResponseErrorConfig<PatchApiV1UsersMe400 | PatchApiV1UsersMe401 | PatchApiV1UsersMe404 | PatchApiV1UsersMe500>, {data?: PatchApiV1UsersMeMutationRequest}, TContext>({
+        return mutationOptions<PatchApiV1UsersMeMutationResponse, ResponseErrorConfig<PatchApiV1UsersMe400 | PatchApiV1UsersMe401 | PatchApiV1UsersMe404 | PatchApiV1UsersMe429 | PatchApiV1UsersMe500>, {data?: PatchApiV1UsersMeMutationRequest}, TContext>({
           mutationKey,
           mutationFn: async({ data }) => {
             return patchApiV1UsersMe(data, config)
@@ -32,7 +32,7 @@ export function patchApiV1UsersMeMutationOptions<TContext = unknown>(config: Par
  */
 export function usePatchApiV1UsersMe<TContext>(options: 
 {
-  mutation?: UseMutationOptions<PatchApiV1UsersMeMutationResponse, ResponseErrorConfig<PatchApiV1UsersMe400 | PatchApiV1UsersMe401 | PatchApiV1UsersMe404 | PatchApiV1UsersMe500>, {data?: PatchApiV1UsersMeMutationRequest}, TContext> & { client?: QueryClient },
+  mutation?: UseMutationOptions<PatchApiV1UsersMeMutationResponse, ResponseErrorConfig<PatchApiV1UsersMe400 | PatchApiV1UsersMe401 | PatchApiV1UsersMe404 | PatchApiV1UsersMe429 | PatchApiV1UsersMe500>, {data?: PatchApiV1UsersMeMutationRequest}, TContext> & { client?: QueryClient },
   client?: Partial<RequestConfig<PatchApiV1UsersMeMutationRequest>> & { client?: Client },
 }
  = {}) {
@@ -41,13 +41,13 @@ export function usePatchApiV1UsersMe<TContext>(options:
           const { client: queryClient, ...mutationOptions } = mutation;
           const mutationKey = mutationOptions.mutationKey ?? patchApiV1UsersMeMutationKey()
 
-          const baseOptions = patchApiV1UsersMeMutationOptions(config) as UseMutationOptions<PatchApiV1UsersMeMutationResponse, ResponseErrorConfig<PatchApiV1UsersMe400 | PatchApiV1UsersMe401 | PatchApiV1UsersMe404 | PatchApiV1UsersMe500>, {data?: PatchApiV1UsersMeMutationRequest}, TContext>
+          const baseOptions = patchApiV1UsersMeMutationOptions(config) as UseMutationOptions<PatchApiV1UsersMeMutationResponse, ResponseErrorConfig<PatchApiV1UsersMe400 | PatchApiV1UsersMe401 | PatchApiV1UsersMe404 | PatchApiV1UsersMe429 | PatchApiV1UsersMe500>, {data?: PatchApiV1UsersMeMutationRequest}, TContext>
           
 
-          return useMutation<PatchApiV1UsersMeMutationResponse, ResponseErrorConfig<PatchApiV1UsersMe400 | PatchApiV1UsersMe401 | PatchApiV1UsersMe404 | PatchApiV1UsersMe500>, {data?: PatchApiV1UsersMeMutationRequest}, TContext>({
+          return useMutation<PatchApiV1UsersMeMutationResponse, ResponseErrorConfig<PatchApiV1UsersMe400 | PatchApiV1UsersMe401 | PatchApiV1UsersMe404 | PatchApiV1UsersMe429 | PatchApiV1UsersMe500>, {data?: PatchApiV1UsersMeMutationRequest}, TContext>({
             ...baseOptions,
             mutationKey,
             ...mutationOptions,
-          }, queryClient) as UseMutationResult<PatchApiV1UsersMeMutationResponse, ResponseErrorConfig<PatchApiV1UsersMe400 | PatchApiV1UsersMe401 | PatchApiV1UsersMe404 | PatchApiV1UsersMe500>, {data?: PatchApiV1UsersMeMutationRequest}, TContext>
+          }, queryClient) as UseMutationResult<PatchApiV1UsersMeMutationResponse, ResponseErrorConfig<PatchApiV1UsersMe400 | PatchApiV1UsersMe401 | PatchApiV1UsersMe404 | PatchApiV1UsersMe429 | PatchApiV1UsersMe500>, {data?: PatchApiV1UsersMeMutationRequest}, TContext>
       
 }

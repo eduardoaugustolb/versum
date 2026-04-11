@@ -1,7 +1,7 @@
-type Route = {
-  startWith: string;
-  redirectTo: string;
-} & ({ path: string } | { startWith: string });
+type Route = { redirectTo: string } & (
+  | { path: string }
+  | { startWith: string }
+);
 
 type ProtectedRoute = Route &
   (
@@ -20,7 +20,7 @@ export const protectedRoutes: ProtectedRoute[] = [
     requiresGhest: true,
   },
   {
-    startWith: "/auth/magic-link",
+    path: "/auth/magic-link",
     redirectTo: "/",
     requiresGhest: true,
   },
@@ -28,7 +28,7 @@ export const protectedRoutes: ProtectedRoute[] = [
 
 export function findProtectedRoute({ pathname }: { pathname: string }) {
   return protectedRoutes.find((r) =>
-    r.startWith
+    "startWith" in r
       ? pathname.startsWith(r.startWith)
       : "path" in r
         ? r.path === pathname

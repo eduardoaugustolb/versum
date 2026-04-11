@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { PatchApiV1UsersMe200, PatchApiV1UsersMe400, PatchApiV1UsersMe401, PatchApiV1UsersMe404, PatchApiV1UsersMe500, PatchApiV1UsersMeMutationRequest, PatchApiV1UsersMeMutationResponse } from "../models/PatchApiV1UsersMe.ts";
+import type { PatchApiV1UsersMe200, PatchApiV1UsersMe400, PatchApiV1UsersMe401, PatchApiV1UsersMe404, PatchApiV1UsersMe429, PatchApiV1UsersMe500, PatchApiV1UsersMeMutationRequest, PatchApiV1UsersMeMutationResponse } from "../models/PatchApiV1UsersMe.ts";
 import { faker } from "@faker-js/faker";
 import { createApiErrorResponse } from "./createApiErrorResponse.ts";
 import { createUpdateAuthenticatedUserBody } from "./createUpdateAuthenticatedUserBody.ts";
@@ -37,6 +37,14 @@ export function createPatchApiV1UsersMe401(data?: Partial<PatchApiV1UsersMe401>)
  * @description Recurso não encontrado
  */
 export function createPatchApiV1UsersMe404(data?: Partial<PatchApiV1UsersMe404>): PatchApiV1UsersMe404 {
+
+  return createApiErrorResponse(data)
+}
+
+/**
+ * @description Muitas requisições
+ */
+export function createPatchApiV1UsersMe429(data?: Partial<PatchApiV1UsersMe429>): PatchApiV1UsersMe429 {
 
   return createApiErrorResponse(data)
 }

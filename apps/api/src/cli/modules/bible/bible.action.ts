@@ -1,12 +1,12 @@
 import prompts from "prompts";
 import { logger } from "@/utils/logger";
+import { initCli } from "../../index";
+import { type SeedBibleOptions, seedBibleFromJson } from "./seed/seed.action";
 import {
-  seedBibleJsonPathPrompt,
   confirmSeedPromptMenu,
+  seedBibleJsonPathPrompt,
   seedOptionsPromptMenu,
 } from "./seed/seed.menus";
-import { seedBibleFromJson, type SeedBibleOptions } from "./seed/seed.action";
-import { initCli } from "../../index";
 
 export const bibleMenu = async () =>
   await prompts({
@@ -74,7 +74,10 @@ export async function bibleAction() {
 
     case "back":
       console.clear();
-      logger({ color: "blue", icon: "", level: "info" }, "Voltando para o menu...");
+      logger(
+        { color: "blue", icon: "", level: "info" },
+        "Voltando para o menu...",
+      );
       await initCli(false);
       return;
   }

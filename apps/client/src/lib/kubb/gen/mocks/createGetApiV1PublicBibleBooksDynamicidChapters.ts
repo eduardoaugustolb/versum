@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { GetApiV1PublicBibleBooksDynamicidChapters200, GetApiV1PublicBibleBooksDynamicidChapters400, GetApiV1PublicBibleBooksDynamicidChapters404, GetApiV1PublicBibleBooksDynamicidChapters500, GetApiV1PublicBibleBooksDynamicidChaptersPathParams, GetApiV1PublicBibleBooksDynamicidChaptersQueryParams, GetApiV1PublicBibleBooksDynamicidChaptersQueryResponse } from "../models/GetApiV1PublicBibleBooksDynamicidChapters.ts";
+import type { GetApiV1PublicBibleBooksDynamicidChapters200, GetApiV1PublicBibleBooksDynamicidChapters400, GetApiV1PublicBibleBooksDynamicidChapters404, GetApiV1PublicBibleBooksDynamicidChapters429, GetApiV1PublicBibleBooksDynamicidChapters500, GetApiV1PublicBibleBooksDynamicidChaptersPathParams, GetApiV1PublicBibleBooksDynamicidChaptersQueryParams, GetApiV1PublicBibleBooksDynamicidChaptersQueryResponse } from "../models/GetApiV1PublicBibleBooksDynamicidChapters.ts";
 import { faker } from "@faker-js/faker";
 import { createApiErrorResponse } from "./createApiErrorResponse.ts";
 import { createGetChaptersResponse } from "./createGetChaptersResponse.ts";
@@ -44,6 +44,14 @@ export function createGetApiV1PublicBibleBooksDynamicidChapters400(data?: Partia
  * @description Recurso não encontrado
  */
 export function createGetApiV1PublicBibleBooksDynamicidChapters404(data?: Partial<GetApiV1PublicBibleBooksDynamicidChapters404>): GetApiV1PublicBibleBooksDynamicidChapters404 {
+
+  return createApiErrorResponse(data)
+}
+
+/**
+ * @description Muitas requisições
+ */
+export function createGetApiV1PublicBibleBooksDynamicidChapters429(data?: Partial<GetApiV1PublicBibleBooksDynamicidChapters429>): GetApiV1PublicBibleBooksDynamicidChapters429 {
 
   return createApiErrorResponse(data)
 }

@@ -1,6 +1,6 @@
 import type { Context } from "hono";
-import { logger } from "../../logger/index.ts";
 import { ApiErrorViewModel } from "../../../view-models/default/error.view-model.ts";
+import { logger } from "../../logger/index.ts";
 import {
   BadRequestError,
   BaseError,

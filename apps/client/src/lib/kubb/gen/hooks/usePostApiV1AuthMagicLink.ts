@@ -5,7 +5,7 @@
 
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import type { PostApiV1AuthMagicLinkMutationRequest, PostApiV1AuthMagicLinkMutationResponse, PostApiV1AuthMagicLink400, PostApiV1AuthMagicLink500 } from "../models/PostApiV1AuthMagicLink.ts";
+import type { PostApiV1AuthMagicLinkMutationRequest, PostApiV1AuthMagicLinkMutationResponse, PostApiV1AuthMagicLink400, PostApiV1AuthMagicLink429, PostApiV1AuthMagicLink500 } from "../models/PostApiV1AuthMagicLink.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 import { postApiV1AuthMagicLink } from "../clients/postApiV1AuthMagicLink.ts";
 
@@ -16,7 +16,7 @@ export type PostApiV1AuthMagicLinkMutationKey = ReturnType<typeof postApiV1AuthM
 export function postApiV1AuthMagicLinkMutationOptions<TContext = unknown>(config: Partial<RequestConfig<PostApiV1AuthMagicLinkMutationRequest>> & { client?: Client } = {}) {
 
         const mutationKey = postApiV1AuthMagicLinkMutationKey()
-        return mutationOptions<PostApiV1AuthMagicLinkMutationResponse, ResponseErrorConfig<PostApiV1AuthMagicLink400 | PostApiV1AuthMagicLink500>, {data: PostApiV1AuthMagicLinkMutationRequest}, TContext>({
+        return mutationOptions<PostApiV1AuthMagicLinkMutationResponse, ResponseErrorConfig<PostApiV1AuthMagicLink400 | PostApiV1AuthMagicLink429 | PostApiV1AuthMagicLink500>, {data: PostApiV1AuthMagicLinkMutationRequest}, TContext>({
           mutationKey,
           mutationFn: async({ data }) => {
             return postApiV1AuthMagicLink(data, config)
@@ -32,7 +32,7 @@ export function postApiV1AuthMagicLinkMutationOptions<TContext = unknown>(config
  */
 export function usePostApiV1AuthMagicLink<TContext>(options: 
 {
-  mutation?: UseMutationOptions<PostApiV1AuthMagicLinkMutationResponse, ResponseErrorConfig<PostApiV1AuthMagicLink400 | PostApiV1AuthMagicLink500>, {data: PostApiV1AuthMagicLinkMutationRequest}, TContext> & { client?: QueryClient },
+  mutation?: UseMutationOptions<PostApiV1AuthMagicLinkMutationResponse, ResponseErrorConfig<PostApiV1AuthMagicLink400 | PostApiV1AuthMagicLink429 | PostApiV1AuthMagicLink500>, {data: PostApiV1AuthMagicLinkMutationRequest}, TContext> & { client?: QueryClient },
   client?: Partial<RequestConfig<PostApiV1AuthMagicLinkMutationRequest>> & { client?: Client },
 }
  = {}) {
@@ -41,13 +41,13 @@ export function usePostApiV1AuthMagicLink<TContext>(options:
           const { client: queryClient, ...mutationOptions } = mutation;
           const mutationKey = mutationOptions.mutationKey ?? postApiV1AuthMagicLinkMutationKey()
 
-          const baseOptions = postApiV1AuthMagicLinkMutationOptions(config) as UseMutationOptions<PostApiV1AuthMagicLinkMutationResponse, ResponseErrorConfig<PostApiV1AuthMagicLink400 | PostApiV1AuthMagicLink500>, {data: PostApiV1AuthMagicLinkMutationRequest}, TContext>
+          const baseOptions = postApiV1AuthMagicLinkMutationOptions(config) as UseMutationOptions<PostApiV1AuthMagicLinkMutationResponse, ResponseErrorConfig<PostApiV1AuthMagicLink400 | PostApiV1AuthMagicLink429 | PostApiV1AuthMagicLink500>, {data: PostApiV1AuthMagicLinkMutationRequest}, TContext>
           
 
-          return useMutation<PostApiV1AuthMagicLinkMutationResponse, ResponseErrorConfig<PostApiV1AuthMagicLink400 | PostApiV1AuthMagicLink500>, {data: PostApiV1AuthMagicLinkMutationRequest}, TContext>({
+          return useMutation<PostApiV1AuthMagicLinkMutationResponse, ResponseErrorConfig<PostApiV1AuthMagicLink400 | PostApiV1AuthMagicLink429 | PostApiV1AuthMagicLink500>, {data: PostApiV1AuthMagicLinkMutationRequest}, TContext>({
             ...baseOptions,
             mutationKey,
             ...mutationOptions,
-          }, queryClient) as UseMutationResult<PostApiV1AuthMagicLinkMutationResponse, ResponseErrorConfig<PostApiV1AuthMagicLink400 | PostApiV1AuthMagicLink500>, {data: PostApiV1AuthMagicLinkMutationRequest}, TContext>
+          }, queryClient) as UseMutationResult<PostApiV1AuthMagicLinkMutationResponse, ResponseErrorConfig<PostApiV1AuthMagicLink400 | PostApiV1AuthMagicLink429 | PostApiV1AuthMagicLink500>, {data: PostApiV1AuthMagicLinkMutationRequest}, TContext>
       
 }

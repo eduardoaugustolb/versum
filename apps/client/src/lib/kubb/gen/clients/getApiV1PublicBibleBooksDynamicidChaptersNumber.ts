@@ -5,7 +5,7 @@
 
 import fetch from "@kubb/plugin-client/clients/fetch";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
-import type { GetApiV1PublicBibleBooksDynamicidChaptersNumberQueryResponse, GetApiV1PublicBibleBooksDynamicidChaptersNumberPathParams, GetApiV1PublicBibleBooksDynamicidChaptersNumber400, GetApiV1PublicBibleBooksDynamicidChaptersNumber404, GetApiV1PublicBibleBooksDynamicidChaptersNumber500 } from "../models/GetApiV1PublicBibleBooksDynamicidChaptersNumber.ts";
+import type { GetApiV1PublicBibleBooksDynamicidChaptersNumberQueryResponse, GetApiV1PublicBibleBooksDynamicidChaptersNumberPathParams, GetApiV1PublicBibleBooksDynamicidChaptersNumber400, GetApiV1PublicBibleBooksDynamicidChaptersNumber404, GetApiV1PublicBibleBooksDynamicidChaptersNumber429, GetApiV1PublicBibleBooksDynamicidChaptersNumber500 } from "../models/GetApiV1PublicBibleBooksDynamicidChaptersNumber.ts";
 
 function getGetApiV1PublicBibleBooksDynamicidChaptersNumberUrl(dynamicId: GetApiV1PublicBibleBooksDynamicidChaptersNumberPathParams["dynamicId"], number: GetApiV1PublicBibleBooksDynamicidChaptersNumberPathParams["number"]) {
   const res = { method: 'GET', url: `https://versum-api.squareweb.app//api/v1/public/bible/books/${dynamicId}/chapters/${number}` as const }
@@ -22,6 +22,6 @@ export async function getApiV1PublicBibleBooksDynamicidChaptersNumber(dynamicId:
 
 
 
-  const res = await request<GetApiV1PublicBibleBooksDynamicidChaptersNumberQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicidChaptersNumber400 | GetApiV1PublicBibleBooksDynamicidChaptersNumber404 | GetApiV1PublicBibleBooksDynamicidChaptersNumber500>, unknown>({ method : "GET", url : getGetApiV1PublicBibleBooksDynamicidChaptersNumberUrl(dynamicId, number).url.toString(), ... requestConfig })
+  const res = await request<GetApiV1PublicBibleBooksDynamicidChaptersNumberQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicidChaptersNumber400 | GetApiV1PublicBibleBooksDynamicidChaptersNumber404 | GetApiV1PublicBibleBooksDynamicidChaptersNumber429 | GetApiV1PublicBibleBooksDynamicidChaptersNumber500>, unknown>({ method : "GET", url : getGetApiV1PublicBibleBooksDynamicidChaptersNumberUrl(dynamicId, number).url.toString(), ... requestConfig })
   return res.data
 }

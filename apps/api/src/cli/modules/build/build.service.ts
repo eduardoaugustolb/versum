@@ -1,12 +1,12 @@
-import JSZip from "jszip";
-import { resolve, relative } from "node:path";
 import {
-  readdirSync,
-  statSync,
   existsSync,
   mkdirSync,
+  readdirSync,
+  statSync,
   writeFileSync,
 } from "node:fs";
+import { relative, resolve } from "node:path";
+import JSZip from "jszip";
 
 const IGNORED_DIRS = new Set([
   "node_modules",
@@ -22,10 +22,7 @@ const IGNORED_DIRS = new Set([
   ".build",
 ]);
 
-const IGNORED_FILES = new Set([
-  ".DS_Store",
-  "Thumbs.db",
-]);
+const IGNORED_FILES = new Set([".DS_Store", "Thumbs.db"]);
 
 async function addToZip(
   zip: JSZip,
@@ -66,11 +63,15 @@ export async function buildProject(): Promise<string> {
   }
 
   const zip = new JSZip();
-  
+
   await addToZip(zip, rootDir, rootDir);
-  
-  const zipBuffer = await zip.generateAsync({ type: "nodebuffer", compression: "DEFLATE", compressionOptions: { level: 6 } });
-  
+
+  const zipBuffer = await zip.generateAsync({
+    type: "nodebuffer",
+    compression: "DEFLATE",
+    compressionOptions: { level: 6 },
+  });
+
   writeFileSync(outputPath, zipBuffer);
 
   return outputPath;

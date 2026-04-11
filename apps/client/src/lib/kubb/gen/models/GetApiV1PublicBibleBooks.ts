@@ -32,6 +32,11 @@ export type GetApiV1PublicBibleBooks200 = GetBooksResponse;
 export type GetApiV1PublicBibleBooks400 = ApiErrorResponse;
 
 /**
+ * @description Muitas requisições
+*/
+export type GetApiV1PublicBibleBooks429 = ApiErrorResponse;
+
+/**
  * @description Erro interno do servidor
 */
 export type GetApiV1PublicBibleBooks500 = ApiErrorResponse;
@@ -41,5 +46,5 @@ export type GetApiV1PublicBibleBooksQueryResponse = GetApiV1PublicBibleBooks200;
 export type GetApiV1PublicBibleBooksQuery = {
     Response: GetApiV1PublicBibleBooks200;
     QueryParams: GetApiV1PublicBibleBooksQueryParams;
-    Errors: GetApiV1PublicBibleBooks400 | GetApiV1PublicBibleBooks500;
+    Errors: GetApiV1PublicBibleBooks400 | GetApiV1PublicBibleBooks429 | GetApiV1PublicBibleBooks500;
 };

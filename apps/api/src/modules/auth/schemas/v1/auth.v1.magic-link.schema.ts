@@ -1,5 +1,5 @@
-import { AuthCommonSchemasV1 } from "./auth.v1.common.schema.ts";
 import { createErrorResponses } from "../../../../utils/app/errors/openapi.ts";
+import { AuthCommonSchemasV1 } from "./auth.v1.common.schema.ts";
 
 export class MagicLinkSchemasV1 {
   static readonly createAndSendMagicLinkResponseSchema =
@@ -16,7 +16,7 @@ export class MagicLinkSchemasV1 {
       },
       description: "Magic link enviado",
     },
-    ...createErrorResponses([400, 500]),
+    ...createErrorResponses([400, 429, 500]),
   };
 
   static readonly authenticateWithMagicLinkResponseSchema =
@@ -36,7 +36,7 @@ export class MagicLinkSchemasV1 {
       },
       description: "Login realizado com sucesso",
     },
-    ...createErrorResponses([400, 401, 500]),
+    ...createErrorResponses([400, 401, 429, 500]),
   };
 }
 

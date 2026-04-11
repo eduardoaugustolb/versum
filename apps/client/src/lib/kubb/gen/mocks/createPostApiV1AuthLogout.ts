@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { PostApiV1AuthLogout200, PostApiV1AuthLogout400, PostApiV1AuthLogout500, PostApiV1AuthLogoutMutationResponse } from "../models/PostApiV1AuthLogout.ts";
+import type { PostApiV1AuthLogout200, PostApiV1AuthLogout400, PostApiV1AuthLogout429, PostApiV1AuthLogout500, PostApiV1AuthLogoutMutationResponse } from "../models/PostApiV1AuthLogout.ts";
 import { faker } from "@faker-js/faker";
 import { createApiErrorResponse } from "./createApiErrorResponse.ts";
 import { createLogoutResponse } from "./createLogoutResponse.ts";
@@ -20,6 +20,14 @@ export function createPostApiV1AuthLogout200(data?: Partial<PostApiV1AuthLogout2
  * @description Requisição inválida
  */
 export function createPostApiV1AuthLogout400(data?: Partial<PostApiV1AuthLogout400>): PostApiV1AuthLogout400 {
+
+  return createApiErrorResponse(data)
+}
+
+/**
+ * @description Muitas requisições
+ */
+export function createPostApiV1AuthLogout429(data?: Partial<PostApiV1AuthLogout429>): PostApiV1AuthLogout429 {
 
   return createApiErrorResponse(data)
 }

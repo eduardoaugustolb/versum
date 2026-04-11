@@ -5,7 +5,7 @@ export const mockEnv = {
   REDIS_DATABASE_URL: "redis://test",
   REDIS_DATABASE_CERT_PATH: "/test",
   PORT: "3000",
-  DENO_ENV: "test",
+  BUN_ENV: "test",
   APP_URL: "http://test",
   ENCRYPT_SECRET: "test-secret-key-min-32-chars-long!!",
   RESEND_API_KEY: "test",

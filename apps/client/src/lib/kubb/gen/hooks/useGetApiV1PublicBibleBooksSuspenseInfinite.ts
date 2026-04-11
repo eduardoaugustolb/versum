@@ -5,7 +5,7 @@
 
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { InfiniteData, QueryKey, QueryClient, UseSuspenseInfiniteQueryOptions, UseSuspenseInfiniteQueryResult } from "@tanstack/react-query";
-import type { GetApiV1PublicBibleBooksQueryResponse, GetApiV1PublicBibleBooksQueryParams, GetApiV1PublicBibleBooks400, GetApiV1PublicBibleBooks500 } from "../models/GetApiV1PublicBibleBooks.ts";
+import type { GetApiV1PublicBibleBooksQueryResponse, GetApiV1PublicBibleBooksQueryParams, GetApiV1PublicBibleBooks400, GetApiV1PublicBibleBooks429, GetApiV1PublicBibleBooks500 } from "../models/GetApiV1PublicBibleBooks.ts";
 import { infiniteQueryOptions, useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { getApiV1PublicBibleBooks } from "../clients/getApiV1PublicBibleBooks.ts";
 
@@ -16,7 +16,7 @@ export type GetApiV1PublicBibleBooksSuspenseInfiniteQueryKey = ReturnType<typeof
 export function getApiV1PublicBibleBooksSuspenseInfiniteQueryOptions(params?: GetApiV1PublicBibleBooksQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getApiV1PublicBibleBooksSuspenseInfiniteQueryKey(params)
-        return infiniteQueryOptions<GetApiV1PublicBibleBooksQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooks400 | GetApiV1PublicBibleBooks500>, InfiniteData<GetApiV1PublicBibleBooksQueryResponse>, typeof queryKey, NonNullable<GetApiV1PublicBibleBooksQueryParams['id']>>({
+        return infiniteQueryOptions<GetApiV1PublicBibleBooksQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooks400 | GetApiV1PublicBibleBooks429 | GetApiV1PublicBibleBooks500>, InfiniteData<GetApiV1PublicBibleBooksQueryResponse>, typeof queryKey, NonNullable<GetApiV1PublicBibleBooksQueryParams['id']>>({
          
          queryKey,
          queryFn: async ({ signal, pageParam }) => {
@@ -39,7 +39,7 @@ export function getApiV1PublicBibleBooksSuspenseInfiniteQueryOptions(params?: Ge
  * @summary Listar livros da Bíblia
  * {@link /api/v1/public/bible/books}
  */
-export function useGetApiV1PublicBibleBooksSuspenseInfinite<TQueryFnData = GetApiV1PublicBibleBooksQueryResponse, TError = ResponseErrorConfig<GetApiV1PublicBibleBooks400 | GetApiV1PublicBibleBooks500>, TData = InfiniteData<TQueryFnData>, TQueryKey extends QueryKey = GetApiV1PublicBibleBooksSuspenseInfiniteQueryKey, TPageParam = NonNullable<GetApiV1PublicBibleBooksQueryParams['id']>>(params?: GetApiV1PublicBibleBooksQueryParams, options: 
+export function useGetApiV1PublicBibleBooksSuspenseInfinite<TQueryFnData = GetApiV1PublicBibleBooksQueryResponse, TError = ResponseErrorConfig<GetApiV1PublicBibleBooks400 | GetApiV1PublicBibleBooks429 | GetApiV1PublicBibleBooks500>, TData = InfiniteData<TQueryFnData>, TQueryKey extends QueryKey = GetApiV1PublicBibleBooksSuspenseInfiniteQueryKey, TPageParam = NonNullable<GetApiV1PublicBibleBooksQueryParams['id']>>(params?: GetApiV1PublicBibleBooksQueryParams, options: 
 {
   query?: Partial<UseSuspenseInfiniteQueryOptions<TQueryFnData, TError, TData, TQueryKey, TPageParam>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }

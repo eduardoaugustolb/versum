@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { GetApiV1PublicBibleBooks200, GetApiV1PublicBibleBooks400, GetApiV1PublicBibleBooks500, GetApiV1PublicBibleBooksQueryParams, GetApiV1PublicBibleBooksQueryResponse } from "../models/GetApiV1PublicBibleBooks.ts";
+import type { GetApiV1PublicBibleBooks200, GetApiV1PublicBibleBooks400, GetApiV1PublicBibleBooks429, GetApiV1PublicBibleBooks500, GetApiV1PublicBibleBooksQueryParams, GetApiV1PublicBibleBooksQueryResponse } from "../models/GetApiV1PublicBibleBooks.ts";
 import { faker } from "@faker-js/faker";
 import { createApiErrorResponse } from "./createApiErrorResponse.ts";
 import { createGetBooksResponse } from "./createGetBooksResponse.ts";
@@ -28,6 +28,14 @@ export function createGetApiV1PublicBibleBooks200(data?: Partial<GetApiV1PublicB
  * @description Requisição inválida
  */
 export function createGetApiV1PublicBibleBooks400(data?: Partial<GetApiV1PublicBibleBooks400>): GetApiV1PublicBibleBooks400 {
+
+  return createApiErrorResponse(data)
+}
+
+/**
+ * @description Muitas requisições
+ */
+export function createGetApiV1PublicBibleBooks429(data?: Partial<GetApiV1PublicBibleBooks429>): GetApiV1PublicBibleBooks429 {
 
   return createApiErrorResponse(data)
 }

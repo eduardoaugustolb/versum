@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { GetApiV1AuthMagicLink200, GetApiV1AuthMagicLink400, GetApiV1AuthMagicLink401, GetApiV1AuthMagicLink500, GetApiV1AuthMagicLinkQueryParams, GetApiV1AuthMagicLinkQueryResponse } from "../models/GetApiV1AuthMagicLink.ts";
+import type { GetApiV1AuthMagicLink200, GetApiV1AuthMagicLink400, GetApiV1AuthMagicLink401, GetApiV1AuthMagicLink429, GetApiV1AuthMagicLink500, GetApiV1AuthMagicLinkQueryParams, GetApiV1AuthMagicLinkQueryResponse } from "../models/GetApiV1AuthMagicLink.ts";
 import { faker } from "@faker-js/faker";
 import { createApiErrorResponse } from "./createApiErrorResponse.ts";
 import { createAuthenticateWithMagicLinkResponse } from "./createAuthenticateWithMagicLinkResponse.ts";
@@ -36,6 +36,14 @@ export function createGetApiV1AuthMagicLink400(data?: Partial<GetApiV1AuthMagicL
  * @description Não autorizado
  */
 export function createGetApiV1AuthMagicLink401(data?: Partial<GetApiV1AuthMagicLink401>): GetApiV1AuthMagicLink401 {
+
+  return createApiErrorResponse(data)
+}
+
+/**
+ * @description Muitas requisições
+ */
+export function createGetApiV1AuthMagicLink429(data?: Partial<GetApiV1AuthMagicLink429>): GetApiV1AuthMagicLink429 {
 
   return createApiErrorResponse(data)
 }

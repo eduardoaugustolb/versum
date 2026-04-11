@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { ApiErrorViewModel } from "./error.view-model";
 
 describe("ApiErrorViewModel", () => {
@@ -27,8 +27,6 @@ describe("ApiErrorViewModel", () => {
       expect(vm.code).toBeUndefined();
     });
   });
-
-
 
   describe("toJSON", () => {
     it("should return correct JSON with message only", () => {
@@ -95,7 +93,13 @@ describe("ApiErrorViewModel", () => {
     });
 
     it("should handle various error codes", () => {
-      const codes = ["VALIDATION_ERROR", "UNAUTHORIZED", "FORBIDDEN", "INTERNAL_ERROR", "404"];
+      const codes = [
+        "VALIDATION_ERROR",
+        "UNAUTHORIZED",
+        "FORBIDDEN",
+        "INTERNAL_ERROR",
+        "404",
+      ];
 
       codes.forEach((code) => {
         const vm = new ApiErrorViewModel("Error", code);

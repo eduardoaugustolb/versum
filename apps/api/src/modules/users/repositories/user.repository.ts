@@ -1,11 +1,12 @@
 import { eq } from "drizzle-orm";
-import { db as drizzle } from "../../../infrastructure/db/index.ts";
-import { users } from "../../../infrastructure/db/schema.ts";
+import { db as drizzle } from "../../../infrastructure/db/index";
+import { users } from "../../../infrastructure/db/schema";
 import type {
   CreateUserParams,
   iUserRepository,
+  UpdateUserParams,
   User,
-} from "./user.types.repository.ts";
+} from "./user.types.repository";
 
 export class UserRepository implements iUserRepository {
   private readonly db: typeof drizzle;
@@ -29,41 +30,19 @@ export class UserRepository implements iUserRepository {
 
   async findByEmail({ email }: { email: string }): Promise<User | null> {
     const user = await this.db.query.users.findFirst({
-      where: (users, { eq }) => eq(users.email, email),
+      where: (users, { eq }) => eq(users.email, email.toLowerCase()),
     });
 
     return user ?? null;
   }
 
-  async findByUsername({
-    username,
-  }: {
-    username: string;
-  }): Promise<User | null> {
-    const user = await this.db.query.users.findFirst({
-      where: (users, { eq }) => eq(users.username, username),
-    });
-
-    return user ?? null;
-  }
-
-  async updateUser(params: Partial<User> & { id: string }): Promise<User> {
-    const user = await this.db.query.users.findFirst({
-      where: (users, { eq }) => eq(users.id, params.id),
-    });
-
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    const updatedUser = await this.db
+  async updateUser(params: UpdateUserParams & { id: string }): Promise<User> {
+    const [updated] = await this.db
       .update(users)
-      .set({
-        ...params,
-      })
-      .where(eq(users.id, user.id))
+      .set(params)
+      .where(eq(users.id, params.id))
       .returning();
 
-    return updatedUser[0];
+    return updated;
   }
 }

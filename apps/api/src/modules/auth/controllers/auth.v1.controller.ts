@@ -1,7 +1,15 @@
 import type { Context } from "hono";
-import { AuthServiceV1 } from "../services/auth.v1.service.ts";
-import { setCookie, getCookie } from "hono/cookie";
+import { getCookie, setCookie } from "hono/cookie";
 import { BadRequestError } from "../../../utils/app/errors/index.ts";
+import { AuthServiceV1 } from "../services/auth.v1.service.ts";
+
+const isSecure = Bun.env.COOKIE_SECURE === "true";
+const cookieOptions = {
+  httpOnly: true,
+  secure: isSecure,
+  sameSite: (isSecure ? "strict" : "lax") as "strict" | "lax",
+  path: "/",
+};
 
 export class AuthControllerV1 {
   private readonly service: AuthServiceV1;
@@ -19,12 +27,10 @@ export class AuthControllerV1 {
       userAgent: c.req.header("user-agent") ?? "unknown",
     });
 
-    setCookie(c, "__Host-session", sessionToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30), // One month
-      path: "/",
+    const cookieName = isSecure ? "__Host-session" : "session";
+    setCookie(c, cookieName, sessionToken, {
+      ...cookieOptions,
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
     });
 
     return c.json({ message: "Logged in successfully!" }, 200);
@@ -45,17 +51,15 @@ export class AuthControllerV1 {
   };
 
   logout = async (c: Context) => {
-    const sessionCookie = getCookie(c, "__Host-session");
+    const cookieName = isSecure ? "__Host-session" : "session";
+    const sessionCookie = getCookie(c, cookieName);
     if (!sessionCookie) throw new BadRequestError("Session cookie not found");
     const sessionPublicId = sessionCookie.split(".")[0];
     if (!sessionPublicId) throw new BadRequestError("Invalid session cookie");
     await this.service.revokeSession({ sessionPublicId });
-    setCookie(c, "__Host-session", "", {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
+    setCookie(c, cookieName, "", {
+      ...cookieOptions,
       expires: new Date(0),
-      path: "/",
     });
     return c.json({ message: "Logged out successfully!" }, 200);
   };

@@ -5,7 +5,7 @@
 
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
-import type { GetApiV1PublicBibleBooksQueryResponse, GetApiV1PublicBibleBooksQueryParams, GetApiV1PublicBibleBooks400, GetApiV1PublicBibleBooks500 } from "../models/GetApiV1PublicBibleBooks.ts";
+import type { GetApiV1PublicBibleBooksQueryResponse, GetApiV1PublicBibleBooksQueryParams, GetApiV1PublicBibleBooks400, GetApiV1PublicBibleBooks429, GetApiV1PublicBibleBooks500 } from "../models/GetApiV1PublicBibleBooks.ts";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { getApiV1PublicBibleBooks } from "../clients/getApiV1PublicBibleBooks.ts";
 
@@ -16,7 +16,7 @@ export type GetApiV1PublicBibleBooksSuspenseQueryKey = ReturnType<typeof getApiV
 export function getApiV1PublicBibleBooksSuspenseQueryOptions(params?: GetApiV1PublicBibleBooksQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getApiV1PublicBibleBooksSuspenseQueryKey(params)
-        return queryOptions<GetApiV1PublicBibleBooksQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooks400 | GetApiV1PublicBibleBooks500>, GetApiV1PublicBibleBooksQueryResponse, typeof queryKey>({
+        return queryOptions<GetApiV1PublicBibleBooksQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooks400 | GetApiV1PublicBibleBooks429 | GetApiV1PublicBibleBooks500>, GetApiV1PublicBibleBooksQueryResponse, typeof queryKey>({
          
          queryKey,
          queryFn: async ({ signal }) => {
@@ -33,7 +33,7 @@ export function getApiV1PublicBibleBooksSuspenseQueryOptions(params?: GetApiV1Pu
  */
 export function useGetApiV1PublicBibleBooksSuspense<TData = GetApiV1PublicBibleBooksQueryResponse, TQueryKey extends QueryKey = GetApiV1PublicBibleBooksSuspenseQueryKey>(params?: GetApiV1PublicBibleBooksQueryParams, options: 
 {
-  query?: Partial<UseSuspenseQueryOptions<GetApiV1PublicBibleBooksQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooks400 | GetApiV1PublicBibleBooks500>, TData, TQueryKey>> & { client?: QueryClient },
+  query?: Partial<UseSuspenseQueryOptions<GetApiV1PublicBibleBooksQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooks400 | GetApiV1PublicBibleBooks429 | GetApiV1PublicBibleBooks500>, TData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }
 }
  = {}) {
@@ -47,7 +47,7 @@ export function useGetApiV1PublicBibleBooksSuspense<TData = GetApiV1PublicBibleB
           ...getApiV1PublicBibleBooksSuspenseQueryOptions(params, config),
           ...resolvedOptions,
           queryKey,
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<GetApiV1PublicBibleBooks400 | GetApiV1PublicBibleBooks500>> & { queryKey: TQueryKey }
+         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<GetApiV1PublicBibleBooks400 | GetApiV1PublicBibleBooks429 | GetApiV1PublicBibleBooks500>> & { queryKey: TQueryKey }
 
          query.queryKey = queryKey as TQueryKey
 

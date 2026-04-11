@@ -5,7 +5,7 @@
 
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import type { PostApiV1AuthLogoutMutationResponse, PostApiV1AuthLogout400, PostApiV1AuthLogout500 } from "../models/PostApiV1AuthLogout.ts";
+import type { PostApiV1AuthLogoutMutationResponse, PostApiV1AuthLogout400, PostApiV1AuthLogout429, PostApiV1AuthLogout500 } from "../models/PostApiV1AuthLogout.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 import { postApiV1AuthLogout } from "../clients/postApiV1AuthLogout.ts";
 
@@ -16,7 +16,7 @@ export type PostApiV1AuthLogoutMutationKey = ReturnType<typeof postApiV1AuthLogo
 export function postApiV1AuthLogoutMutationOptions<TContext = unknown>(config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const mutationKey = postApiV1AuthLogoutMutationKey()
-        return mutationOptions<PostApiV1AuthLogoutMutationResponse, ResponseErrorConfig<PostApiV1AuthLogout400 | PostApiV1AuthLogout500>, void, TContext>({
+        return mutationOptions<PostApiV1AuthLogoutMutationResponse, ResponseErrorConfig<PostApiV1AuthLogout400 | PostApiV1AuthLogout429 | PostApiV1AuthLogout500>, void, TContext>({
           mutationKey,
           mutationFn: async() => {
             return postApiV1AuthLogout(config)
@@ -32,7 +32,7 @@ export function postApiV1AuthLogoutMutationOptions<TContext = unknown>(config: P
  */
 export function usePostApiV1AuthLogout<TContext>(options: 
 {
-  mutation?: UseMutationOptions<PostApiV1AuthLogoutMutationResponse, ResponseErrorConfig<PostApiV1AuthLogout400 | PostApiV1AuthLogout500>, void, TContext> & { client?: QueryClient },
+  mutation?: UseMutationOptions<PostApiV1AuthLogoutMutationResponse, ResponseErrorConfig<PostApiV1AuthLogout400 | PostApiV1AuthLogout429 | PostApiV1AuthLogout500>, void, TContext> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client },
 }
  = {}) {
@@ -41,13 +41,13 @@ export function usePostApiV1AuthLogout<TContext>(options:
           const { client: queryClient, ...mutationOptions } = mutation;
           const mutationKey = mutationOptions.mutationKey ?? postApiV1AuthLogoutMutationKey()
 
-          const baseOptions = postApiV1AuthLogoutMutationOptions(config) as UseMutationOptions<PostApiV1AuthLogoutMutationResponse, ResponseErrorConfig<PostApiV1AuthLogout400 | PostApiV1AuthLogout500>, void, TContext>
+          const baseOptions = postApiV1AuthLogoutMutationOptions(config) as UseMutationOptions<PostApiV1AuthLogoutMutationResponse, ResponseErrorConfig<PostApiV1AuthLogout400 | PostApiV1AuthLogout429 | PostApiV1AuthLogout500>, void, TContext>
           
 
-          return useMutation<PostApiV1AuthLogoutMutationResponse, ResponseErrorConfig<PostApiV1AuthLogout400 | PostApiV1AuthLogout500>, void, TContext>({
+          return useMutation<PostApiV1AuthLogoutMutationResponse, ResponseErrorConfig<PostApiV1AuthLogout400 | PostApiV1AuthLogout429 | PostApiV1AuthLogout500>, void, TContext>({
             ...baseOptions,
             mutationKey,
             ...mutationOptions,
-          }, queryClient) as UseMutationResult<PostApiV1AuthLogoutMutationResponse, ResponseErrorConfig<PostApiV1AuthLogout400 | PostApiV1AuthLogout500>, void, TContext>
+          }, queryClient) as UseMutationResult<PostApiV1AuthLogoutMutationResponse, ResponseErrorConfig<PostApiV1AuthLogout400 | PostApiV1AuthLogout429 | PostApiV1AuthLogout500>, void, TContext>
       
 }

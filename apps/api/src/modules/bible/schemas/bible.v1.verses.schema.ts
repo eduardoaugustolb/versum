@@ -1,6 +1,6 @@
 import { z } from "@hono/zod-openapi";
-import { BibleCommonSchemasV1 } from "./bible.v1.common.schema.ts";
 import { createErrorResponses } from "../../../utils/app/errors/openapi.ts";
+import { BibleCommonSchemasV1 } from "./bible.v1.common.schema.ts";
 
 export class VersesSchemasV1 {
   static readonly getVersesResponseSchema =
@@ -19,7 +19,7 @@ export class VersesSchemasV1 {
       },
       description: "Lista de versículos do capítulo retornada com sucesso",
     },
-    ...createErrorResponses([400, 404, 500]),
+    ...createErrorResponses([400, 404, 429, 500]),
   };
 
   static readonly getVerseResponseSchema =
@@ -38,7 +38,7 @@ export class VersesSchemasV1 {
       },
       description: "Versículo encontrado e retornado com sucesso",
     },
-    ...createErrorResponses([400, 404, 500]),
+    ...createErrorResponses([400, 404, 429, 500]),
   };
 }
 

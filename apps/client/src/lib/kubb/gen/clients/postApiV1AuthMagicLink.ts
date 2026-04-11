@@ -5,7 +5,7 @@
 
 import fetch from "@kubb/plugin-client/clients/fetch";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
-import type { PostApiV1AuthMagicLinkMutationRequest, PostApiV1AuthMagicLinkMutationResponse, PostApiV1AuthMagicLink400, PostApiV1AuthMagicLink500 } from "../models/PostApiV1AuthMagicLink.ts";
+import type { PostApiV1AuthMagicLinkMutationRequest, PostApiV1AuthMagicLinkMutationResponse, PostApiV1AuthMagicLink400, PostApiV1AuthMagicLink429, PostApiV1AuthMagicLink500 } from "../models/PostApiV1AuthMagicLink.ts";
 
 function getPostApiV1AuthMagicLinkUrl() {
   const res = { method: 'POST', url: `https://versum-api.squareweb.app//api/v1/auth/magic-link` as const }
@@ -22,6 +22,6 @@ export async function postApiV1AuthMagicLink(data: PostApiV1AuthMagicLinkMutatio
 
   const requestData = data
 
-  const res = await request<PostApiV1AuthMagicLinkMutationResponse, ResponseErrorConfig<PostApiV1AuthMagicLink400 | PostApiV1AuthMagicLink500>, PostApiV1AuthMagicLinkMutationRequest>({ method : "POST", url : getPostApiV1AuthMagicLinkUrl().url.toString(), data : requestData, ... requestConfig })
+  const res = await request<PostApiV1AuthMagicLinkMutationResponse, ResponseErrorConfig<PostApiV1AuthMagicLink400 | PostApiV1AuthMagicLink429 | PostApiV1AuthMagicLink500>, PostApiV1AuthMagicLinkMutationRequest>({ method : "POST", url : getPostApiV1AuthMagicLinkUrl().url.toString(), data : requestData, ... requestConfig })
   return res.data
 }

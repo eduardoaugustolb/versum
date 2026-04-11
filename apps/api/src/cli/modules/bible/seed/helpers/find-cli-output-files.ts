@@ -15,7 +15,11 @@ export async function findCliOutputFiles(cwd: string): Promise<string[]> {
     const entries = readdirSync(outputDir, { recursive: true });
 
     for (const entry of entries) {
-      if (typeof entry === "string" && entry.endsWith(".json") && !entry.endsWith("missing-verses.json")) {
+      if (
+        typeof entry === "string" &&
+        entry.endsWith(".json") &&
+        !entry.endsWith("missing-verses.json")
+      ) {
         const full = `${outputDir}/${entry}`;
         if (!files.includes(full)) {
           files.push(full);

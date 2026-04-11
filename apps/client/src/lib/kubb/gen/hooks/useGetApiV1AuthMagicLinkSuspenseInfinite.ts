@@ -5,7 +5,7 @@
 
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { InfiniteData, QueryKey, QueryClient, UseSuspenseInfiniteQueryOptions, UseSuspenseInfiniteQueryResult } from "@tanstack/react-query";
-import type { GetApiV1AuthMagicLinkQueryResponse, GetApiV1AuthMagicLinkQueryParams, GetApiV1AuthMagicLink400, GetApiV1AuthMagicLink401, GetApiV1AuthMagicLink500 } from "../models/GetApiV1AuthMagicLink.ts";
+import type { GetApiV1AuthMagicLinkQueryResponse, GetApiV1AuthMagicLinkQueryParams, GetApiV1AuthMagicLink400, GetApiV1AuthMagicLink401, GetApiV1AuthMagicLink429, GetApiV1AuthMagicLink500 } from "../models/GetApiV1AuthMagicLink.ts";
 import { infiniteQueryOptions, useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { getApiV1AuthMagicLink } from "../clients/getApiV1AuthMagicLink.ts";
 
@@ -16,7 +16,7 @@ export type GetApiV1AuthMagicLinkSuspenseInfiniteQueryKey = ReturnType<typeof ge
 export function getApiV1AuthMagicLinkSuspenseInfiniteQueryOptions(params: GetApiV1AuthMagicLinkQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getApiV1AuthMagicLinkSuspenseInfiniteQueryKey(params)
-        return infiniteQueryOptions<GetApiV1AuthMagicLinkQueryResponse, ResponseErrorConfig<GetApiV1AuthMagicLink400 | GetApiV1AuthMagicLink401 | GetApiV1AuthMagicLink500>, InfiniteData<GetApiV1AuthMagicLinkQueryResponse>, typeof queryKey, NonNullable<GetApiV1AuthMagicLinkQueryParams['id']>>({
+        return infiniteQueryOptions<GetApiV1AuthMagicLinkQueryResponse, ResponseErrorConfig<GetApiV1AuthMagicLink400 | GetApiV1AuthMagicLink401 | GetApiV1AuthMagicLink429 | GetApiV1AuthMagicLink500>, InfiniteData<GetApiV1AuthMagicLinkQueryResponse>, typeof queryKey, NonNullable<GetApiV1AuthMagicLinkQueryParams['id']>>({
          enabled: !!(params),
          queryKey,
          queryFn: async ({ signal, pageParam }) => {
@@ -39,7 +39,7 @@ export function getApiV1AuthMagicLinkSuspenseInfiniteQueryOptions(params: GetApi
  * @summary Autenticar com magic link
  * {@link /api/v1/auth/magic-link}
  */
-export function useGetApiV1AuthMagicLinkSuspenseInfinite<TQueryFnData = GetApiV1AuthMagicLinkQueryResponse, TError = ResponseErrorConfig<GetApiV1AuthMagicLink400 | GetApiV1AuthMagicLink401 | GetApiV1AuthMagicLink500>, TData = InfiniteData<TQueryFnData>, TQueryKey extends QueryKey = GetApiV1AuthMagicLinkSuspenseInfiniteQueryKey, TPageParam = NonNullable<GetApiV1AuthMagicLinkQueryParams['id']>>(params: GetApiV1AuthMagicLinkQueryParams, options: 
+export function useGetApiV1AuthMagicLinkSuspenseInfinite<TQueryFnData = GetApiV1AuthMagicLinkQueryResponse, TError = ResponseErrorConfig<GetApiV1AuthMagicLink400 | GetApiV1AuthMagicLink401 | GetApiV1AuthMagicLink429 | GetApiV1AuthMagicLink500>, TData = InfiniteData<TQueryFnData>, TQueryKey extends QueryKey = GetApiV1AuthMagicLinkSuspenseInfiniteQueryKey, TPageParam = NonNullable<GetApiV1AuthMagicLinkQueryParams['id']>>(params: GetApiV1AuthMagicLinkQueryParams, options: 
 {
   query?: Partial<UseSuspenseInfiniteQueryOptions<TQueryFnData, TError, TData, TQueryKey, TPageParam>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }

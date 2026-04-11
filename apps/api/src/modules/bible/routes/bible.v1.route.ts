@@ -1,25 +1,25 @@
-import { BibleControllerV1 } from "../controllers/bible.v1.controller.ts";
-import { CacheMiddleware } from "../../../middlewares/cache.middleware.ts";
-import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
+import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
+import { CacheMiddleware } from "../../../middlewares/cache-reqs/middleware.ts";
+import { validationErrorHook } from "../../../utils/app/errors/validation.hook.ts";
+import type { BibleControllerV1 } from "../controllers/bible.v1.controller.ts";
 import {
-  dynamicIdParamSchema,
-  chapterNumberParamSchema,
-  verseNumberParamSchema,
-  paginationQuerySchema,
-} from "../schemas/bible.v1.common.schema.ts";
-import {
-  getBooksResponses,
   getBookByDynamicIdResponses,
+  getBooksResponses,
 } from "../schemas/bible.v1.books.schema.ts";
 import {
-  getChaptersResponses,
   getChapterResponses,
+  getChaptersResponses,
 } from "../schemas/bible.v1.chapters.schema.ts";
 import {
-  getVersesResponses,
+  chapterNumberParamSchema,
+  dynamicIdParamSchema,
+  paginationQuerySchema,
+  verseNumberParamSchema,
+} from "../schemas/bible.v1.common.schema.ts";
+import {
   getVerseResponses,
+  getVersesResponses,
 } from "../schemas/bible.v1.verses.schema.ts";
-import { validationErrorHook } from "../../../utils/app/errors/validation.hook.ts";
 
 export const createBibleRoutesV1 = (controller: BibleControllerV1) => {
   const router = new OpenAPIHono({

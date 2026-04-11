@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { GetApiV1UsersUsername200, GetApiV1UsersUsername404, GetApiV1UsersUsername500, GetApiV1UsersUsernamePathParams, GetApiV1UsersUsernameQueryResponse } from "../models/GetApiV1UsersUsername.ts";
+import type { GetApiV1UsersUsername200, GetApiV1UsersUsername404, GetApiV1UsersUsername429, GetApiV1UsersUsername500, GetApiV1UsersUsernamePathParams, GetApiV1UsersUsernameQueryResponse } from "../models/GetApiV1UsersUsername.ts";
 import { faker } from "@faker-js/faker";
 import { createApiErrorResponse } from "./createApiErrorResponse.ts";
 import { createGetAuthenticatedUserResponse } from "./createGetAuthenticatedUserResponse.ts";
@@ -28,6 +28,14 @@ export function createGetApiV1UsersUsername200(data?: Partial<GetApiV1UsersUsern
  * @description Recurso não encontrado
  */
 export function createGetApiV1UsersUsername404(data?: Partial<GetApiV1UsersUsername404>): GetApiV1UsersUsername404 {
+
+  return createApiErrorResponse(data)
+}
+
+/**
+ * @description Muitas requisições
+ */
+export function createGetApiV1UsersUsername429(data?: Partial<GetApiV1UsersUsername429>): GetApiV1UsersUsername429 {
 
   return createApiErrorResponse(data)
 }

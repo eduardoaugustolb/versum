@@ -1,7 +1,7 @@
 import prompts from "prompts";
 import { logger } from "@/utils/logger";
-import { buildProject } from "./build.service";
 import { initCli } from "../../index";
+import { buildProject } from "./build.service";
 
 export async function buildAction() {
   logger("info", "Iniciando build...");

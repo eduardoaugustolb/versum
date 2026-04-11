@@ -1,4 +1,4 @@
-import { CreateEmailOptions, Resend } from "resend";
+import { type CreateEmailOptions, Resend } from "resend";
 import { env } from "../../utils/env/index.ts";
 
 export class EmailProvider {

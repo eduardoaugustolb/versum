@@ -22,6 +22,11 @@ export const getApiV1UsersUsername200Schema = z.lazy(() => getAuthenticatedUserR
 export const getApiV1UsersUsername404Schema = z.lazy(() => apiErrorResponseSchema).describe("Resposta padrão de erro da API")
 
 /**
+ * @description Muitas requisições
+ */
+export const getApiV1UsersUsername429Schema = z.lazy(() => apiErrorResponseSchema).describe("Resposta padrão de erro da API")
+
+/**
  * @description Erro interno do servidor
  */
 export const getApiV1UsersUsername500Schema = z.lazy(() => apiErrorResponseSchema).describe("Resposta padrão de erro da API")

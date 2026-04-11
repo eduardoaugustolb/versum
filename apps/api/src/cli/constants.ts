@@ -1,1 +1,1 @@
-export const cliOutputPath = "src/cli/output"
+export const cliOutputPath = "src/cli/output";

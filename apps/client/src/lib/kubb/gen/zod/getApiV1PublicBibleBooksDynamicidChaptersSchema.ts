@@ -32,6 +32,11 @@ export const getApiV1PublicBibleBooksDynamicidChapters400Schema = z.lazy(() => a
 export const getApiV1PublicBibleBooksDynamicidChapters404Schema = z.lazy(() => apiErrorResponseSchema).describe("Resposta padrão de erro da API")
 
 /**
+ * @description Muitas requisições
+ */
+export const getApiV1PublicBibleBooksDynamicidChapters429Schema = z.lazy(() => apiErrorResponseSchema).describe("Resposta padrão de erro da API")
+
+/**
  * @description Erro interno do servidor
  */
 export const getApiV1PublicBibleBooksDynamicidChapters500Schema = z.lazy(() => apiErrorResponseSchema).describe("Resposta padrão de erro da API")

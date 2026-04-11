@@ -1,7 +1,7 @@
-import { generateOpenApiDocs } from "./openapi-doc.service";
-import { initCli } from "../../index";
 import prompts from "prompts";
 import { logger } from "@/utils/logger";
+import { initCli } from "../../index";
+import { generateOpenApiDocs } from "./openapi-doc.service";
 
 export async function openapiDocAction() {
   logger("info", "Gerando documentação OpenAPI...");

@@ -27,6 +27,11 @@ export type GetApiV1UsersUsername200 = GetAuthenticatedUserResponse;
 export type GetApiV1UsersUsername404 = ApiErrorResponse;
 
 /**
+ * @description Muitas requisições
+*/
+export type GetApiV1UsersUsername429 = ApiErrorResponse;
+
+/**
  * @description Erro interno do servidor
 */
 export type GetApiV1UsersUsername500 = ApiErrorResponse;
@@ -36,5 +41,5 @@ export type GetApiV1UsersUsernameQueryResponse = GetApiV1UsersUsername200;
 export type GetApiV1UsersUsernameQuery = {
     Response: GetApiV1UsersUsername200;
     PathParams: GetApiV1UsersUsernamePathParams;
-    Errors: GetApiV1UsersUsername404 | GetApiV1UsersUsername500;
+    Errors: GetApiV1UsersUsername404 | GetApiV1UsersUsername429 | GetApiV1UsersUsername500;
 };

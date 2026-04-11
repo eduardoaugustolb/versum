@@ -189,8 +189,6 @@ export class AuthRepository implements iAuthRepository {
       .set({
         revokedAt: new Date(),
       })
-      .where(
-        and(eq(sessions.publicId, publicId), isNull(sessions.revokedAt)),
-      );
+      .where(and(eq(sessions.publicId, publicId), isNull(sessions.revokedAt)));
   }
 }

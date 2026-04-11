@@ -1,7 +1,7 @@
 import { logger } from "@/utils/logger";
 import { initCli } from "../../index.ts";
-import { truncateDatabaseAction } from "./truncate.action.ts";
 import { databaseMenu } from "./database.menus.ts";
+import { truncateDatabaseAction } from "./truncate.action.ts";
 
 export async function databaseAction() {
   const result = await databaseMenu();
@@ -17,7 +17,10 @@ export async function databaseAction() {
 
     case "back":
       console.clear();
-      logger({ color: "blue", icon: "", level: "info" }, "Voltando para o menu...");
+      logger(
+        { color: "blue", icon: "", level: "info" },
+        "Voltando para o menu...",
+      );
       await initCli(false);
       return;
 

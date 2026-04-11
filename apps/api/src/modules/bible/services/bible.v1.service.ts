@@ -2,10 +2,9 @@ import { BibleRepository } from "../repositories/bible.repository.ts";
 import type {
   Book,
   Chapter,
-  Verse,
   PaginatedResult,
   PaginationParams,
-  ChapterParams,
+  Verse,
   VerseParams,
 } from "../repositories/bible.types.repository.ts";
 

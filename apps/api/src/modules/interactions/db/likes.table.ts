@@ -1,6 +1,6 @@
-import { pgTable, timestamp, uuid, unique, index } from "drizzle-orm/pg-core";
-import { users } from "../../users/db/users.table.ts";
+import { index, pgTable, timestamp, unique, uuid } from "drizzle-orm/pg-core";
 import { bibleVerses } from "../../bible/db/verses.table.ts";
+import { users } from "../../users/db/users.table.ts";
 
 export const likes = pgTable(
   "likes",

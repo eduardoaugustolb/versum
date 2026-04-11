@@ -5,7 +5,7 @@
 
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
-import type { GetApiV1PublicBibleBooksDynamicidChaptersNumberQueryResponse, GetApiV1PublicBibleBooksDynamicidChaptersNumberPathParams, GetApiV1PublicBibleBooksDynamicidChaptersNumber400, GetApiV1PublicBibleBooksDynamicidChaptersNumber404, GetApiV1PublicBibleBooksDynamicidChaptersNumber500 } from "../models/GetApiV1PublicBibleBooksDynamicidChaptersNumber.ts";
+import type { GetApiV1PublicBibleBooksDynamicidChaptersNumberQueryResponse, GetApiV1PublicBibleBooksDynamicidChaptersNumberPathParams, GetApiV1PublicBibleBooksDynamicidChaptersNumber400, GetApiV1PublicBibleBooksDynamicidChaptersNumber404, GetApiV1PublicBibleBooksDynamicidChaptersNumber429, GetApiV1PublicBibleBooksDynamicidChaptersNumber500 } from "../models/GetApiV1PublicBibleBooksDynamicidChaptersNumber.ts";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { getApiV1PublicBibleBooksDynamicidChaptersNumber } from "../clients/getApiV1PublicBibleBooksDynamicidChaptersNumber.ts";
 
@@ -16,7 +16,7 @@ export type GetApiV1PublicBibleBooksDynamicidChaptersNumberSuspenseQueryKey = Re
 export function getApiV1PublicBibleBooksDynamicidChaptersNumberSuspenseQueryOptions(dynamicId: GetApiV1PublicBibleBooksDynamicidChaptersNumberPathParams["dynamicId"], number: GetApiV1PublicBibleBooksDynamicidChaptersNumberPathParams["number"], config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getApiV1PublicBibleBooksDynamicidChaptersNumberSuspenseQueryKey(dynamicId, number)
-        return queryOptions<GetApiV1PublicBibleBooksDynamicidChaptersNumberQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicidChaptersNumber400 | GetApiV1PublicBibleBooksDynamicidChaptersNumber404 | GetApiV1PublicBibleBooksDynamicidChaptersNumber500>, GetApiV1PublicBibleBooksDynamicidChaptersNumberQueryResponse, typeof queryKey>({
+        return queryOptions<GetApiV1PublicBibleBooksDynamicidChaptersNumberQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicidChaptersNumber400 | GetApiV1PublicBibleBooksDynamicidChaptersNumber404 | GetApiV1PublicBibleBooksDynamicidChaptersNumber429 | GetApiV1PublicBibleBooksDynamicidChaptersNumber500>, GetApiV1PublicBibleBooksDynamicidChaptersNumberQueryResponse, typeof queryKey>({
          enabled: !!(dynamicId&& number),
          queryKey,
          queryFn: async ({ signal }) => {
@@ -33,7 +33,7 @@ export function getApiV1PublicBibleBooksDynamicidChaptersNumberSuspenseQueryOpti
  */
 export function useGetApiV1PublicBibleBooksDynamicidChaptersNumberSuspense<TData = GetApiV1PublicBibleBooksDynamicidChaptersNumberQueryResponse, TQueryKey extends QueryKey = GetApiV1PublicBibleBooksDynamicidChaptersNumberSuspenseQueryKey>(dynamicId: GetApiV1PublicBibleBooksDynamicidChaptersNumberPathParams["dynamicId"], number: GetApiV1PublicBibleBooksDynamicidChaptersNumberPathParams["number"], options: 
 {
-  query?: Partial<UseSuspenseQueryOptions<GetApiV1PublicBibleBooksDynamicidChaptersNumberQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicidChaptersNumber400 | GetApiV1PublicBibleBooksDynamicidChaptersNumber404 | GetApiV1PublicBibleBooksDynamicidChaptersNumber500>, TData, TQueryKey>> & { client?: QueryClient },
+  query?: Partial<UseSuspenseQueryOptions<GetApiV1PublicBibleBooksDynamicidChaptersNumberQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicidChaptersNumber400 | GetApiV1PublicBibleBooksDynamicidChaptersNumber404 | GetApiV1PublicBibleBooksDynamicidChaptersNumber429 | GetApiV1PublicBibleBooksDynamicidChaptersNumber500>, TData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }
 }
  = {}) {
@@ -47,7 +47,7 @@ export function useGetApiV1PublicBibleBooksDynamicidChaptersNumberSuspense<TData
           ...getApiV1PublicBibleBooksDynamicidChaptersNumberSuspenseQueryOptions(dynamicId, number, config),
           ...resolvedOptions,
           queryKey,
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicidChaptersNumber400 | GetApiV1PublicBibleBooksDynamicidChaptersNumber404 | GetApiV1PublicBibleBooksDynamicidChaptersNumber500>> & { queryKey: TQueryKey }
+         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicidChaptersNumber400 | GetApiV1PublicBibleBooksDynamicidChaptersNumber404 | GetApiV1PublicBibleBooksDynamicidChaptersNumber429 | GetApiV1PublicBibleBooksDynamicidChaptersNumber500>> & { queryKey: TQueryKey }
 
          query.queryKey = queryKey as TQueryKey
 

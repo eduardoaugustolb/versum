@@ -1,4 +1,4 @@
-import { PaginationViewModel } from "./pagination.view-model.ts";
+import type { PaginationViewModel } from "./pagination.view-model.ts";
 
 export class SuccessViewModel<T> {
   success: boolean;

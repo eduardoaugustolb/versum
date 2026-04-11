@@ -1,4 +1,4 @@
-import { LoggerConfigLevel, LoggerConfigObject } from "./types.ts";
+import type { LoggerConfigLevel, LoggerConfigObject } from "./types.ts";
 
 export const colors = {
   reset: "\x1b[0m",

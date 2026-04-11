@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { SuccessViewModel } from "./success.view-model";
+import { describe, expect, it } from "vitest";
 import { PaginationViewModel } from "./pagination.view-model";
+import { SuccessViewModel } from "./success.view-model";
 
 describe("SuccessViewModel", () => {
   describe("create", () => {
@@ -29,7 +29,11 @@ describe("SuccessViewModel", () => {
     });
 
     it("should create instance with data and message", () => {
-      const vm = SuccessViewModel.create({ id: "123" }, undefined, "Operation successful");
+      const vm = SuccessViewModel.create(
+        { id: "123" },
+        undefined,
+        "Operation successful",
+      );
 
       expect(vm.success).toBe(true);
       expect(vm.data).toEqual({ id: "123" });
@@ -47,7 +51,7 @@ describe("SuccessViewModel", () => {
       const vm = SuccessViewModel.create(
         { items: ["a", "b"] },
         pagination,
-        "Data retrieved successfully"
+        "Data retrieved successfully",
       );
 
       expect(vm.success).toBe(true);
@@ -155,7 +159,11 @@ describe("SuccessViewModel", () => {
     });
 
     it("should return correct JSON with message only (no data)", () => {
-      const vm = SuccessViewModel.create(undefined, undefined, "Operation completed");
+      const vm = SuccessViewModel.create(
+        undefined,
+        undefined,
+        "Operation completed",
+      );
       const json = vm.toJSON();
 
       expect(json).toEqual({
@@ -183,7 +191,7 @@ describe("SuccessViewModel", () => {
       const vm = SuccessViewModel.create(
         { users: ["john", "jane"] },
         pagination,
-        "Users retrieved"
+        "Users retrieved",
       );
       const json = vm.toJSON();
 

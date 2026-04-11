@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import * as yaml from "yaml";
 import { cliOutputPath } from "../../constants";
@@ -79,7 +79,10 @@ function resolveRef(ref: string, spec: OpenApiSpec): OpenApiSchema | null {
   return current as OpenApiSchema | null;
 }
 
-function resolveSchema(schema: OpenApiSchema | undefined, spec: OpenApiSpec): OpenApiSchema {
+function resolveSchema(
+  schema: OpenApiSchema | undefined,
+  spec: OpenApiSpec,
+): OpenApiSchema {
   if (!schema) return {};
 
   if (schema.$ref) {
@@ -133,7 +136,10 @@ function getSchemaRefName(schema: OpenApiSchema): string | null {
   return null;
 }
 
-function formatSchemaType(schema: OpenApiSchema | undefined, _spec: OpenApiSpec): string {
+function formatSchemaType(
+  schema: OpenApiSchema | undefined,
+  _spec: OpenApiSpec,
+): string {
   if (!schema) return "`any`";
 
   if (schema.$ref) {
@@ -153,10 +159,17 @@ function formatSchemaType(schema: OpenApiSchema | undefined, _spec: OpenApiSpec)
 }
 
 function toAnchorId(name: string): string {
-  return name.toLowerCase().replace(/([A-Z])/g, "-$1").replace(/^-/, "");
+  return name
+    .toLowerCase()
+    .replace(/([A-Z])/g, "-$1")
+    .replace(/^-/, "");
 }
 
-function generateSchemaDocs(schemaName: string, schema: OpenApiSchema, spec: OpenApiSpec): string {
+function generateSchemaDocs(
+  schemaName: string,
+  schema: OpenApiSchema,
+  spec: OpenApiSpec,
+): string {
   const lines: string[] = [];
   const anchorId = toAnchorId(schemaName);
   lines.push(`### \`${schemaName}\` {#${anchorId}}`);
@@ -176,7 +189,9 @@ function generateSchemaDocs(schemaName: string, schema: OpenApiSchema, spec: Ope
       const resolved = resolveSchema(propSchema, spec);
       const isRequired = required.includes(propName) ? "**" : "";
       const desc = resolved.description || "";
-      lines.push(`| ${isRequired}${propName}${isRequired} | ${typeStr} | ${desc} |`);
+      lines.push(
+        `| ${isRequired}${propName}${isRequired} | ${typeStr} | ${desc} |`,
+      );
     }
     lines.push("");
   } else if (schema.type === "array" && schema.items) {
@@ -193,7 +208,12 @@ function generateSchemaDocs(schemaName: string, schema: OpenApiSchema, spec: Ope
   return lines.join("\n");
 }
 
-function generateEndpointDocs(path: string, method: string, operation: OpenApiOperation, spec: OpenApiSpec): string {
+function generateEndpointDocs(
+  path: string,
+  method: string,
+  operation: OpenApiOperation,
+  spec: OpenApiSpec,
+): string {
   const lines: string[] = [];
   const methodUpper = method.toUpperCase();
   const methodBadge = `**\`${methodUpper}\`**`;
@@ -213,7 +233,7 @@ function generateEndpointDocs(path: string, method: string, operation: OpenApiOp
       const type = formatSchemaType(param.schema, spec);
       const required = param.required ? "Sim" : "Não";
       lines.push(
-        `| \`${param.name}\` | ${param.in} | ${type} | ${required} | ${param.description || ""} |`
+        `| \`${param.name}\` | ${param.in} | ${type} | ${required} | ${param.description || ""} |`,
       );
     }
     lines.push("");
@@ -221,18 +241,23 @@ function generateEndpointDocs(path: string, method: string, operation: OpenApiOp
 
   if (operation.requestBody?.content?.["application/json"]?.schema) {
     lines.push("**Body (JSON):**");
-    const bodySchema = resolveSchema(operation.requestBody.content["application/json"].schema, spec);
+    const bodySchema = resolveSchema(
+      operation.requestBody.content["application/json"].schema,
+      spec,
+    );
     lines.push("");
     if (bodySchema.properties) {
       lines.push("| Campo | Tipo | Obrigatório | Descrição |");
       lines.push("|-------|------|-------------|-----------|");
       const required = bodySchema.required || [];
-      for (const [propName, propSchema] of Object.entries(bodySchema.properties)) {
+      for (const [propName, propSchema] of Object.entries(
+        bodySchema.properties,
+      )) {
         const resolved = resolveSchema(propSchema, spec);
         const typeStr = formatSchemaType(resolved, spec);
         const isRequired = required.includes(propName) ? "Sim" : "Não";
         lines.push(
-          `| \`${propName}\` | ${typeStr} | ${isRequired} | ${resolved.description || ""} |`
+          `| \`${propName}\` | ${typeStr} | ${isRequired} | ${resolved.description || ""} |`,
         );
       }
     }
@@ -277,13 +302,20 @@ export async function generateOpenApiDocs(): Promise<void> {
     lines.push("## Schemas");
     lines.push("");
 
-    for (const [schemaName, schema] of Object.entries(spec.components.schemas)) {
-      lines.push(generateSchemaDocs(schemaName, resolveSchema(schema, spec), spec));
+    for (const [schemaName, schema] of Object.entries(
+      spec.components.schemas,
+    )) {
+      lines.push(
+        generateSchemaDocs(schemaName, resolveSchema(schema, spec), spec),
+      );
     }
   }
 
   if (spec.paths) {
-    const pathsByTag: Record<string, Array<{ path: string; method: string; operation: OpenApiOperation }>> = {};
+    const pathsByTag: Record<
+      string,
+      Array<{ path: string; method: string; operation: OpenApiOperation }>
+    > = {};
 
     for (const [pathStr, pathItem] of Object.entries(spec.paths)) {
       for (const [method, operation] of Object.entries(pathItem)) {

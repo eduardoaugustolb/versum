@@ -19,6 +19,11 @@ export const postApiV1AuthMagicLink200Schema = z.lazy(() => sendMagicLinkRespons
 export const postApiV1AuthMagicLink400Schema = z.lazy(() => apiErrorResponseSchema).describe("Resposta padrão de erro da API")
 
 /**
+ * @description Muitas requisições
+ */
+export const postApiV1AuthMagicLink429Schema = z.lazy(() => apiErrorResponseSchema).describe("Resposta padrão de erro da API")
+
+/**
  * @description Erro interno do servidor
  */
 export const postApiV1AuthMagicLink500Schema = z.lazy(() => apiErrorResponseSchema).describe("Resposta padrão de erro da API")

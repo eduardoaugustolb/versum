@@ -2,7 +2,7 @@ import {
   NotFoundError,
   UnauthorizedError,
 } from "../../../utils/app/errors/index.ts";
-import { Session } from "../repositories/auth.types.repository.ts";
+import type { Session } from "../repositories/auth.types.repository.ts";
 
 export class ValidateSession {
   session: Session;
@@ -15,12 +15,12 @@ export class ValidateSession {
     forwardedFor?: string;
   }) {
     if (!session) throw new NotFoundError("Session not found");
-    if (session.expires_at.getTime() < Date.now())
+    if (session.expiresAt.getTime() < Date.now())
       throw new UnauthorizedError("Session expired");
-    if (session.revoked_at && session.revoked_at.getTime() < Date.now())
+    if (session.revokedAt && session.revokedAt.getTime() < Date.now())
       throw new UnauthorizedError("Session revoked");
-    if (session.ip !== forwardedFor)
-      throw new UnauthorizedError("Session IP mismatch");
+    // if (session.ip !== forwardedFor)
+    //   throw new UnauthorizedError("Session IP mismatch");
 
     this.session = session;
   }

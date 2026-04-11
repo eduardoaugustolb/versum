@@ -8,6 +8,11 @@ export class BibleCommonSchemasV1 {
   static readonly bookSchema = z
     .object({
       id: z.uuid().describe("ID único do livro"),
+      order: z
+        .number()
+        .int()
+        .positive()
+        .describe("Ordem canônica do livro (1-73)"),
       name: z.string().max(100).describe("Nome do livro"),
       slug: z.string().max(10).describe("Slug do livro"),
       niceName: z.string().max(100).describe("Nome amigável do livro"),

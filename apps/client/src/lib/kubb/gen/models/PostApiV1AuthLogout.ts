@@ -17,6 +17,11 @@ export type PostApiV1AuthLogout200 = LogoutResponse;
 export type PostApiV1AuthLogout400 = ApiErrorResponse;
 
 /**
+ * @description Muitas requisições
+*/
+export type PostApiV1AuthLogout429 = ApiErrorResponse;
+
+/**
  * @description Erro interno do servidor
 */
 export type PostApiV1AuthLogout500 = ApiErrorResponse;
@@ -25,5 +30,5 @@ export type PostApiV1AuthLogoutMutationResponse = PostApiV1AuthLogout200;
 
 export type PostApiV1AuthLogoutMutation = {
     Response: PostApiV1AuthLogout200;
-    Errors: PostApiV1AuthLogout400 | PostApiV1AuthLogout500;
+    Errors: PostApiV1AuthLogout400 | PostApiV1AuthLogout429 | PostApiV1AuthLogout500;
 };

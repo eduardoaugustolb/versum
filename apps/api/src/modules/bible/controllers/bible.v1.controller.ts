@@ -1,9 +1,9 @@
 import type { Context } from "hono";
-import { BibleServiceV1 } from "../services/bible.v1.service.ts";
-import { PaginationViewModel } from "../../../view-models/default/pagination.view-model.ts";
-import { parsePagination } from "../../../utils/pagination/index.ts";
-import { SuccessViewModel } from "../../../view-models/default/success.view-model.ts";
 import { BadRequestError } from "../../../utils/app/errors/index.ts";
+import { parsePagination } from "../../../utils/pagination/index.ts";
+import { PaginationViewModel } from "../../../view-models/default/pagination.view-model.ts";
+import { SuccessViewModel } from "../../../view-models/default/success.view-model.ts";
+import { BibleServiceV1 } from "../services/bible.v1.service.ts";
 
 export class BibleControllerV1 {
   private readonly service: BibleServiceV1;

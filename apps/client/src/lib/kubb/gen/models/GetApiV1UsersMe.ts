@@ -22,6 +22,11 @@ export type GetApiV1UsersMe401 = ApiErrorResponse;
 export type GetApiV1UsersMe404 = ApiErrorResponse;
 
 /**
+ * @description Muitas requisições
+*/
+export type GetApiV1UsersMe429 = ApiErrorResponse;
+
+/**
  * @description Erro interno do servidor
 */
 export type GetApiV1UsersMe500 = ApiErrorResponse;
@@ -30,5 +35,5 @@ export type GetApiV1UsersMeQueryResponse = GetApiV1UsersMe200;
 
 export type GetApiV1UsersMeQuery = {
     Response: GetApiV1UsersMe200;
-    Errors: GetApiV1UsersMe401 | GetApiV1UsersMe404 | GetApiV1UsersMe500;
+    Errors: GetApiV1UsersMe401 | GetApiV1UsersMe404 | GetApiV1UsersMe429 | GetApiV1UsersMe500;
 };

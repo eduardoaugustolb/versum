@@ -1,3 +1,4 @@
+import argon2 from "argon2";
 import { EmailProvider } from "../../../infrastructure/resend/email-provider.ts";
 import {
   InternalServerError,
@@ -6,10 +7,9 @@ import {
 } from "../../../utils/app/errors/index.ts";
 import { env } from "../../../utils/env/index.ts";
 import { UserRepository } from "../../users/repositoties/user.repository.ts";
-import { AuthRepository } from "../repositories/auth.repository.ts";
-import argon2 from "argon2";
-import type { Session } from "../repositories/auth.types.repository.ts";
 import { ValidateSession } from "../helpers/validate-session.ts";
+import { AuthRepository } from "../repositories/auth.repository.ts";
+import type { Session } from "../repositories/auth.types.repository.ts";
 
 export class AuthServiceV1 {
   private readonly repository: AuthRepository;
@@ -118,7 +118,9 @@ export class AuthServiceV1 {
       user = await this.userRepository.create({
         email: magicLink.email,
         name: magicLink.email.split("@")[0] ?? magicLink.email,
-        username: magicLink.email.split("@")[0]?.toLowerCase() ?? magicLink.email.toLowerCase(),
+        username:
+          magicLink.email.split("@")[0]?.toLowerCase() ??
+          magicLink.email.toLowerCase(),
       });
     }
 

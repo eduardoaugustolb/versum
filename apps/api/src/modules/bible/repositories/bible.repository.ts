@@ -1,21 +1,21 @@
-import { and, eq, or, sql, count } from "drizzle-orm";
+import { and, count, eq, or } from "drizzle-orm";
+import { db as drizzle } from "../../../infrastructure/db/index.ts";
 import {
   bibleBooks as books,
   bibleChapters as chapters,
   bibleVerses as verses,
 } from "../../../infrastructure/db/schema.ts";
 import type {
-  iBibleRepository,
-  PaginationParams,
-  PaginatedResult,
-  BookDynamicIdParams,
-  ChapterParams,
-  VerseParams,
   Book,
+  BookDynamicIdParams,
   Chapter,
+  ChapterParams,
+  iBibleRepository,
+  PaginatedResult,
+  PaginationParams,
   Verse,
+  VerseParams,
 } from "./bible.types.repository.ts";
-import { db as drizzle } from "../../../infrastructure/db/index.ts";
 
 export class BibleRepository implements iBibleRepository {
   private readonly db: typeof drizzle;
@@ -34,7 +34,7 @@ export class BibleRepository implements iBibleRepository {
       this.db
         .select()
         .from(books)
-        .orderBy(books.name)
+        .orderBy(books.order)
         .limit(limit)
         .offset(offset),
       this.db.select({ total: count() }).from(books),
@@ -60,7 +60,9 @@ export class BibleRepository implements iBibleRepository {
     dynamicId,
     page,
     limit,
-  }: PaginationParams & Omit<ChapterParams, "chapterNumber">): Promise<PaginatedResult<Chapter>> {
+  }: PaginationParams & Omit<ChapterParams, "chapterNumber">): Promise<
+    PaginatedResult<Chapter>
+  > {
     const offset = (page - 1) * limit;
 
     const bookResult = await this.db
@@ -131,7 +133,9 @@ export class BibleRepository implements iBibleRepository {
     chapterNumber,
     page,
     limit,
-  }: PaginationParams & Omit<VerseParams, "verseNumber">): Promise<PaginatedResult<Verse>> {
+  }: PaginationParams & Omit<VerseParams, "verseNumber">): Promise<
+    PaginatedResult<Verse>
+  > {
     const offset = (page - 1) * limit;
 
     const chapterResult = await this.db

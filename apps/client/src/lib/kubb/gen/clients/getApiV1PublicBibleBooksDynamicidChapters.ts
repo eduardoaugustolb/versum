@@ -5,7 +5,7 @@
 
 import fetch from "@kubb/plugin-client/clients/fetch";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
-import type { GetApiV1PublicBibleBooksDynamicidChaptersQueryResponse, GetApiV1PublicBibleBooksDynamicidChaptersPathParams, GetApiV1PublicBibleBooksDynamicidChaptersQueryParams, GetApiV1PublicBibleBooksDynamicidChapters400, GetApiV1PublicBibleBooksDynamicidChapters404, GetApiV1PublicBibleBooksDynamicidChapters500 } from "../models/GetApiV1PublicBibleBooksDynamicidChapters.ts";
+import type { GetApiV1PublicBibleBooksDynamicidChaptersQueryResponse, GetApiV1PublicBibleBooksDynamicidChaptersPathParams, GetApiV1PublicBibleBooksDynamicidChaptersQueryParams, GetApiV1PublicBibleBooksDynamicidChapters400, GetApiV1PublicBibleBooksDynamicidChapters404, GetApiV1PublicBibleBooksDynamicidChapters429, GetApiV1PublicBibleBooksDynamicidChapters500 } from "../models/GetApiV1PublicBibleBooksDynamicidChapters.ts";
 
 function getGetApiV1PublicBibleBooksDynamicidChaptersUrl(dynamicId: GetApiV1PublicBibleBooksDynamicidChaptersPathParams["dynamicId"]) {
   const res = { method: 'GET', url: `https://versum-api.squareweb.app//api/v1/public/bible/books/${dynamicId}/chapters` as const }
@@ -22,6 +22,6 @@ export async function getApiV1PublicBibleBooksDynamicidChapters(dynamicId: GetAp
 
 
 
-  const res = await request<GetApiV1PublicBibleBooksDynamicidChaptersQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicidChapters400 | GetApiV1PublicBibleBooksDynamicidChapters404 | GetApiV1PublicBibleBooksDynamicidChapters500>, unknown>({ method : "GET", url : getGetApiV1PublicBibleBooksDynamicidChaptersUrl(dynamicId).url.toString(), params, ... requestConfig })
+  const res = await request<GetApiV1PublicBibleBooksDynamicidChaptersQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicidChapters400 | GetApiV1PublicBibleBooksDynamicidChapters404 | GetApiV1PublicBibleBooksDynamicidChapters429 | GetApiV1PublicBibleBooksDynamicidChapters500>, unknown>({ method : "GET", url : getGetApiV1PublicBibleBooksDynamicidChaptersUrl(dynamicId).url.toString(), params, ... requestConfig })
   return res.data
 }

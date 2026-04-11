@@ -28,6 +28,11 @@ export type PatchApiV1UsersMe401 = ApiErrorResponse;
 export type PatchApiV1UsersMe404 = ApiErrorResponse;
 
 /**
+ * @description Muitas requisições
+*/
+export type PatchApiV1UsersMe429 = ApiErrorResponse;
+
+/**
  * @description Erro interno do servidor
 */
 export type PatchApiV1UsersMe500 = ApiErrorResponse;
@@ -39,5 +44,5 @@ export type PatchApiV1UsersMeMutationResponse = PatchApiV1UsersMe200;
 export type PatchApiV1UsersMeMutation = {
     Response: PatchApiV1UsersMe200;
     Request: PatchApiV1UsersMeMutationRequest;
-    Errors: PatchApiV1UsersMe400 | PatchApiV1UsersMe401 | PatchApiV1UsersMe404 | PatchApiV1UsersMe500;
+    Errors: PatchApiV1UsersMe400 | PatchApiV1UsersMe401 | PatchApiV1UsersMe404 | PatchApiV1UsersMe429 | PatchApiV1UsersMe500;
 };

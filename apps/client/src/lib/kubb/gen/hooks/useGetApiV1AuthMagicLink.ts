@@ -5,7 +5,7 @@
 
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import type { GetApiV1AuthMagicLinkQueryResponse, GetApiV1AuthMagicLinkQueryParams, GetApiV1AuthMagicLink400, GetApiV1AuthMagicLink401, GetApiV1AuthMagicLink500 } from "../models/GetApiV1AuthMagicLink.ts";
+import type { GetApiV1AuthMagicLinkQueryResponse, GetApiV1AuthMagicLinkQueryParams, GetApiV1AuthMagicLink400, GetApiV1AuthMagicLink401, GetApiV1AuthMagicLink429, GetApiV1AuthMagicLink500 } from "../models/GetApiV1AuthMagicLink.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { getApiV1AuthMagicLink } from "../clients/getApiV1AuthMagicLink.ts";
 
@@ -16,7 +16,7 @@ export type GetApiV1AuthMagicLinkQueryKey = ReturnType<typeof getApiV1AuthMagicL
 export function getApiV1AuthMagicLinkQueryOptions(params: GetApiV1AuthMagicLinkQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getApiV1AuthMagicLinkQueryKey(params)
-        return queryOptions<GetApiV1AuthMagicLinkQueryResponse, ResponseErrorConfig<GetApiV1AuthMagicLink400 | GetApiV1AuthMagicLink401 | GetApiV1AuthMagicLink500>, GetApiV1AuthMagicLinkQueryResponse, typeof queryKey>({
+        return queryOptions<GetApiV1AuthMagicLinkQueryResponse, ResponseErrorConfig<GetApiV1AuthMagicLink400 | GetApiV1AuthMagicLink401 | GetApiV1AuthMagicLink429 | GetApiV1AuthMagicLink500>, GetApiV1AuthMagicLinkQueryResponse, typeof queryKey>({
          enabled: !!(params),
          queryKey,
          queryFn: async ({ signal }) => {
@@ -33,7 +33,7 @@ export function getApiV1AuthMagicLinkQueryOptions(params: GetApiV1AuthMagicLinkQ
  */
 export function useGetApiV1AuthMagicLink<TData = GetApiV1AuthMagicLinkQueryResponse, TQueryData = GetApiV1AuthMagicLinkQueryResponse, TQueryKey extends QueryKey = GetApiV1AuthMagicLinkQueryKey>(params: GetApiV1AuthMagicLinkQueryParams, options: 
 {
-  query?: Partial<QueryObserverOptions<GetApiV1AuthMagicLinkQueryResponse, ResponseErrorConfig<GetApiV1AuthMagicLink400 | GetApiV1AuthMagicLink401 | GetApiV1AuthMagicLink500>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  query?: Partial<QueryObserverOptions<GetApiV1AuthMagicLinkQueryResponse, ResponseErrorConfig<GetApiV1AuthMagicLink400 | GetApiV1AuthMagicLink401 | GetApiV1AuthMagicLink429 | GetApiV1AuthMagicLink500>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }
 }
  = {}) {
@@ -47,7 +47,7 @@ export function useGetApiV1AuthMagicLink<TData = GetApiV1AuthMagicLinkQueryRespo
           ...getApiV1AuthMagicLinkQueryOptions(params, config),
           ...resolvedOptions,
           queryKey,
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<GetApiV1AuthMagicLink400 | GetApiV1AuthMagicLink401 | GetApiV1AuthMagicLink500>> & { queryKey: TQueryKey }
+         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<GetApiV1AuthMagicLink400 | GetApiV1AuthMagicLink401 | GetApiV1AuthMagicLink429 | GetApiV1AuthMagicLink500>> & { queryKey: TQueryKey }
 
          query.queryKey = queryKey as TQueryKey
 

@@ -5,7 +5,7 @@
 
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import type { GetApiV1UsersUsernameQueryResponse, GetApiV1UsersUsernamePathParams, GetApiV1UsersUsername404, GetApiV1UsersUsername500 } from "../models/GetApiV1UsersUsername.ts";
+import type { GetApiV1UsersUsernameQueryResponse, GetApiV1UsersUsernamePathParams, GetApiV1UsersUsername404, GetApiV1UsersUsername429, GetApiV1UsersUsername500 } from "../models/GetApiV1UsersUsername.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { getApiV1UsersUsername } from "../clients/getApiV1UsersUsername.ts";
 
@@ -16,7 +16,7 @@ export type GetApiV1UsersUsernameQueryKey = ReturnType<typeof getApiV1UsersUsern
 export function getApiV1UsersUsernameQueryOptions(username: GetApiV1UsersUsernamePathParams["username"], config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getApiV1UsersUsernameQueryKey(username)
-        return queryOptions<GetApiV1UsersUsernameQueryResponse, ResponseErrorConfig<GetApiV1UsersUsername404 | GetApiV1UsersUsername500>, GetApiV1UsersUsernameQueryResponse, typeof queryKey>({
+        return queryOptions<GetApiV1UsersUsernameQueryResponse, ResponseErrorConfig<GetApiV1UsersUsername404 | GetApiV1UsersUsername429 | GetApiV1UsersUsername500>, GetApiV1UsersUsernameQueryResponse, typeof queryKey>({
          enabled: !!(username),
          queryKey,
          queryFn: async ({ signal }) => {
@@ -33,7 +33,7 @@ export function getApiV1UsersUsernameQueryOptions(username: GetApiV1UsersUsernam
  */
 export function useGetApiV1UsersUsername<TData = GetApiV1UsersUsernameQueryResponse, TQueryData = GetApiV1UsersUsernameQueryResponse, TQueryKey extends QueryKey = GetApiV1UsersUsernameQueryKey>(username: GetApiV1UsersUsernamePathParams["username"], options: 
 {
-  query?: Partial<QueryObserverOptions<GetApiV1UsersUsernameQueryResponse, ResponseErrorConfig<GetApiV1UsersUsername404 | GetApiV1UsersUsername500>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  query?: Partial<QueryObserverOptions<GetApiV1UsersUsernameQueryResponse, ResponseErrorConfig<GetApiV1UsersUsername404 | GetApiV1UsersUsername429 | GetApiV1UsersUsername500>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }
 }
  = {}) {
@@ -47,7 +47,7 @@ export function useGetApiV1UsersUsername<TData = GetApiV1UsersUsernameQueryRespo
           ...getApiV1UsersUsernameQueryOptions(username, config),
           ...resolvedOptions,
           queryKey,
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<GetApiV1UsersUsername404 | GetApiV1UsersUsername500>> & { queryKey: TQueryKey }
+         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<GetApiV1UsersUsername404 | GetApiV1UsersUsername429 | GetApiV1UsersUsername500>> & { queryKey: TQueryKey }
 
          query.queryKey = queryKey as TQueryKey
 

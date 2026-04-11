@@ -1,20 +1,24 @@
-import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
-import { AuthControllerV1 } from "../controllers/auth.v1.controller.ts";
+import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
+import { MagicLinkRateLimiter } from "@/middlewares/rate-limiter/middleware.ts";
+import { validationErrorHook } from "../../../utils/app/errors/validation.hook.ts";
+import type { AuthControllerV1 } from "../controllers/auth.v1.controller.ts";
 import {
   magicLinkTokenQuerySchema,
   sendMagicLinkBodySchema,
 } from "../schemas/v1/auth.v1.common.schema.ts";
+import { logoutResponses } from "../schemas/v1/auth.v1.logout.schema.ts";
 import {
   authenticateWithMagicLinkResponses,
   createAndSendMagicLinkResponses,
 } from "../schemas/v1/auth.v1.magic-link.schema.ts";
-import { logoutResponses } from "../schemas/v1/auth.v1.logout.schema.ts";
-import { validationErrorHook } from "../../../utils/app/errors/validation.hook.ts";
 
 export const createAuthRoutesV1 = (controller: AuthControllerV1) => {
   const router = new OpenAPIHono({
     defaultHook: validationErrorHook,
   });
+
+  const magicLinkRateLimiter = new MagicLinkRateLimiter();
+  router.use("/magic-link", magicLinkRateLimiter.middleware);
 
   const sendMagicLinkRouteV1 = createRoute({
     method: "post",

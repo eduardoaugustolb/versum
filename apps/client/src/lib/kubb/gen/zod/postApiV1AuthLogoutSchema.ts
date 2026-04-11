@@ -18,6 +18,11 @@ export const postApiV1AuthLogout200Schema = z.lazy(() => logoutResponseSchema).d
 export const postApiV1AuthLogout400Schema = z.lazy(() => apiErrorResponseSchema).describe("Resposta padrão de erro da API")
 
 /**
+ * @description Muitas requisições
+ */
+export const postApiV1AuthLogout429Schema = z.lazy(() => apiErrorResponseSchema).describe("Resposta padrão de erro da API")
+
+/**
  * @description Erro interno do servidor
  */
 export const postApiV1AuthLogout500Schema = z.lazy(() => apiErrorResponseSchema).describe("Resposta padrão de erro da API")

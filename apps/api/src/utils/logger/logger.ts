@@ -1,6 +1,6 @@
 import { env } from "../env/parser.ts";
 import { colors, defaultColor, icons, presets } from "./constants.ts";
-import { LoggerConfig, LoggerConfigObject } from "./types.ts";
+import type { LoggerConfig, LoggerConfigObject } from "./types.ts";
 
 export function logger(paramConfig: LoggerConfig, ...args: unknown[]) {
   let config: LoggerConfigObject;

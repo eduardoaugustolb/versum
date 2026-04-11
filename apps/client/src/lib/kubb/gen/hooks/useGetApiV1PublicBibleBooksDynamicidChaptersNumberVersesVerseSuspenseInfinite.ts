@@ -5,7 +5,7 @@
 
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { InfiniteData, QueryKey, QueryClient, UseSuspenseInfiniteQueryOptions, UseSuspenseInfiniteQueryResult } from "@tanstack/react-query";
-import type { GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerseQueryResponse, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVersePathParams, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse400, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse404, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse500 } from "../models/GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse.ts";
+import type { GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerseQueryResponse, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVersePathParams, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse400, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse404, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse429, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse500 } from "../models/GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse.ts";
 import { infiniteQueryOptions, useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { getApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse } from "../clients/getApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse.ts";
 
@@ -16,7 +16,7 @@ export type GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerseSuspenseIn
 export function getApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerseSuspenseInfiniteQueryOptions(dynamicId: GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVersePathParams["dynamicId"], number: GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVersePathParams["number"], verse: GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVersePathParams["verse"], config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerseSuspenseInfiniteQueryKey(dynamicId, number, verse)
-        return infiniteQueryOptions<GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerseQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse400 | GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse404 | GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse500>, InfiniteData<GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerseQueryResponse>, typeof queryKey, number>({
+        return infiniteQueryOptions<GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerseQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse400 | GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse404 | GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse429 | GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse500>, InfiniteData<GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerseQueryResponse>, typeof queryKey, number>({
          enabled: !!(dynamicId&& number&& verse),
          queryKey,
          queryFn: async ({ signal }) => {
@@ -34,7 +34,7 @@ export function getApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerseSuspen
  * @summary Obter versículo por número
  * {@link /api/v1/public/bible/books/:dynamicId/chapters/:number/verses/:verse}
  */
-export function useGetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerseSuspenseInfinite<TQueryFnData = GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerseQueryResponse, TError = ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse400 | GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse404 | GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse500>, TData = InfiniteData<TQueryFnData>, TQueryKey extends QueryKey = GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerseSuspenseInfiniteQueryKey, TPageParam = number>(dynamicId: GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVersePathParams["dynamicId"], number: GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVersePathParams["number"], verse: GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVersePathParams["verse"], options: 
+export function useGetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerseSuspenseInfinite<TQueryFnData = GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerseQueryResponse, TError = ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse400 | GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse404 | GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse429 | GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse500>, TData = InfiniteData<TQueryFnData>, TQueryKey extends QueryKey = GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerseSuspenseInfiniteQueryKey, TPageParam = number>(dynamicId: GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVersePathParams["dynamicId"], number: GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVersePathParams["number"], verse: GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVersePathParams["verse"], options: 
 {
   query?: Partial<UseSuspenseInfiniteQueryOptions<TQueryFnData, TError, TData, TQueryKey, TPageParam>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }

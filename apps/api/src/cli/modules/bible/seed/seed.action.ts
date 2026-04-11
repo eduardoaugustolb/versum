@@ -1,13 +1,13 @@
 import type { InferSelectModel } from "drizzle-orm";
+import { and, count, eq } from "drizzle-orm";
+import { logger } from "@/utils/logger";
 import { db } from "../../../../infrastructure/db/index.ts";
 import { bibleBooks } from "../../../../modules/bible/db/books.table.ts";
 import { bibleChapters } from "../../../../modules/bible/db/chapters.table.ts";
 import { bibleVerses } from "../../../../modules/bible/db/verses.table.ts";
-import { and, eq, count } from "drizzle-orm";
-import { logger } from "@/utils/logger";
 import {
-  normalizeBibleJsonForSeed,
   type NormalizedBook,
+  normalizeBibleJsonForSeed,
 } from "../bible-json-normalize.ts";
 
 type ExistingBook = InferSelectModel<typeof bibleBooks>;
@@ -43,7 +43,7 @@ function formatDate(date: Date): string {
 async function updateDiscordMessage() {
   const logsText = logs.join("\n");
   const truncatedLogs =
-    logsText.length > 3800 ? "...\n" + logsText.slice(-3800) : logsText;
+    logsText.length > 3800 ? `...\n${logsText.slice(-3800)}` : logsText;
 
   const embed = {
     title: `Logs do seed ${startTime.toISOString()}`,
@@ -71,7 +71,7 @@ async function updateDiscordMessage() {
 
   try {
     if (!messageId) {
-      const response = await fetch(WEBHOOK_URL + "?wait=true", {
+      const response = await fetch(`${WEBHOOK_URL}?wait=true`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ embeds: [embed] }),
@@ -130,6 +130,7 @@ async function processBook(
           niceName: bookData.niceName || bookData.name,
           testament: testament,
           totalChapters: bookData.chapters.length,
+          order: bookData.order,
         })
         .returning();
 
@@ -142,8 +143,7 @@ async function processBook(
     }
   }
 
-  const book =
-    existing || existingBooks.find((b) => b.name === bookData.name);
+  const book = existing || existingBooks.find((b) => b.name === bookData.name);
 
   if (!book) {
     await addLog(
@@ -197,10 +197,7 @@ async function processBook(
       }));
 
       if (verses.length > 0) {
-        await db
-          .insert(bibleVerses)
-          .values(verses)
-          .onConflictDoNothing();
+        await db.insert(bibleVerses).values(verses).onConflictDoNothing();
       }
 
       const [afterCountResult] = await db
@@ -236,7 +233,10 @@ export async function seedBibleFromJson(
   try {
     const bibleJson = await Bun.file(jsonPath).text();
     const existingBooks = await db.select().from(bibleBooks);
-    const bible = normalizeBibleJsonForSeed(JSON.parse(bibleJson), existingBooks);
+    const bible = normalizeBibleJsonForSeed(
+      JSON.parse(bibleJson),
+      existingBooks,
+    );
 
     await addLog(`✅ JSON OK - Total de livros: ${bible.books.length}`);
 

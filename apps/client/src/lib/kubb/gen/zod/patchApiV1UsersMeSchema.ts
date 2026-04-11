@@ -29,6 +29,11 @@ export const patchApiV1UsersMe401Schema = z.lazy(() => apiErrorResponseSchema).d
 export const patchApiV1UsersMe404Schema = z.lazy(() => apiErrorResponseSchema).describe("Resposta padrão de erro da API")
 
 /**
+ * @description Muitas requisições
+ */
+export const patchApiV1UsersMe429Schema = z.lazy(() => apiErrorResponseSchema).describe("Resposta padrão de erro da API")
+
+/**
  * @description Erro interno do servidor
  */
 export const patchApiV1UsersMe500Schema = z.lazy(() => apiErrorResponseSchema).describe("Resposta padrão de erro da API")

@@ -1,11 +1,11 @@
-import { Hono } from "hono";
-import { SetupMiddlewares } from "./setups/setup-middlewares.ts";
-import { SetupListeners } from "./setups/setup-listeners.ts";
-import { logger } from "../logger/index.ts";
-import { SetupRoutes } from "./setups/setup-routes.ts";
 import { OpenAPIHono } from "@hono/zod-openapi";
+import type { Hono } from "hono";
+import { logger } from "../logger/index.ts";
 import { validationErrorHook } from "./errors/validation.hook.ts";
+import { SetupListeners } from "./setups/setup-listeners.ts";
+import { SetupMiddlewares } from "./setups/setup-middlewares.ts";
 import { SetupPlugins } from "./setups/setup-plugins.ts";
+import { SetupRoutes } from "./setups/setup-routes.ts";
 
 export class App {
   public readonly hono = new OpenAPIHono({

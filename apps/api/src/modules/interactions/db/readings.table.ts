@@ -1,10 +1,9 @@
-import { index, pgTable, timestamp, uuid } from "drizzle-orm/pg-core";
+import { index, pgTable, timestamp, unique, uuid } from "drizzle-orm/pg-core";
+import { bibleChapters } from "../../bible/db/chapters.table.ts";
 import { users } from "../../users/db/users.table.ts";
-import { bibleVerses } from "../../bible/db/verses.table.ts";
-import { readingModeEnum } from "./interactions.enums.ts";
 
-export const readings = pgTable(
-  "readings",
+export const journeyReadings = pgTable(
+  "journey_readings",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     userId: uuid("user_id")
@@ -12,13 +11,12 @@ export const readings = pgTable(
       .references(() => users.id, {
         onDelete: "cascade",
       }),
-    verseId: uuid("verse_id")
+    chapterId: uuid("chapter_id")
       .notNull()
-      .references(() => bibleVerses.id, {
+      .references(() => bibleChapters.id, {
         onDelete: "cascade",
       }),
-    mode: readingModeEnum("mode").notNull(),
-    read_at: timestamp("read_at", {
+    readAt: timestamp("read_at", {
       withTimezone: true,
       precision: 3,
     })
@@ -26,10 +24,14 @@ export const readings = pgTable(
       .defaultNow(),
   },
   (table) => [
-    index("readings_user_id_read_at_idx").on(
+    unique("journey_readings_user_chapter_unique_idx").on(
       table.userId,
-      table.read_at.desc(),
+      table.chapterId,
     ),
-    index("readings_verse_id_idx").on(table.verseId),
+    index("journey_readings_user_id_read_at_idx").on(
+      table.userId,
+      table.readAt.desc(),
+    ),
+    index("journey_readings_chapter_id_idx").on(table.chapterId),
   ],
 );

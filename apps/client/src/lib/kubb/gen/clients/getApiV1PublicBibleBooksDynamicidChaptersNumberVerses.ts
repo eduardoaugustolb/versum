@@ -5,7 +5,7 @@
 
 import fetch from "@kubb/plugin-client/clients/fetch";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
-import type { GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesQueryResponse, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesPathParams, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesQueryParams, GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses400, GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses404, GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses500 } from "../models/GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses.ts";
+import type { GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesQueryResponse, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesPathParams, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesQueryParams, GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses400, GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses404, GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses429, GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses500 } from "../models/GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses.ts";
 
 function getGetApiV1PublicBibleBooksDynamicidChaptersNumberVersesUrl(dynamicId: GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesPathParams["dynamicId"], number: GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesPathParams["number"]) {
   const res = { method: 'GET', url: `https://versum-api.squareweb.app//api/v1/public/bible/books/${dynamicId}/chapters/${number}/verses` as const }
@@ -22,6 +22,6 @@ export async function getApiV1PublicBibleBooksDynamicidChaptersNumberVerses(dyna
 
 
 
-  const res = await request<GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses400 | GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses404 | GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses500>, unknown>({ method : "GET", url : getGetApiV1PublicBibleBooksDynamicidChaptersNumberVersesUrl(dynamicId, number).url.toString(), params, ... requestConfig })
+  const res = await request<GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesQueryResponse, ResponseErrorConfig<GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses400 | GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses404 | GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses429 | GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses500>, unknown>({ method : "GET", url : getGetApiV1PublicBibleBooksDynamicidChaptersNumberVersesUrl(dynamicId, number).url.toString(), params, ... requestConfig })
   return res.data
 }

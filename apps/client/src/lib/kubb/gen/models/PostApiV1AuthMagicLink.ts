@@ -18,6 +18,11 @@ export type PostApiV1AuthMagicLink200 = SendMagicLinkResponse;
 export type PostApiV1AuthMagicLink400 = ApiErrorResponse;
 
 /**
+ * @description Muitas requisições
+*/
+export type PostApiV1AuthMagicLink429 = ApiErrorResponse;
+
+/**
  * @description Erro interno do servidor
 */
 export type PostApiV1AuthMagicLink500 = ApiErrorResponse;
@@ -29,5 +34,5 @@ export type PostApiV1AuthMagicLinkMutationResponse = PostApiV1AuthMagicLink200;
 export type PostApiV1AuthMagicLinkMutation = {
     Response: PostApiV1AuthMagicLink200;
     Request: PostApiV1AuthMagicLinkMutationRequest;
-    Errors: PostApiV1AuthMagicLink400 | PostApiV1AuthMagicLink500;
+    Errors: PostApiV1AuthMagicLink400 | PostApiV1AuthMagicLink429 | PostApiV1AuthMagicLink500;
 };

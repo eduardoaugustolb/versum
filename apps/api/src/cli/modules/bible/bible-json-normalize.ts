@@ -14,6 +14,7 @@ export interface NormalizedBook {
   name: string;
   niceName: string;
   slug: string;
+  order: number;
   chapters: NormalizedChapter[];
 }
 
@@ -69,9 +70,7 @@ function toVerse(
   };
 }
 
-function isBookNode(
-  raw: unknown,
-): raw is {
+function isBookNode(raw: unknown): raw is {
   name?: string;
   slug?: string;
   niceName?: string;
@@ -91,7 +90,11 @@ export function normalizeBibleJsonForSeed(
   parsedJson: unknown,
   existingBooks: Array<{ name: string; slug: string; niceName: string }>,
 ): NormalizedBible {
-  if (typeof parsedJson !== "object" || parsedJson === null || Array.isArray(parsedJson)) {
+  if (
+    typeof parsedJson !== "object" ||
+    parsedJson === null ||
+    Array.isArray(parsedJson)
+  ) {
     throw new Error("bible.json deve ser um objeto na raiz.");
   }
 
@@ -103,7 +106,7 @@ export function normalizeBibleJsonForSeed(
     );
   }
 
-  const books = Object.entries(root).map(([bookKey, rawBook]) => {
+  const books = Object.entries(root).map(([bookKey, rawBook], index) => {
     if (!isBookNode(rawBook)) {
       throw new Error(
         `Livro "${bookKey}": cada entrada deve ter "chapters" como mapa (capítulo → versículos).`,
@@ -120,12 +123,18 @@ export function normalizeBibleJsonForSeed(
 
     const chapters = Object.entries(rawBook.chapters)
       .map(([chapterNumber, rawChapter]) => {
-        if (typeof rawChapter !== "object" || rawChapter === null || Array.isArray(rawChapter)) {
+        if (
+          typeof rawChapter !== "object" ||
+          rawChapter === null ||
+          Array.isArray(rawChapter)
+        ) {
           throw new Error(
             `Livro "${bookKey}" capítulo ${chapterNumber}: esperado objeto de versículos.`,
           );
         }
-        const verses = Object.entries(rawChapter as Record<string, string | CompactVerseWithGroup>)
+        const verses = Object.entries(
+          rawChapter as Record<string, string | CompactVerseWithGroup>,
+        )
           .map(([verseNumber, verseContent]) =>
             toVerse(verseContent, Number(verseNumber)),
           )
@@ -142,6 +151,7 @@ export function normalizeBibleJsonForSeed(
       name: existing?.name || rawBook.name || bookKey,
       niceName: existing?.niceName || rawBook.niceName || toNiceName(bookKey),
       slug: existing?.slug || rawBook.slug || slugify(bookKey).slice(0, 10),
+      order: index + 1,
       chapters,
     };
   });

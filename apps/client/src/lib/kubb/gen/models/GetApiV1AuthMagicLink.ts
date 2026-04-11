@@ -31,6 +31,11 @@ export type GetApiV1AuthMagicLink400 = ApiErrorResponse;
 export type GetApiV1AuthMagicLink401 = ApiErrorResponse;
 
 /**
+ * @description Muitas requisições
+*/
+export type GetApiV1AuthMagicLink429 = ApiErrorResponse;
+
+/**
  * @description Erro interno do servidor
 */
 export type GetApiV1AuthMagicLink500 = ApiErrorResponse;
@@ -40,5 +45,5 @@ export type GetApiV1AuthMagicLinkQueryResponse = GetApiV1AuthMagicLink200;
 export type GetApiV1AuthMagicLinkQuery = {
     Response: GetApiV1AuthMagicLink200;
     QueryParams: GetApiV1AuthMagicLinkQueryParams;
-    Errors: GetApiV1AuthMagicLink400 | GetApiV1AuthMagicLink401 | GetApiV1AuthMagicLink500;
+    Errors: GetApiV1AuthMagicLink400 | GetApiV1AuthMagicLink401 | GetApiV1AuthMagicLink429 | GetApiV1AuthMagicLink500;
 };
