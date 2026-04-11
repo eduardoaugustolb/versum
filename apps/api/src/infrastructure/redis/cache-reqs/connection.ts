@@ -1,5 +1,5 @@
 import { env } from "../../../utils/env";
-import { CustomRedisClient } from "..";
+import { CustomRedisClient } from "../client";
 
 const url = new URL(env.REDIS_DATABASE_URL);
 url.pathname = `cache_reqs_${env.BUN_ENV}`;
