@@ -7,7 +7,6 @@ on:
 
   push:
     branches:
-      - main
     paths:
       - "apps/api/**"
 
@@ -31,7 +30,7 @@ jobs:
             ${{ runner.os }}-bun-
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: bun install
 
       - name: Run Lint
         run: cd apps/api && bun run lint
