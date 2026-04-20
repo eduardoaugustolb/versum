@@ -4,7 +4,7 @@ import { ValidateSession } from "../modules/auth/helpers/validate-session.ts";
 import { AuthRepository } from "../modules/auth/repositories/auth.repository.ts";
 import { AuthServiceV1 } from "../modules/auth/services/auth.v1.service.ts";
 import { UnauthorizedError } from "../utils/app/errors/index.ts";
-import { logger } from "../utils/logger/index.ts";
+import { logger } from "@versum/logger";
 
 const isSecure = Bun.env.COOKIE_SECURE === "true";
 const cookieName = isSecure ? "__Host-session" : "session";

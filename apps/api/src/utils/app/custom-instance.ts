@@ -1,7 +1,7 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 import type { Hono } from "hono";
-import { logger } from "../logger/index.ts";
-import { validationErrorHook } from "./errors/validation.hook.ts";
+import { logger } from "@versum/logger";
+import { validationErrorHook } from "@/utils/app/errors/validation.hook.ts";
 import { SetupListeners } from "./setups/setup-listeners.ts";
 import { SetupMiddlewares } from "./setups/setup-middlewares.ts";
 import { SetupPlugins } from "./setups/setup-plugins.ts";

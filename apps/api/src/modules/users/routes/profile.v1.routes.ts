@@ -22,7 +22,7 @@ export const createProfileRoutesV1 = (controller: ProfileControllerV1) => {
 
   const createProfileRoute = createRoute({
     method: "post",
-    path: "/",
+    path: "/@me",
     tags: ["Profiles"],
     summary: "Criar perfil do usuário autenticado",
     description: "Cria um novo perfil para o usuário autenticado.",
@@ -117,7 +117,7 @@ export const createProfileRoutesV1 = (controller: ProfileControllerV1) => {
     },
   });
 
-  router.use("/@me", authMiddleware.validateSession);
+  router.use("/*", authMiddleware.validateSession);
 
   router.openapi(createProfileRoute, controller.createProfile);
   router.openapi(getMeRoute, controller.getAuthenticatedProfile);

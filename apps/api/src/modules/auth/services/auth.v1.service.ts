@@ -6,7 +6,7 @@ import {
   UnauthorizedError,
 } from "../../../utils/app/errors/index.ts";
 import { env } from "../../../utils/env/index.ts";
-import { UserRepository } from "../../users/repositoties/user.repository.ts";
+import { UserRepository } from "../../users/repositories/user.repository.ts";
 import { ValidateSession } from "../helpers/validate-session.ts";
 import { AuthRepository } from "../repositories/auth.repository.ts";
 import type { Session } from "../repositories/auth.types.repository.ts";
@@ -117,10 +117,6 @@ export class AuthServiceV1 {
     if (!user) {
       user = await this.userRepository.create({
         email: magicLink.email,
-        name: magicLink.email.split("@")[0] ?? magicLink.email,
-        username:
-          magicLink.email.split("@")[0]?.toLowerCase() ??
-          magicLink.email.toLowerCase(),
       });
     }
 

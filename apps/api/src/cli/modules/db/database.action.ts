@@ -1,4 +1,4 @@
-import { logger } from "@/utils/logger";
+import { logger } from "@versum/logger";
 import { initCli } from "../../index.ts";
 import { databaseMenu } from "./database.menus.ts";
 import { truncateDatabaseAction } from "./truncate.action.ts";

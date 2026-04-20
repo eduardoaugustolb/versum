@@ -1,0 +1,1 @@
+export const CONTENT_TYPE_SEPARATOR = "_:_CONTENT_TYPE_:_"

@@ -144,11 +144,11 @@ export class ProfileServiceV1 {
     this.validateBio(sanitizedParams.bio);
     this.validatePictureUrl(sanitizedParams.pictureUrl);
 
-    const exists = await this.repository.existsByUsername({
+    const profileWithSelectedUsername = await this.repository.existsByUsername({
       username: sanitizedParams.username,
     });
 
-    if (exists) {
+    if (profileWithSelectedUsername.exists) {
       throw new ConflictError("Username already in use");
     }
 
@@ -195,11 +195,11 @@ export class ProfileServiceV1 {
     const sanitized = this.sanitizeAndValidate(params);
 
     if (sanitized.username) {
-      const exists = await this.repository.existsByUsername({
+      const profileWithSelectedUsername = await this.repository.existsByUsername({
         username: sanitized.username,
       });
 
-      if (exists && exists !== profile.username) {
+      if (profileWithSelectedUsername.exists && profileWithSelectedUsername.profileId !== profile.id) {
         throw new ConflictError("Username already in use");
       }
     }
@@ -210,7 +210,4 @@ export class ProfileServiceV1 {
     });
   }
 
-  async usernameExists(username: string): Promise<boolean> {
-    return await this.repository.existsByUsername({ username });
-  }
 }

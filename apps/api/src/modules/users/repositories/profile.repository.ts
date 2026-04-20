@@ -7,6 +7,7 @@ import type {
   Profile,
   UpdateProfileParams,
 } from "./profile.types.repository";
+import { InternalServerError } from "@/utils/app/errors";
 
 export class ProfileRepository implements iProfileRepository {
   private readonly db: typeof drizzle;
@@ -17,6 +18,11 @@ export class ProfileRepository implements iProfileRepository {
 
   async create(params: CreateProfileParams): Promise<Profile> {
     const [profile] = await this.db.insert(profiles).values(params).returning();
+
+    if (!profile) {
+      throw new InternalServerError("Create failed");
+    }
+
     return profile;
   }
 
@@ -61,15 +67,19 @@ export class ProfileRepository implements iProfileRepository {
       .where(eq(profiles.id, params.id))
       .returning();
 
+    if (!updated) {
+      throw new InternalServerError("Update failed");
+    }
+
     return updated;
   }
 
-  async existsByUsername({ username }: { username: string }): Promise<boolean> {
+  async existsByUsername({ username }: { username: string }): Promise<{ exists: boolean, profileId: string } | { exists: false }> {
     const profile = await this.db.query.profiles.findFirst({
       where: (profiles, { eq }) =>
         eq(profiles.username, username.toLowerCase()),
       columns: { id: true },
     });
-    return profile !== null;
+    return profile ? { exists: true, profileId: profile.id } : { exists: false };
   }
 }

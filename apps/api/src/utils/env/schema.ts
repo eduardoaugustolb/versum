@@ -11,4 +11,5 @@ export const envSchema = z.object({
   RESEND_API_KEY: z.string(),
   DEBUG: z.string().optional(),
   WEB_CLIENT_APP_URL: z.url(),
+  DISCORD_WEBHOOK_URL: z.string(),
 });

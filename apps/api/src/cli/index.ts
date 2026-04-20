@@ -1,4 +1,4 @@
-import { logger } from "@/utils/logger";
+import { logger } from "@versum/logger";
 import { mainMenu } from "./menus/main-menu.menu";
 import { bibleAction } from "./modules/bible/bible.action";
 import { buildAction } from "./modules/build/build.action";

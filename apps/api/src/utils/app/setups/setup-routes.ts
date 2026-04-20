@@ -3,7 +3,7 @@ import { Scalar } from "@scalar/hono-api-reference";
 import { getCookie } from "hono/cookie";
 import { DEFAULT_API_VERSION } from "../../../modules/api-version.ts";
 import { createModulesRoutes } from "../../../modules/routes.ts";
-import { logger } from "../../logger/index.ts";
+import { logger } from "@versum/logger";
 
 const scalarCss = await Bun.file("src/assets/css/scalar.css").text();
 const { version } = await Bun.file("package.json").json();

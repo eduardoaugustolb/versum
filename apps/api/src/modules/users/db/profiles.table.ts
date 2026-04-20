@@ -1,10 +1,11 @@
 import { index, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import { users } from "./users.table";
 
 export const profiles = pgTable(
   "profiles",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    userId: uuid("user_id").notNull().unique(),
+    userId: uuid("user_id").notNull().unique().references(() => users.id),
     username: varchar("username", { length: 50 }).notNull().unique(),
     name: varchar("name", { length: 100 }).notNull(),
     bio: varchar("bio", { length: 500 }),

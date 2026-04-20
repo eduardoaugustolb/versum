@@ -7,6 +7,8 @@ import type {
   UpdateUserParams,
   User,
 } from "./user.types.repository";
+import { InternalServerError } from "@/utils/app/errors";
+import type { Profile } from "./profile.types.repository";
 
 export class UserRepository implements iUserRepository {
   private readonly db: typeof drizzle;
@@ -17,12 +19,26 @@ export class UserRepository implements iUserRepository {
 
   async create(params: CreateUserParams): Promise<User> {
     const [user] = await this.db.insert(users).values(params).returning();
+    if (!user) {
+      throw new InternalServerError("Failed to create user");
+    }
     return user;
   }
 
   async findById({ id }: { id: string }): Promise<User | null> {
     const user = await this.db.query.users.findFirst({
       where: (users, { eq }) => eq(users.id, id),
+    });
+
+    return user ?? null;
+  }
+
+  async findByIdWithProfile({ id }: { id: string }): Promise<User & { profile: Profile } | null> {
+    const user = await this.db.query.users.findFirst({
+      where: (users, { eq }) => eq(users.id, id),
+      with: {
+        profile: true
+      }
     });
 
     return user ?? null;
@@ -42,6 +58,10 @@ export class UserRepository implements iUserRepository {
       .set(params)
       .where(eq(users.id, params.id))
       .returning();
+
+    if (!updated) {
+      throw new InternalServerError("Failed to update user");
+    }
 
     return updated;
   }

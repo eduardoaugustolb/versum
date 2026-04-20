@@ -1,5 +1,5 @@
 import prompts from "prompts";
-import { logger } from "@/utils/logger";
+import { logger } from "@versum/logger";
 import { initCli } from "../../index";
 import { generateOpenApiDocs } from "./openapi-doc.service";
 

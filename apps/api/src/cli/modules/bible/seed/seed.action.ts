@@ -1,6 +1,6 @@
 import type { InferSelectModel } from "drizzle-orm";
 import { and, count, eq } from "drizzle-orm";
-import { logger } from "@/utils/logger";
+import { logger } from "@versum/logger";
 import { db } from "../../../../infrastructure/db/index.ts";
 import { bibleBooks } from "../../../../modules/bible/db/books.table.ts";
 import { bibleChapters } from "../../../../modules/bible/db/chapters.table.ts";
@@ -9,6 +9,7 @@ import {
   type NormalizedBook,
   normalizeBibleJsonForSeed,
 } from "../bible-json-normalize.ts";
+import { env } from "@/utils/env/parser.ts";
 
 type ExistingBook = InferSelectModel<typeof bibleBooks>;
 
@@ -21,8 +22,7 @@ function slugify(text: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
-const WEBHOOK_URL =
-  "https://discord.com/api/webhooks/1463937488962850837/kc9xkCsbzsXASyoxiMQDkWh3aQLsvejHYIf9CK6eABrg6QlGOdAjHHpg0MT5LO38zf6R";
+const WEBHOOK_URL = env.DISCORD_WEBHOOK_URL;
 
 let messageId: string | null = null;
 let logs: string[] = [];

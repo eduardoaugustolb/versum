@@ -1,6 +1,6 @@
 import type { Context } from "hono";
 import { ApiErrorViewModel } from "../../../view-models/default/error.view-model.ts";
-import { logger } from "../../logger/index.ts";
+import { logger } from "@versum/logger";
 import {
   BadRequestError,
   BaseError,
@@ -18,43 +18,42 @@ export class ErrorHandler {
     this.ctx = ctx;
   }
 
-  handle(error: unknown, details?: string) {
-    if (error instanceof BaseError) {
-      const statusCode = this.getStatusCodeForError(error);
+  handle(err: unknown, details?: string) {
+    if (err instanceof BaseError) {
+      const statusCode = this.getStatusCodeForError(err);
       this.ctx.status(statusCode);
-      return this.ctx.json(new ApiErrorViewModel(error.message, error.name));
+      return this.ctx.json(new ApiErrorViewModel(err.message, err.name));
     }
 
-    if (isValidationError(error)) {
+    if (isValidationError(err)) {
       this.ctx.status(400);
       return this.ctx.json(
         new ApiErrorViewModel(
-          extractErrorMessage(error, "Validation error"),
+          extractErrorMessage(err, "Validation error"),
           "VALIDATION_ERROR",
         ),
       );
     }
 
-    logger(
-      "error",
+    logger("error",
       details ? `Erro no ${details}:` : "Erro não tratado:",
-      error,
+      String(err),
     );
 
     this.ctx.status(500);
     return this.ctx.json(
       new ApiErrorViewModel(
-        extractErrorMessage(error, "Internal Server Error"),
+        extractErrorMessage(err, "Internal Server Error"),
         "INTERNAL_SERVER_ERROR",
       ),
     );
   }
-  private getStatusCodeForError(error: unknown) {
-    if (error instanceof BadRequestError) return 400;
-    if (error instanceof NotFoundError) return 404;
-    if (error instanceof UnauthorizedError) return 401;
-    if (error instanceof ForbiddenError) return 403;
-    if (error instanceof InternalServerError) return 500;
+  private getStatusCodeForError(err: unknown) {
+    if (err instanceof BadRequestError) return 400;
+    if (err instanceof NotFoundError) return 404;
+    if (err instanceof UnauthorizedError) return 401;
+    if (err instanceof ForbiddenError) return 403;
+    if (err instanceof InternalServerError) return 500;
 
     return 400;
   }

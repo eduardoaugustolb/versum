@@ -1,3 +1,4 @@
+import type { Profile } from "../repositories/profile.types.repository";
 import { UserRepository } from "../repositories/user.repository";
 import type {
   CreateUserParams,
@@ -42,6 +43,16 @@ export class UserServiceV1 {
 
   async getUserById({ id }: { id: string }): Promise<User> {
     const user = await this.repository.findById({ id });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    return user;
+  }
+
+  async getUserByIdWithProfile({ id }: { id: string }): Promise<User & { profile: Profile }> {
+    const user = await this.repository.findByIdWithProfile({ id });
 
     if (!user) {
       throw new Error("User not found");

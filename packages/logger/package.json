@@ -1,0 +1,25 @@
+{
+  "name": "@versum/logger",
+  "version": "1.0.0",
+  "description": "Colored console logger with sensitivity handling for Bun",
+  "type": "module",
+  "module": "index.ts",
+  "main": "index.ts",
+  "types": "index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./sensitive": "./src/sensitive.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "vitest": "^3.0.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "keywords": ["logger", "console", "bun"],
+  "license": "MIT"
+}

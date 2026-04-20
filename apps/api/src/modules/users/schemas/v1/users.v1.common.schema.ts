@@ -22,6 +22,7 @@ export class UsersCommonSchemasV1 {
   static readonly getAuthenticatedUserResponseSchema = z
     .object({
       user: this.userSchema,
+      onboardingIsCompleted: z.boolean(),
     })
     .openapi("GetAuthenticatedUserResponse", {
       description: "Usuário autenticado retornado com sucesso",

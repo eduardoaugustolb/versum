@@ -25,6 +25,7 @@
   "dependencies": {
     "@hono/zod-openapi": "^1.2.2",
     "@scalar/hono-api-reference": "^0.10.4",
+    "@versum/logger": "workspace:*",
     "argon2": "^0.44.0",
     "dotenv": "^17.3.1",
     "drizzle-orm": "^0.45.1",

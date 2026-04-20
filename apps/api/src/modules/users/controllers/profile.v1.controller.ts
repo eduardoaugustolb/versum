@@ -1,5 +1,5 @@
 import type { Context } from "hono";
-import { NotFoundError } from "../../../utils/app/errors/index";
+import { BadRequestError, NotFoundError } from "../../../utils/app/errors/index";
 import type { Session } from "../../auth/repositories/auth.types.repository";
 import { ProfileServiceV1 } from "../services/profile.v1.service";
 
@@ -50,6 +50,9 @@ export class ProfileControllerV1 {
 
   getProfileByUsername = async (c: Context) => {
     const rawUsername = c.req.param("username");
+    if (!rawUsername) {
+      throw new BadRequestError("Username is required");
+    }
     const username = rawUsername.startsWith("@")
       ? rawUsername.slice(1)
       : rawUsername;
