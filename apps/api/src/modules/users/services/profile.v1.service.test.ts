@@ -23,7 +23,7 @@ describe("ProfileServiceV1", () => {
     findByUserId: vi.fn<() => Promise<Profile | null>>(),
     findByUsername: vi.fn<() => Promise<Profile | null>>(),
     update: vi.fn<() => Promise<Profile>>(),
-    existsByUsername: vi.fn<() => Promise<boolean>>(),
+    existsByUsername: vi.fn<() => Promise<{exists: boolean} | { exists: true, profile: Profile }>>(),
   });
 
   beforeEach(() => {
@@ -108,7 +108,7 @@ describe("ProfileServiceV1", () => {
   describe("createProfile", () => {
     it("should create a new profile with sanitized data", async () => {
       const mockRepository = createMockRepository();
-      mockRepository.existsByUsername.mockResolvedValue(false);
+      mockRepository.existsByUsername.mockResolvedValue({exists: false});
       mockRepository.create.mockResolvedValue(mockProfile);
       service = new ProfileServiceV1({
         repository:
@@ -170,7 +170,7 @@ describe("ProfileServiceV1", () => {
 
     it("should throw error for username already in use", async () => {
       const mockRepository = createMockRepository();
-      mockRepository.existsByUsername.mockResolvedValue(true);
+      mockRepository.existsByUsername.mockResolvedValue({exists: true, profile: mockProfile});
       service = new ProfileServiceV1({
         repository:
           mockRepository as unknown as import("../repositories/profile.repository").ProfileRepository,
@@ -258,7 +258,7 @@ describe("ProfileServiceV1", () => {
     it("should update profile with sanitized data", async () => {
       const mockRepository = createMockRepository();
       mockRepository.findByUserId.mockResolvedValue(mockProfile);
-      mockRepository.existsByUsername.mockResolvedValue(false);
+      mockRepository.existsByUsername.mockResolvedValue({exists: false});
       mockRepository.update.mockResolvedValue({
         ...mockProfile,
         name: "Jane Doe",
@@ -301,7 +301,7 @@ describe("ProfileServiceV1", () => {
     it("should throw error for duplicate username", async () => {
       const mockRepository = createMockRepository();
       mockRepository.findByUserId.mockResolvedValue(mockProfile);
-      mockRepository.existsByUsername.mockResolvedValue(true);
+      mockRepository.existsByUsername.mockResolvedValue({exists: true, profile: mockProfile});
       service = new ProfileServiceV1({
         repository:
           mockRepository as unknown as import("../repositories/profile.repository").ProfileRepository,
@@ -319,7 +319,7 @@ describe("ProfileServiceV1", () => {
   describe("validation", () => {
     it("should normalize username to lowercase", async () => {
       const mockRepository = createMockRepository();
-      mockRepository.existsByUsername.mockResolvedValue(false);
+      mockRepository.existsByUsername.mockResolvedValue({exists: false});
       mockRepository.create.mockResolvedValue(mockProfile);
       service = new ProfileServiceV1({
         repository:
@@ -341,7 +341,7 @@ describe("ProfileServiceV1", () => {
 
     it("should sanitize HTML from name", async () => {
       const mockRepository = createMockRepository();
-      mockRepository.existsByUsername.mockResolvedValue(false);
+      mockRepository.existsByUsername.mockResolvedValue({exists: false});
       mockRepository.create.mockResolvedValue(mockProfile);
       service = new ProfileServiceV1({
         repository:

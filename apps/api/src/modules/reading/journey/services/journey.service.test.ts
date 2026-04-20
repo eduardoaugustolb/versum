@@ -98,9 +98,9 @@ describe("JourneyService", () => {
 
       expect(result.current).not.toBeNull();
       expect(result.nextItems).toHaveLength(1);
-      expect(result.nextItems[0].chapter.id).toBe("next-chapter-id");
+      expect(result.nextItems[0]?.chapter.id).toBe("next-chapter-id");
       expect(mockRepo.findChaptersAfter).toHaveBeenCalledWith(
-        mockChapterData.chapter.id!,
+        mockChapterData.chapter.id,
         4,
       );
     });
