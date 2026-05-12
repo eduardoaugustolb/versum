@@ -131,6 +131,14 @@ export class ProfileServiceV1 {
   }
 
   async createProfile(params: CreateProfileParams): Promise<Profile> {
+    const existingProfile = await this.repository.findByUserId({
+      userId: params.userId,
+    });
+
+    if (existingProfile) {
+      throw new ConflictError("Profile already exists");
+    }
+
     const sanitizedParams = {
       ...params,
       username: params.username.trim().toLowerCase(),

@@ -3,11 +3,11 @@
 * Do not edit manually.
 */
 
+import type { GetApiV1PublicBibleBooksQueryResponse, GetApiV1PublicBibleBooksQueryParams, GetApiV1PublicBibleBooks400, GetApiV1PublicBibleBooks429, GetApiV1PublicBibleBooks500 } from "../models/GetApiV1PublicBibleBooks.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import type { GetApiV1PublicBibleBooksQueryResponse, GetApiV1PublicBibleBooksQueryParams, GetApiV1PublicBibleBooks400, GetApiV1PublicBibleBooks429, GetApiV1PublicBibleBooks500 } from "../models/GetApiV1PublicBibleBooks.ts";
-import { queryOptions, useQuery } from "@tanstack/react-query";
 import { getApiV1PublicBibleBooks } from "../clients/getApiV1PublicBibleBooks.ts";
+import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getApiV1PublicBibleBooksQueryKey = (params?: GetApiV1PublicBibleBooksQueryParams) => [{ url: '/api/v1/public/bible/books' }, ...(params ? [params] : [])] as const
 

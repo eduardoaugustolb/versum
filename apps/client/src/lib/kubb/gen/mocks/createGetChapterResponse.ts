@@ -4,9 +4,9 @@
 */
 
 import type { GetChapterResponse } from "../models/GetChapterResponse.ts";
-import { faker } from "@faker-js/faker";
 import { createChapter } from "./createChapter.ts";
 import { createPaginationViewModel } from "./createPaginationViewModel.ts";
+import { faker } from "@faker-js/faker";
 
 /**
  * @description Resposta de sucesso para GetChapterResponse

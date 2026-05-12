@@ -3,11 +3,11 @@
 * Do not edit manually.
 */
 
+import type { GetApiV1UsersMeQueryResponse, GetApiV1UsersMe401, GetApiV1UsersMe404, GetApiV1UsersMe429, GetApiV1UsersMe500 } from "../models/GetApiV1UsersMe.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import type { GetApiV1UsersMeQueryResponse, GetApiV1UsersMe401, GetApiV1UsersMe404, GetApiV1UsersMe429, GetApiV1UsersMe500 } from "../models/GetApiV1UsersMe.ts";
-import { queryOptions, useQuery } from "@tanstack/react-query";
 import { getApiV1UsersMe } from "../clients/getApiV1UsersMe.ts";
+import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getApiV1UsersMeQueryKey = () => [{ url: '/api/v1/users/@me' }] as const
 

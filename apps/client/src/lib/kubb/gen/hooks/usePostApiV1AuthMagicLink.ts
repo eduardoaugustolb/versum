@@ -3,11 +3,11 @@
 * Do not edit manually.
 */
 
+import type { PostApiV1AuthMagicLinkMutationRequest, PostApiV1AuthMagicLinkMutationResponse, PostApiV1AuthMagicLink400, PostApiV1AuthMagicLink429, PostApiV1AuthMagicLink500 } from "../models/PostApiV1AuthMagicLink.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import type { PostApiV1AuthMagicLinkMutationRequest, PostApiV1AuthMagicLinkMutationResponse, PostApiV1AuthMagicLink400, PostApiV1AuthMagicLink429, PostApiV1AuthMagicLink500 } from "../models/PostApiV1AuthMagicLink.ts";
-import { mutationOptions, useMutation } from "@tanstack/react-query";
 import { postApiV1AuthMagicLink } from "../clients/postApiV1AuthMagicLink.ts";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const postApiV1AuthMagicLinkMutationKey = () => [{ url: '/api/v1/auth/magic-link' }] as const
 

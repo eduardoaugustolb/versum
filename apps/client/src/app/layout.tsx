@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans, IBM_Plex_Serif } from "next/font/google";
+import { IBM_Plex_Mono, IBM_Plex_Sans, IBM_Plex_Serif, Instrument_Sans, Instrument_Serif } from "next/font/google";
 import { ReactQueryProvider } from "@/components/provider/react-query-provider";
 import { ThemeProvider } from "@/components/provider/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -23,6 +23,19 @@ const fontMono = IBM_Plex_Mono({
   weight: ["100", "200", "300", "400", "500", "600", "700"],
 });
 
+
+const instrumentSans = Instrument_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-instrument-sans",
+});
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-instrument-serif",
+});
+
 export const metadata: Metadata = {
   title: "Versum",
   description: "Leitura Bíblica",
@@ -42,6 +55,8 @@ export default function RootLayout({
         fontMono.variable,
         fontSerif.variable,
         fontSans.variable,
+        instrumentSans.variable,
+        instrumentSerif.variable,
       )}
       suppressHydrationWarning
     >
@@ -52,7 +67,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ReactQueryProvider>{children}</ReactQueryProvider>
+          <ReactQueryProvider>
+            {children}
+          </ReactQueryProvider>
           <Toaster />
         </ThemeProvider>
       </body>

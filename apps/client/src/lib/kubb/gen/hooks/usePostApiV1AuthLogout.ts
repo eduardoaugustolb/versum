@@ -3,11 +3,11 @@
 * Do not edit manually.
 */
 
+import type { PostApiV1AuthLogoutMutationResponse, PostApiV1AuthLogout400, PostApiV1AuthLogout429, PostApiV1AuthLogout500 } from "../models/PostApiV1AuthLogout.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import type { PostApiV1AuthLogoutMutationResponse, PostApiV1AuthLogout400, PostApiV1AuthLogout429, PostApiV1AuthLogout500 } from "../models/PostApiV1AuthLogout.ts";
-import { mutationOptions, useMutation } from "@tanstack/react-query";
 import { postApiV1AuthLogout } from "../clients/postApiV1AuthLogout.ts";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const postApiV1AuthLogoutMutationKey = () => [{ url: '/api/v1/auth/logout' }] as const
 

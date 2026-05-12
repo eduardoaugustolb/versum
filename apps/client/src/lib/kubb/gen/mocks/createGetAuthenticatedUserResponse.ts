@@ -5,6 +5,7 @@
 
 import type { GetAuthenticatedUserResponse } from "../models/GetAuthenticatedUserResponse.ts";
 import { createUser } from "./createUser.ts";
+import { faker } from "@faker-js/faker";
 
 /**
  * @description Usuário autenticado retornado com sucesso
@@ -12,7 +13,7 @@ import { createUser } from "./createUser.ts";
 export function createGetAuthenticatedUserResponse(data?: Partial<GetAuthenticatedUserResponse>): GetAuthenticatedUserResponse {
 
   return {
-    ...{"user": createUser()},
+    ...{"user": createUser(),"onboardingIsCompleted": faker.datatype.boolean()},
     ...data || {}
   }
 }

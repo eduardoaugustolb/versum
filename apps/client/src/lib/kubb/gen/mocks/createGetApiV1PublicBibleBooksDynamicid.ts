@@ -4,9 +4,9 @@
 */
 
 import type { GetApiV1PublicBibleBooksDynamicid200, GetApiV1PublicBibleBooksDynamicid400, GetApiV1PublicBibleBooksDynamicid404, GetApiV1PublicBibleBooksDynamicid429, GetApiV1PublicBibleBooksDynamicid500, GetApiV1PublicBibleBooksDynamicidPathParams, GetApiV1PublicBibleBooksDynamicidQueryResponse } from "../models/GetApiV1PublicBibleBooksDynamicid.ts";
-import { faker } from "@faker-js/faker";
 import { createApiErrorResponse } from "./createApiErrorResponse.ts";
 import { createGetBookByDynamicIdResponse } from "./createGetBookByDynamicIdResponse.ts";
+import { faker } from "@faker-js/faker";
 
 export function createGetApiV1PublicBibleBooksDynamicidPathParams(data?: Partial<GetApiV1PublicBibleBooksDynamicidPathParams>): GetApiV1PublicBibleBooksDynamicidPathParams {
 

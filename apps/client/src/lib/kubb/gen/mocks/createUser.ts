@@ -7,12 +7,12 @@ import type { User } from "../models/User.ts";
 import { faker } from "@faker-js/faker";
 
 /**
- * @description Representação pública do usuário
+ * @description Dados privados do usuário
  */
 export function createUser(data?: Partial<User>): User {
 
   return {
-    ...{"id": faker.string.uuid(),"username": faker.string.alpha({ length: { min: 1, max: 50 } }),"name": faker.string.alpha({ length: { min: 1, max: 100 } }),"email": faker.internet.email(),"bio": faker.string.alpha({ length: 500 }),"pictureUrl": faker.string.alpha({ length: 500 }),"createdAt": faker.date.anytime().toISOString()},
+    ...{"email": faker.internet.email()},
     ...data || {}
   }
 }

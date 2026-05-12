@@ -10,8 +10,12 @@ import type { User } from "./User.ts";
 */
 export type GetAuthenticatedUserResponse = {
     /**
-     * @description Representação pública do usuário
+     * @description Dados privados do usuário
      * @type object
     */
     user: User;
+    /**
+     * @type boolean
+    */
+    onboardingIsCompleted: boolean;
 };

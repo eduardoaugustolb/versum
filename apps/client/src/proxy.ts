@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { findProtectedRoute } from "./app/(private)/protected-routes";
+import { matchGuard } from "./app/(private)/routes";
+import { getSessionCookieName } from "./lib/auth";
 
 class Response {
   res?: NextResponse;
@@ -36,7 +37,7 @@ class Response {
 export default function proxy(req: NextRequest) {
   const response = new Response();
 
-  const isAuthenticated = !!req.cookies.get("__Host-session");
+  const isAuthenticated = !!req.cookies.get(getSessionCookieName());
   const url = req.nextUrl.clone();
   console.debug(
     "🛡️ Proxy executando para:",
@@ -52,21 +53,12 @@ export default function proxy(req: NextRequest) {
     });
   }
 
-  const route = findProtectedRoute({ pathname: url.pathname });
+  const guard = matchGuard(url.pathname);
 
-  if (!route) {
-    return response.next({ url });
-  }
-
-  const routeRedirect = url.clone();
-  routeRedirect.pathname = route.redirectTo;
-
-  if (isAuthenticated && "requiresGhest" in route && route.requiresGhest) {
+  if (guard?.kind === "guest" && isAuthenticated) {
+    const routeRedirect = url.clone();
+    routeRedirect.pathname = guard.redirectTo;
     console.debug("🛡️ Redirecionando para (guest):", routeRedirect);
-    return response.redirect(routeRedirect, { url });
-  }
-  if ("requiresAuth" in route && route.requiresAuth && !isAuthenticated) {
-    console.debug("🛡️ Redirecionando para (auth):", routeRedirect);
     return response.redirect(routeRedirect, { url });
   }
 

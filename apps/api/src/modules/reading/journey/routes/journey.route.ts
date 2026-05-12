@@ -31,6 +31,7 @@ export class JourneyRoutes {
       summary: "Feed de leitura",
       description:
         "Retorna o capítulo atual e os próximos itens para pre-fetch.",
+      security: [{ cookieAuth: [] }],
       request: {
         query: feedQuerySchema,
       },
@@ -55,6 +56,7 @@ export class JourneyRoutes {
       tags: ["Journey"],
       summary: "Avançar progresso",
       description: "Salva o capítulo atual como lido e avança para o próximo.",
+      security: [{ cookieAuth: [] }],
       responses: {
         200: {
           content: {
@@ -76,6 +78,7 @@ export class JourneyRoutes {
       tags: ["Journey"],
       summary: "Status da jornada",
       description: "Retorna o status atual do progresso de leitura.",
+      security: [{ cookieAuth: [] }],
       responses: {
         200: {
           content: {

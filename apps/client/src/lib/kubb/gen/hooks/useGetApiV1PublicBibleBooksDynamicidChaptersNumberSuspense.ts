@@ -3,11 +3,11 @@
 * Do not edit manually.
 */
 
+import type { GetApiV1PublicBibleBooksDynamicidChaptersNumberQueryResponse, GetApiV1PublicBibleBooksDynamicidChaptersNumberPathParams, GetApiV1PublicBibleBooksDynamicidChaptersNumber400, GetApiV1PublicBibleBooksDynamicidChaptersNumber404, GetApiV1PublicBibleBooksDynamicidChaptersNumber429, GetApiV1PublicBibleBooksDynamicidChaptersNumber500 } from "../models/GetApiV1PublicBibleBooksDynamicidChaptersNumber.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
-import type { GetApiV1PublicBibleBooksDynamicidChaptersNumberQueryResponse, GetApiV1PublicBibleBooksDynamicidChaptersNumberPathParams, GetApiV1PublicBibleBooksDynamicidChaptersNumber400, GetApiV1PublicBibleBooksDynamicidChaptersNumber404, GetApiV1PublicBibleBooksDynamicidChaptersNumber429, GetApiV1PublicBibleBooksDynamicidChaptersNumber500 } from "../models/GetApiV1PublicBibleBooksDynamicidChaptersNumber.ts";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { getApiV1PublicBibleBooksDynamicidChaptersNumber } from "../clients/getApiV1PublicBibleBooksDynamicidChaptersNumber.ts";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
 export const getApiV1PublicBibleBooksDynamicidChaptersNumberSuspenseQueryKey = (dynamicId: GetApiV1PublicBibleBooksDynamicidChaptersNumberPathParams["dynamicId"], number: GetApiV1PublicBibleBooksDynamicidChaptersNumberPathParams["number"]) => [{ url: '/api/v1/public/bible/books/:dynamicId/chapters/:number', params: {dynamicId:dynamicId,number:number} }] as const
 

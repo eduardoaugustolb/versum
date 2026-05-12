@@ -110,6 +110,10 @@ export class ProfilesCommonSchemasV1 {
       .string()
       .min(1)
       .max(50)
+      .regex(
+        USERNAME_REGEX,
+        "Username can only contain letters, numbers, and underscores",
+      )
       .openapi({
         param: {
           name: "username",

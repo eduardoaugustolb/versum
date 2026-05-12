@@ -4,9 +4,9 @@
 */
 
 import type { GetApiV1AuthMagicLink200, GetApiV1AuthMagicLink400, GetApiV1AuthMagicLink401, GetApiV1AuthMagicLink429, GetApiV1AuthMagicLink500, GetApiV1AuthMagicLinkQueryParams, GetApiV1AuthMagicLinkQueryResponse } from "../models/GetApiV1AuthMagicLink.ts";
-import { faker } from "@faker-js/faker";
 import { createApiErrorResponse } from "./createApiErrorResponse.ts";
 import { createAuthenticateWithMagicLinkResponse } from "./createAuthenticateWithMagicLinkResponse.ts";
+import { faker } from "@faker-js/faker";
 
 export function createGetApiV1AuthMagicLinkQueryParams(data?: Partial<GetApiV1AuthMagicLinkQueryParams>): GetApiV1AuthMagicLinkQueryParams {
 

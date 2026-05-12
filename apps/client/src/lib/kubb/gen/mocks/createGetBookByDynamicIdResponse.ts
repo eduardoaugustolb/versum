@@ -4,9 +4,9 @@
 */
 
 import type { GetBookByDynamicIdResponse } from "../models/GetBookByDynamicIdResponse.ts";
-import { faker } from "@faker-js/faker";
 import { createBook } from "./createBook.ts";
 import { createPaginationViewModel } from "./createPaginationViewModel.ts";
+import { faker } from "@faker-js/faker";
 
 /**
  * @description Resposta de sucesso para GetBookByDynamicIdResponse

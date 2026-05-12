@@ -33,6 +33,7 @@ export class DiscoveryRoutes {
       summary: "Versículos do capítulo",
       description:
         "Retorna todos os versículos de um capítulo para leitura no modo Discovery.",
+      security: [{ cookieAuth: [] }],
       request: {
         query: z.object({
           chapterId: z.string().uuid().optional().openapi({
@@ -62,6 +63,7 @@ export class DiscoveryRoutes {
       tags: ["Discovery"],
       summary: "Marcar versículos como lidos",
       description: "Registra que o usuário leu versículos específicos.",
+      security: [{ cookieAuth: [] }],
       request: {
         body: {
           content: {
@@ -92,6 +94,7 @@ export class DiscoveryRoutes {
       tags: ["Discovery"],
       summary: "Estatísticas do Discovery",
       description: "Retorna estatísticas de leitura no modo Discovery.",
+      security: [{ cookieAuth: [] }],
       responses: {
         200: {
           content: {

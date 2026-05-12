@@ -23,7 +23,7 @@ describe("ProfileServiceV1", () => {
     findByUserId: vi.fn<() => Promise<Profile | null>>(),
     findByUsername: vi.fn<() => Promise<Profile | null>>(),
     update: vi.fn<() => Promise<Profile>>(),
-    existsByUsername: vi.fn<() => Promise<{exists: boolean} | { exists: true, profile: Profile }>>(),
+    existsByUsername: vi.fn<() => Promise<{exists: boolean} | { exists: true, profileId: string }>>(),
   });
 
   beforeEach(() => {
@@ -108,6 +108,7 @@ describe("ProfileServiceV1", () => {
   describe("createProfile", () => {
     it("should create a new profile with sanitized data", async () => {
       const mockRepository = createMockRepository();
+      mockRepository.findByUserId.mockResolvedValue(null);
       mockRepository.existsByUsername.mockResolvedValue({exists: false});
       mockRepository.create.mockResolvedValue(mockProfile);
       service = new ProfileServiceV1({
@@ -134,6 +135,23 @@ describe("ProfileServiceV1", () => {
       );
     });
 
+    it("should throw error when profile already exists", async () => {
+      const mockRepository = createMockRepository();
+      mockRepository.findByUserId.mockResolvedValue(mockProfile);
+      service = new ProfileServiceV1({
+        repository:
+          mockRepository as unknown as import("../repositories/profile.repository").ProfileRepository,
+      });
+
+      await expect(
+        service.createProfile({
+          userId: mockProfile.userId,
+          username: "newuser",
+          name: "New User",
+        }),
+      ).rejects.toThrow("Profile already exists");
+    });
+
     it("should throw error for invalid username format", async () => {
       const mockRepository = createMockRepository();
       service = new ProfileServiceV1({
@@ -154,6 +172,7 @@ describe("ProfileServiceV1", () => {
 
     it("should throw error for username too short", async () => {
       const mockRepository = createMockRepository();
+      mockRepository.findByUserId.mockResolvedValue(null);
       service = new ProfileServiceV1({
         repository:
           mockRepository as unknown as import("../repositories/profile.repository").ProfileRepository,
@@ -170,7 +189,8 @@ describe("ProfileServiceV1", () => {
 
     it("should throw error for username already in use", async () => {
       const mockRepository = createMockRepository();
-      mockRepository.existsByUsername.mockResolvedValue({exists: true, profile: mockProfile});
+      mockRepository.findByUserId.mockResolvedValue(null);
+      mockRepository.existsByUsername.mockResolvedValue({exists: true, profileId: "other-profile-id"});
       service = new ProfileServiceV1({
         repository:
           mockRepository as unknown as import("../repositories/profile.repository").ProfileRepository,
@@ -187,6 +207,7 @@ describe("ProfileServiceV1", () => {
 
     it("should throw error for empty name", async () => {
       const mockRepository = createMockRepository();
+      mockRepository.findByUserId.mockResolvedValue(null);
       service = new ProfileServiceV1({
         repository:
           mockRepository as unknown as import("../repositories/profile.repository").ProfileRepository,
@@ -203,6 +224,9 @@ describe("ProfileServiceV1", () => {
 
     it("should throw error for bio exceeding max length", async () => {
       const mockRepository = createMockRepository();
+      mockRepository.findByUserId.mockResolvedValue(null);
+      mockRepository.existsByUsername.mockResolvedValue({exists: false});
+      mockRepository.create.mockResolvedValue(mockProfile);
       service = new ProfileServiceV1({
         repository:
           mockRepository as unknown as import("../repositories/profile.repository").ProfileRepository,
@@ -221,6 +245,9 @@ describe("ProfileServiceV1", () => {
 
     it("should throw error for invalid picture URL", async () => {
       const mockRepository = createMockRepository();
+      mockRepository.findByUserId.mockResolvedValue(null);
+      mockRepository.existsByUsername.mockResolvedValue({exists: false});
+      mockRepository.create.mockResolvedValue(mockProfile);
       service = new ProfileServiceV1({
         repository:
           mockRepository as unknown as import("../repositories/profile.repository").ProfileRepository,
@@ -238,6 +265,9 @@ describe("ProfileServiceV1", () => {
 
     it("should throw error for non-HTTPS picture URL", async () => {
       const mockRepository = createMockRepository();
+      mockRepository.findByUserId.mockResolvedValue(null);
+      mockRepository.existsByUsername.mockResolvedValue({exists: false});
+      mockRepository.create.mockResolvedValue(mockProfile);
       service = new ProfileServiceV1({
         repository:
           mockRepository as unknown as import("../repositories/profile.repository").ProfileRepository,
@@ -301,7 +331,7 @@ describe("ProfileServiceV1", () => {
     it("should throw error for duplicate username", async () => {
       const mockRepository = createMockRepository();
       mockRepository.findByUserId.mockResolvedValue(mockProfile);
-      mockRepository.existsByUsername.mockResolvedValue({exists: true, profile: mockProfile});
+      mockRepository.existsByUsername.mockResolvedValue({exists: true, profileId: "different-profile-id"});
       service = new ProfileServiceV1({
         repository:
           mockRepository as unknown as import("../repositories/profile.repository").ProfileRepository,
@@ -314,11 +344,30 @@ describe("ProfileServiceV1", () => {
         }),
       ).rejects.toThrow("Username already in use");
     });
+
+    it("should not throw when updating to own username", async () => {
+      const mockRepository = createMockRepository();
+      mockRepository.findByUserId.mockResolvedValue(mockProfile);
+      mockRepository.existsByUsername.mockResolvedValue({exists: true, profileId: mockProfile.id});
+      mockRepository.update.mockResolvedValue(mockProfile);
+      service = new ProfileServiceV1({
+        repository:
+          mockRepository as unknown as import("../repositories/profile.repository").ProfileRepository,
+      });
+
+      const result = await service.updateProfile({
+        userId: mockProfile.userId,
+        username: mockProfile.username,
+      });
+
+      expect(result).toEqual(mockProfile);
+    });
   });
 
   describe("validation", () => {
     it("should normalize username to lowercase", async () => {
       const mockRepository = createMockRepository();
+      mockRepository.findByUserId.mockResolvedValue(null);
       mockRepository.existsByUsername.mockResolvedValue({exists: false});
       mockRepository.create.mockResolvedValue(mockProfile);
       service = new ProfileServiceV1({
@@ -341,6 +390,7 @@ describe("ProfileServiceV1", () => {
 
     it("should sanitize HTML from name", async () => {
       const mockRepository = createMockRepository();
+      mockRepository.findByUserId.mockResolvedValue(null);
       mockRepository.existsByUsername.mockResolvedValue({exists: false});
       mockRepository.create.mockResolvedValue(mockProfile);
       service = new ProfileServiceV1({

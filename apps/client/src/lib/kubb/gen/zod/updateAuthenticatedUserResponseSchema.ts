@@ -11,6 +11,6 @@ import { z } from "zod/v4";
  */
 export const updateAuthenticatedUserResponseSchema = z.object({
     get "user"(){
-                return userSchema.describe("Representação pública do usuário")
+                return userSchema.describe("Dados privados do usuário")
               }
     }).describe("Usuário autenticado atualizado com sucesso")

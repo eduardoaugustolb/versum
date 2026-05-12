@@ -4,9 +4,9 @@
 */
 
 import type { PostApiV1AuthLogout200, PostApiV1AuthLogout400, PostApiV1AuthLogout429, PostApiV1AuthLogout500, PostApiV1AuthLogoutMutationResponse } from "../models/PostApiV1AuthLogout.ts";
-import { faker } from "@faker-js/faker";
 import { createApiErrorResponse } from "./createApiErrorResponse.ts";
 import { createLogoutResponse } from "./createLogoutResponse.ts";
+import { faker } from "@faker-js/faker";
 
 /**
  * @description Logout realizado com sucesso

@@ -3,11 +3,11 @@
 * Do not edit manually.
 */
 
+import type { GetApiV1AuthMagicLinkQueryResponse, GetApiV1AuthMagicLinkQueryParams, GetApiV1AuthMagicLink400, GetApiV1AuthMagicLink401, GetApiV1AuthMagicLink429, GetApiV1AuthMagicLink500 } from "../models/GetApiV1AuthMagicLink.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import type { GetApiV1AuthMagicLinkQueryResponse, GetApiV1AuthMagicLinkQueryParams, GetApiV1AuthMagicLink400, GetApiV1AuthMagicLink401, GetApiV1AuthMagicLink429, GetApiV1AuthMagicLink500 } from "../models/GetApiV1AuthMagicLink.ts";
-import { queryOptions, useQuery } from "@tanstack/react-query";
 import { getApiV1AuthMagicLink } from "../clients/getApiV1AuthMagicLink.ts";
+import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getApiV1AuthMagicLinkQueryKey = (params: GetApiV1AuthMagicLinkQueryParams) => [{ url: '/api/v1/auth/magic-link' }, ...(params ? [params] : [])] as const
 

@@ -4,10 +4,10 @@
 */
 
 import type { PostApiV1AuthMagicLink200, PostApiV1AuthMagicLink400, PostApiV1AuthMagicLink429, PostApiV1AuthMagicLink500, PostApiV1AuthMagicLinkMutationRequest, PostApiV1AuthMagicLinkMutationResponse } from "../models/PostApiV1AuthMagicLink.ts";
-import { faker } from "@faker-js/faker";
 import { createApiErrorResponse } from "./createApiErrorResponse.ts";
 import { createSendMagicLinkBody } from "./createSendMagicLinkBody.ts";
 import { createSendMagicLinkResponse } from "./createSendMagicLinkResponse.ts";
+import { faker } from "@faker-js/faker";
 
 /**
  * @description Magic link enviado

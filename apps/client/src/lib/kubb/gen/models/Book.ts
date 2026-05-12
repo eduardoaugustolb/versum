@@ -21,6 +21,11 @@ export type Book = {
     */
     id: string;
     /**
+     * @description Ordem canônica do livro (1-73)
+     * @type integer
+    */
+    order: number;
+    /**
      * @description Nome do livro
      * @maxLength 100
      * @type string

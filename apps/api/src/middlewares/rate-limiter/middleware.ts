@@ -1,5 +1,5 @@
 import type { Context, Next } from "hono";
-import { rateLimitRedisConn as redis } from "../../infrastructure/redis";
+import { redis } from "../../infrastructure/redis";
 
 interface iConfig {
   windowMs?: number;
@@ -40,7 +40,7 @@ export class RateLimiterMiddleware {
     try {
       const identifier = this.getKey(c);
       const windowStart = Math.floor(Date.now() / this.windowMs);
-      const redisKey = `ratelimit:${identifier}:${c.req.path}:${windowStart}`;
+      const redisKey = `rate_limit:${identifier}:${c.req.path}:${windowStart}`;
 
       const currentCount = await redis.incr(redisKey);
 

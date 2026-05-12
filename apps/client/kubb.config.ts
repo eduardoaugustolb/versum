@@ -22,12 +22,10 @@ export default defineConfig({
     }),
     pluginClient({
       output: { path: "clients", override: true },
-      client: "fetch",
-      baseURL: "https://versum-api.squareweb.app/",
+      client: "fetch"
     }),
     pluginReactQuery({
       client: {
-        baseURL: "https://versum-api.squareweb.app/",
         client: "fetch",
       },
       output: { path: "hooks", override: true },

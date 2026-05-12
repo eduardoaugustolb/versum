@@ -9,29 +9,9 @@
 */
 export type UpdateAuthenticatedUserBody = {
     /**
-     * @description Novo nome de usuário
-     * @minLength 1
-     * @maxLength 50
-     * @type string | undefined
+     * @description E-mail do usuário
+     * @maxLength 255
+     * @type string, email
     */
-    username?: string;
-    /**
-     * @description Novo nome de exibição
-     * @minLength 1
-     * @maxLength 100
-     * @type string | undefined
-    */
-    name?: string;
-    /**
-     * @description Nova biografia
-     * @maxLength 500
-     * @type string
-    */
-    bio?: string | null;
-    /**
-     * @description Nova URL da foto de perfil
-     * @maxLength 500
-     * @type string
-    */
-    pictureUrl?: string | null;
+    email: string;
 };

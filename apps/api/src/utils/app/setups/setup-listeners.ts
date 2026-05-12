@@ -1,5 +1,5 @@
 import type { OpenAPIHono } from "@hono/zod-openapi";
-import { CustomRedisClient } from "../../../infrastructure/redis";
+import { redis } from "../../../infrastructure/redis";
 import { logger } from "@versum/logger";
 import { ErrorHandler } from "../errors/index.ts";
 
@@ -13,7 +13,9 @@ export class SetupListeners {
   }
 
   private setupRedisListener() {
-    CustomRedisClient.connectAll();
+    redis.connect().catch((err) => {
+      logger({ level: "error" }, "[REDIS]", `Connection failed: ${err}`);
+    });
   }
 
   private setupErrorListener() {

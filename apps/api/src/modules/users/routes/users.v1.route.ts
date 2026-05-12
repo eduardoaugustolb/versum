@@ -21,7 +21,8 @@ export const createUsersRoutesV1 = (controller: UsersControllerV1) => {
     path: "/@me",
     tags: ["Users"],
     summary: "Obter usuário autenticado",
-    description: "Retorna os dados do usuário autenticado.",
+      description: "Retorna os dados do usuário autenticado.",
+      security: [{ cookieAuth: [] }],
     responses: {
       200: {
         content: {
@@ -40,7 +41,8 @@ export const createUsersRoutesV1 = (controller: UsersControllerV1) => {
     path: "/@me",
     tags: ["Users"],
     summary: "Atualizar usuário autenticado",
-    description: "Atualiza os dados do usuário autenticado.",
+      description: "Atualiza os dados do usuário autenticado.",
+      security: [{ cookieAuth: [] }],
     request: {
       body: {
         content: {
@@ -65,7 +67,7 @@ export const createUsersRoutesV1 = (controller: UsersControllerV1) => {
 
   router.use("/@me", authMiddleware.validateSession);
 
-  router.openapi(getMeRoute, controller.getAutheticatedUser);
+  router.openapi(getMeRoute, controller.getAuthenticatedUser);
   router.openapi(updateMeRoute, controller.updateAuthenticatedUser);
 
   return router;

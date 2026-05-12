@@ -3,11 +3,11 @@
 * Do not edit manually.
 */
 
+import type { GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerseQueryResponse, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVersePathParams, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse400, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse404, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse429, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse500 } from "../models/GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { InfiniteData, QueryKey, QueryClient, UseSuspenseInfiniteQueryOptions, UseSuspenseInfiniteQueryResult } from "@tanstack/react-query";
-import type { GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerseQueryResponse, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVersePathParams, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse400, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse404, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse429, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse500 } from "../models/GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse.ts";
-import { infiniteQueryOptions, useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { getApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse } from "../clients/getApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerse.ts";
+import { infiniteQueryOptions, useSuspenseInfiniteQuery } from "@tanstack/react-query";
 
 export const getApiV1PublicBibleBooksDynamicidChaptersNumberVersesVerseSuspenseInfiniteQueryKey = (dynamicId: GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVersePathParams["dynamicId"], number: GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVersePathParams["number"], verse: GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesVersePathParams["verse"]) => [{ url: '/api/v1/public/bible/books/:dynamicId/chapters/:number/verses/:verse', params: {dynamicId:dynamicId,number:number,verse:verse} }] as const
 

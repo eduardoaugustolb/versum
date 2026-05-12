@@ -51,7 +51,7 @@ export class UserServiceV1 {
     return user;
   }
 
-  async getUserByIdWithProfile({ id }: { id: string }): Promise<User & { profile: Profile }> {
+  async getUserByIdWithProfile({ id }: { id: string }): Promise<User & { profile: Profile | undefined }> {
     const user = await this.repository.findByIdWithProfile({ id });
 
     if (!user) {

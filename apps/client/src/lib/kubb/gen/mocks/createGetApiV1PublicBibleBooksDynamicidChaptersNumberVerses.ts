@@ -4,9 +4,9 @@
 */
 
 import type { GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses200, GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses400, GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses404, GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses429, GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses500, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesPathParams, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesQueryParams, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesQueryResponse } from "../models/GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses.ts";
-import { faker } from "@faker-js/faker";
 import { createApiErrorResponse } from "./createApiErrorResponse.ts";
 import { createGetVersesResponse } from "./createGetVersesResponse.ts";
+import { faker } from "@faker-js/faker";
 
 export function createGetApiV1PublicBibleBooksDynamicidChaptersNumberVersesPathParams(data?: Partial<GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesPathParams>): GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesPathParams {
 

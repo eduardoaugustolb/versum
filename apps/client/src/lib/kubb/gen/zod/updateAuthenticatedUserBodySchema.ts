@@ -9,8 +9,5 @@ import { z } from "zod/v4";
  * @description Payload para atualizar os dados do usuário autenticado
  */
 export const updateAuthenticatedUserBodySchema = z.object({
-    "username": z.optional(z.string().min(1).max(50).describe("Novo nome de usuário")),
-"name": z.optional(z.string().min(1).max(100).describe("Novo nome de exibição")),
-"bio": z.string().max(500).describe("Nova biografia").nullish(),
-"pictureUrl": z.string().max(500).describe("Nova URL da foto de perfil").nullish()
+    "email": z.email().max(255).describe("E-mail do usuário")
     }).describe("Payload para atualizar os dados do usuário autenticado")

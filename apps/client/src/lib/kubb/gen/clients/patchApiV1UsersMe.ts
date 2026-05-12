@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/fetch";
+import type { PatchApiV1UsersMeMutationRequest, PatchApiV1UsersMeMutationResponse, PatchApiV1UsersMe400, PatchApiV1UsersMe401, PatchApiV1UsersMe404, PatchApiV1UsersMe409, PatchApiV1UsersMe429, PatchApiV1UsersMe500 } from "../models/PatchApiV1UsersMe.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
-import type { PatchApiV1UsersMeMutationRequest, PatchApiV1UsersMeMutationResponse, PatchApiV1UsersMe400, PatchApiV1UsersMe401, PatchApiV1UsersMe404, PatchApiV1UsersMe429, PatchApiV1UsersMe500 } from "../models/PatchApiV1UsersMe.ts";
 
 function getPatchApiV1UsersMeUrl() {
-  const res = { method: 'PATCH', url: `https://versum-api.squareweb.app//api/v1/users/@me` as const }
+  const res = { method: 'PATCH', url: `/api/v1/users/@me` as const }
   return res
 }
 
@@ -17,11 +17,11 @@ function getPatchApiV1UsersMeUrl() {
  * @summary Atualizar usuário autenticado
  * {@link /api/v1/users/@me}
  */
-export async function patchApiV1UsersMe(data?: PatchApiV1UsersMeMutationRequest, config: Partial<RequestConfig<PatchApiV1UsersMeMutationRequest>> & { client?: Client } = {}) {
+export async function patchApiV1UsersMe(data: PatchApiV1UsersMeMutationRequest, config: Partial<RequestConfig<PatchApiV1UsersMeMutationRequest>> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config
 
   const requestData = data
 
-  const res = await request<PatchApiV1UsersMeMutationResponse, ResponseErrorConfig<PatchApiV1UsersMe400 | PatchApiV1UsersMe401 | PatchApiV1UsersMe404 | PatchApiV1UsersMe429 | PatchApiV1UsersMe500>, PatchApiV1UsersMeMutationRequest>({ method : "PATCH", url : getPatchApiV1UsersMeUrl().url.toString(), data : requestData, ... requestConfig })
+  const res = await request<PatchApiV1UsersMeMutationResponse, ResponseErrorConfig<PatchApiV1UsersMe400 | PatchApiV1UsersMe401 | PatchApiV1UsersMe404 | PatchApiV1UsersMe409 | PatchApiV1UsersMe429 | PatchApiV1UsersMe500>, PatchApiV1UsersMeMutationRequest>({ method : "PATCH", url : getPatchApiV1UsersMeUrl().url.toString(), data : requestData, ... requestConfig })
   return res.data
 }

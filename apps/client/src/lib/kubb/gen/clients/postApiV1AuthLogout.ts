@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/fetch";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { PostApiV1AuthLogoutMutationResponse, PostApiV1AuthLogout400, PostApiV1AuthLogout429, PostApiV1AuthLogout500 } from "../models/PostApiV1AuthLogout.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 
 function getPostApiV1AuthLogoutUrl() {
-  const res = { method: 'POST', url: `https://versum-api.squareweb.app//api/v1/auth/logout` as const }
+  const res = { method: 'POST', url: `/api/v1/auth/logout` as const }
   return res
 }
 

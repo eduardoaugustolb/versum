@@ -2,12 +2,9 @@ import type { Context } from "hono";
 import {
   BadRequestError,
   ConflictError,
-  NotFoundError,
 } from "../../../utils/app/errors/index";
 import type { Session } from "../../auth/repositories/auth.types.repository";
 import { UserServiceV1 } from "../services/user.v1.service";
-import type { User } from "../repositories/user.types.repository";
-import type { Profile } from "../repositories/profile.types.repository";
 
 const userService = new UserServiceV1();
 
@@ -18,24 +15,14 @@ export class UsersControllerV1 {
     this.service = service ?? userService;
   }
 
-  getAutheticatedUser = async (c: Context) => {
+  getAuthenticatedUser = async (c: Context) => {
     const session = c.get("session") as Session;
 
     const user = await this.service.getUserByIdWithProfile({
       id: session.userId,
     });
 
-    const profile = user.profile;
-
-    const hydratedUser: User & { profile?: Profile } = Object.create(user);
-
-    delete hydratedUser.profile;
-
-    if (!user || !hydratedUser) {
-      throw new NotFoundError("User not found");
-    }
-
-    const onboardingIsCompleted = !!profile;
+    const onboardingIsCompleted = !!user.profile;
 
     return c.json(
       {

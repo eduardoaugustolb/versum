@@ -5,48 +5,13 @@
 
 
 /**
- * @description Representação pública do usuário
+ * @description Dados privados do usuário
 */
 export type User = {
     /**
-     * @description ID único do usuário
-     * @type string, uuid
-    */
-    id: string;
-    /**
-     * @description Nome de usuário único
-     * @minLength 1
-     * @maxLength 50
-     * @type string
-    */
-    username: string;
-    /**
-     * @description Nome de exibição do usuário
-     * @minLength 1
-     * @maxLength 100
-     * @type string
-    */
-    name: string;
-    /**
      * @description E-mail do usuário
+     * @maxLength 255
      * @type string, email
     */
     email: string;
-    /**
-     * @description Biografia do usuário
-     * @maxLength 500
-     * @type string
-    */
-    bio: string | null;
-    /**
-     * @description URL da foto de perfil
-     * @maxLength 500
-     * @type string
-    */
-    pictureUrl: string | null;
-    /**
-     * @description Data/hora de criação da conta
-     * @type string, date-time
-    */
-    createdAt: string;
 };

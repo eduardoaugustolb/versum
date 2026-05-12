@@ -12,6 +12,7 @@ import {
   updateAuthenticatedProfileResponseSchema,
   usernameParamSchema,
 } from "../schemas/v1/profiles.v1.common.schema.ts";
+import { z } from "zod";
 
 export const createProfileRoutesV1 = (controller: ProfileControllerV1) => {
   const router = new OpenAPIHono({
@@ -25,6 +26,7 @@ export const createProfileRoutesV1 = (controller: ProfileControllerV1) => {
     path: "/@me",
     tags: ["Profiles"],
     summary: "Criar perfil do usuário autenticado",
+    security: [{cookieAuth: []}],
     description: "Cria um novo perfil para o usuário autenticado.",
     request: {
       body: {
@@ -53,7 +55,8 @@ export const createProfileRoutesV1 = (controller: ProfileControllerV1) => {
     path: "/@me",
     tags: ["Profiles"],
     summary: "Obter perfil do usuário autenticado",
-    description: "Retorna os dados do perfil do usuário autenticado.",
+          description: "Retorna os dados do perfil do usuário autenticado.",
+      security: [{ cookieAuth: [] }],
     responses: {
       200: {
         content: {
@@ -72,7 +75,8 @@ export const createProfileRoutesV1 = (controller: ProfileControllerV1) => {
     path: "/@me",
     tags: ["Profiles"],
     summary: "Atualizar perfil do usuário autenticado",
-    description: "Atualiza os dados do perfil do usuário autenticado.",
+          description: "Atualiza os dados do perfil do usuário autenticado.",
+      security: [{ cookieAuth: [] }],
     request: {
       body: {
         content: {
@@ -100,7 +104,8 @@ export const createProfileRoutesV1 = (controller: ProfileControllerV1) => {
     path: "/{username}",
     tags: ["Profiles"],
     summary: "Obter perfil por username",
-    description: "Retorna os dados públicos de um perfil pelo username.",
+      description: "Retorna os dados públicos de um perfil pelo username.",
+      security: [{ cookieAuth: [] }],
     request: {
       params: usernameParamSchema,
     },

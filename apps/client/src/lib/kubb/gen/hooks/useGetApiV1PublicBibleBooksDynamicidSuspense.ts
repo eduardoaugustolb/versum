@@ -3,11 +3,11 @@
 * Do not edit manually.
 */
 
+import type { GetApiV1PublicBibleBooksDynamicidQueryResponse, GetApiV1PublicBibleBooksDynamicidPathParams, GetApiV1PublicBibleBooksDynamicid400, GetApiV1PublicBibleBooksDynamicid404, GetApiV1PublicBibleBooksDynamicid429, GetApiV1PublicBibleBooksDynamicid500 } from "../models/GetApiV1PublicBibleBooksDynamicid.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
-import type { GetApiV1PublicBibleBooksDynamicidQueryResponse, GetApiV1PublicBibleBooksDynamicidPathParams, GetApiV1PublicBibleBooksDynamicid400, GetApiV1PublicBibleBooksDynamicid404, GetApiV1PublicBibleBooksDynamicid429, GetApiV1PublicBibleBooksDynamicid500 } from "../models/GetApiV1PublicBibleBooksDynamicid.ts";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { getApiV1PublicBibleBooksDynamicid } from "../clients/getApiV1PublicBibleBooksDynamicid.ts";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
 export const getApiV1PublicBibleBooksDynamicidSuspenseQueryKey = (dynamicId: GetApiV1PublicBibleBooksDynamicidPathParams["dynamicId"]) => [{ url: '/api/v1/public/bible/books/:dynamicId', params: {dynamicId:dynamicId} }] as const
 

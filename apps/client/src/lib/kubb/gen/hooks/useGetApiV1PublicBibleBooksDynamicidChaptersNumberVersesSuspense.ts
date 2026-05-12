@@ -3,11 +3,11 @@
 * Do not edit manually.
 */
 
+import type { GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesQueryResponse, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesPathParams, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesQueryParams, GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses400, GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses404, GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses429, GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses500 } from "../models/GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/fetch";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
-import type { GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesQueryResponse, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesPathParams, GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesQueryParams, GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses400, GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses404, GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses429, GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses500 } from "../models/GetApiV1PublicBibleBooksDynamicidChaptersNumberVerses.ts";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { getApiV1PublicBibleBooksDynamicidChaptersNumberVerses } from "../clients/getApiV1PublicBibleBooksDynamicidChaptersNumberVerses.ts";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
 export const getApiV1PublicBibleBooksDynamicidChaptersNumberVersesSuspenseQueryKey = (dynamicId: GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesPathParams["dynamicId"], number: GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesPathParams["number"], params?: GetApiV1PublicBibleBooksDynamicidChaptersNumberVersesQueryParams) => [{ url: '/api/v1/public/bible/books/:dynamicId/chapters/:number/verses', params: {dynamicId:dynamicId,number:number} }, ...(params ? [params] : [])] as const
 

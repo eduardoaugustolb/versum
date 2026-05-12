@@ -4,9 +4,9 @@
 */
 
 import type { GetVerseResponse } from "../models/GetVerseResponse.ts";
-import { faker } from "@faker-js/faker";
 import { createPaginationViewModel } from "./createPaginationViewModel.ts";
 import { createVerse } from "./createVerse.ts";
+import { faker } from "@faker-js/faker";
 
 /**
  * @description Resposta de sucesso para GetVerseResponse

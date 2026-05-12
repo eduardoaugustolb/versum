@@ -4,9 +4,9 @@
 */
 
 import type { GetApiV1UsersMe200, GetApiV1UsersMe401, GetApiV1UsersMe404, GetApiV1UsersMe429, GetApiV1UsersMe500, GetApiV1UsersMeQueryResponse } from "../models/GetApiV1UsersMe.ts";
-import { faker } from "@faker-js/faker";
 import { createApiErrorResponse } from "./createApiErrorResponse.ts";
 import { createGetAuthenticatedUserResponse } from "./createGetAuthenticatedUserResponse.ts";
+import { faker } from "@faker-js/faker";
 
 /**
  * @description Usuário autenticado retornado com sucesso

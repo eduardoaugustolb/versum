@@ -4,9 +4,9 @@
 */
 
 import type { GetApiV1PublicBibleBooks200, GetApiV1PublicBibleBooks400, GetApiV1PublicBibleBooks429, GetApiV1PublicBibleBooks500, GetApiV1PublicBibleBooksQueryParams, GetApiV1PublicBibleBooksQueryResponse } from "../models/GetApiV1PublicBibleBooks.ts";
-import { faker } from "@faker-js/faker";
 import { createApiErrorResponse } from "./createApiErrorResponse.ts";
 import { createGetBooksResponse } from "./createGetBooksResponse.ts";
+import { faker } from "@faker-js/faker";
 
 export function createGetApiV1PublicBibleBooksQueryParams(data?: Partial<GetApiV1PublicBibleBooksQueryParams>): GetApiV1PublicBibleBooksQueryParams {
 

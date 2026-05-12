@@ -1,5 +1,5 @@
 import type { Context, Next } from "hono";
-import { cacheReqsRedisConn as redis } from "../../infrastructure/redis";
+import { redis } from "../../infrastructure/redis";
 import { logger } from "@versum/logger";
 
 export class CacheMiddleware {

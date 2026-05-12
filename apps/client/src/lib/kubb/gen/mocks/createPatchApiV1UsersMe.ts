@@ -3,11 +3,11 @@
 * Do not edit manually.
 */
 
-import type { PatchApiV1UsersMe200, PatchApiV1UsersMe400, PatchApiV1UsersMe401, PatchApiV1UsersMe404, PatchApiV1UsersMe429, PatchApiV1UsersMe500, PatchApiV1UsersMeMutationRequest, PatchApiV1UsersMeMutationResponse } from "../models/PatchApiV1UsersMe.ts";
-import { faker } from "@faker-js/faker";
+import type { PatchApiV1UsersMe200, PatchApiV1UsersMe400, PatchApiV1UsersMe401, PatchApiV1UsersMe404, PatchApiV1UsersMe409, PatchApiV1UsersMe429, PatchApiV1UsersMe500, PatchApiV1UsersMeMutationRequest, PatchApiV1UsersMeMutationResponse } from "../models/PatchApiV1UsersMe.ts";
 import { createApiErrorResponse } from "./createApiErrorResponse.ts";
 import { createUpdateAuthenticatedUserBody } from "./createUpdateAuthenticatedUserBody.ts";
 import { createUpdateAuthenticatedUserResponse } from "./createUpdateAuthenticatedUserResponse.ts";
+import { faker } from "@faker-js/faker";
 
 /**
  * @description Usuário autenticado atualizado com sucesso
@@ -37,6 +37,14 @@ export function createPatchApiV1UsersMe401(data?: Partial<PatchApiV1UsersMe401>)
  * @description Recurso não encontrado
  */
 export function createPatchApiV1UsersMe404(data?: Partial<PatchApiV1UsersMe404>): PatchApiV1UsersMe404 {
+
+  return createApiErrorResponse(data)
+}
+
+/**
+ * @description Conflito de estado
+ */
+export function createPatchApiV1UsersMe409(data?: Partial<PatchApiV1UsersMe409>): PatchApiV1UsersMe409 {
 
   return createApiErrorResponse(data)
 }

@@ -10,7 +10,7 @@ import type { User } from "./User.ts";
 */
 export type UpdateAuthenticatedUserResponse = {
     /**
-     * @description Representação pública do usuário
+     * @description Dados privados do usuário
      * @type object
     */
     user: User;

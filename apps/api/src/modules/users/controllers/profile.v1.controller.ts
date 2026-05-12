@@ -15,8 +15,8 @@ export class ProfileControllerV1 {
     const body = await c.req.json();
 
     const profile = await this.service.createProfile({
-      userId: session.userId,
       ...body,
+      userId: session.userId,
     });
 
     return c.json({ profile }, 201);
@@ -41,8 +41,8 @@ export class ProfileControllerV1 {
     const body = await c.req.json();
 
     const profile = await this.service.updateProfile({
-      userId: session.userId,
       ...body,
+      userId: session.userId,
     });
 
     return c.json({ profile }, 200);

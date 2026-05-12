@@ -11,6 +11,7 @@ import { z } from "zod/v4";
  */
 export const getAuthenticatedUserResponseSchema = z.object({
     get "user"(){
-                return userSchema.describe("Representação pública do usuário")
-              }
+                return userSchema.describe("Dados privados do usuário")
+              },
+"onboardingIsCompleted": z.boolean()
     }).describe("Usuário autenticado retornado com sucesso")

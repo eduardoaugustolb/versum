@@ -33,7 +33,7 @@ export class UserRepository implements iUserRepository {
     return user ?? null;
   }
 
-  async findByIdWithProfile({ id }: { id: string }): Promise<User & { profile: Profile } | null> {
+  async findByIdWithProfile({ id }: { id: string }): Promise<(User & { profile: Profile | undefined }) | null> {
     const user = await this.db.query.users.findFirst({
       where: (users, { eq }) => eq(users.id, id),
       with: {
