@@ -9,6 +9,7 @@ on:
     branches: [main]
     paths:
       - "apps/api/**"
+      - ".github/workflows/**"
 
 jobs:
   lint:
