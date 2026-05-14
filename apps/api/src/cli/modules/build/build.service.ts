@@ -32,7 +32,7 @@ function shouldIgnore(name: string): boolean {
   if (IGNORED_DIRS.has(name)) return true;
   if (IGNORED_FILES.has(name)) return true;
   if (name.startsWith(".env")) return true;
-  if (name === "bun.lock" || name.endsWith(".lock")) return true;
+  if (name.endsWith(".lock") && name !== "bun.lock") return true;
   return false;
 }
 
@@ -97,6 +97,7 @@ export async function buildProject(): Promise<string> {
   loggerPkg.types = "index.js";
   loggerPkg.exports = { ".": "./index.js" };
   delete loggerPkg.devDependencies;
+  delete loggerPkg.peerDependencies;
   delete loggerPkg.scripts;
 
   await writeFile(
@@ -104,7 +105,7 @@ export async function buildProject(): Promise<string> {
     JSON.stringify(loggerPkg, null, 2),
   );
 
-  // 4. Generate deploy package.json
+  // 4. Generate deploy package.json (excluding peer/dev deps)
   const apiPkg = JSON.parse(
     readFileSync(resolve(API_ROOT, "package.json"), "utf-8"),
   );
@@ -137,7 +138,24 @@ export async function buildProject(): Promise<string> {
     JSON.stringify(deployPkg, null, 2),
   );
 
-  // 5. Zip the build directory
+  // 5. Generate lockfile by running bun install
+  const installResult = Bun.spawnSync(["bun", "install"], {
+    cwd: buildDir,
+  });
+
+  if (!installResult.success) {
+    throw new Error(
+      `Dependency installation failed:\n${installResult.stderr.toString()}`,
+    );
+  }
+
+  // 6. Remove node_modules (keep zip small, SquareCloud will reinstall)
+  await rm(resolve(buildDir, "node_modules"), {
+    recursive: true,
+    force: true,
+  });
+
+  // 7. Zip the build directory
   const zip = new JSZip();
   await addDirToZip(zip, buildDir, buildDir);
 
