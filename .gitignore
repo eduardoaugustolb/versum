@@ -1,4 +1,7 @@
 .env
-/.certs
-/node_modules
-__git
+.env.local
+.env.*.local
+.certs
+node_modules
+*.zip
+.build

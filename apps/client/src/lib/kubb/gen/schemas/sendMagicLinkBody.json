@@ -1,0 +1,1 @@
+{"type":"object","properties":{"email":{"type":"string","format":"email","description":"E-mail do usuário"}},"required":["email"],"description":"Payload para solicitar um magic link","x-readme-ref-name":"SendMagicLinkBody"}

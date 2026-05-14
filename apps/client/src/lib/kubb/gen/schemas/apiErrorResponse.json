@@ -1,0 +1,1 @@
+{"type":"object","properties":{"success":{"type":"boolean","enum":[false],"description":"Indica que ocorreu um erro"},"error":{"type":"string","description":"Mensagem de erro"},"code":{"type":"string","description":"Código do erro"}},"required":["success","error"],"description":"Resposta padrão de erro da API","x-readme-ref-name":"ApiErrorResponse"}

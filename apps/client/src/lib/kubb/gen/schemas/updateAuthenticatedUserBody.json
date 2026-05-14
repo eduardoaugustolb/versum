@@ -1,0 +1,1 @@
+{"type":"object","properties":{"email":{"type":"string","maxLength":255,"format":"email","description":"E-mail do usuário","example":"john@example.com"}},"required":["email"],"description":"Payload para atualizar os dados do usuário autenticado","x-readme-ref-name":"UpdateAuthenticatedUserBody"}

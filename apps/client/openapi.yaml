@@ -1,0 +1,917 @@
+openapi: 3.0.0
+info:
+  title: Versum API
+  version: 1.0.0
+components:
+  schemas:
+    SendMagicLinkResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Mensagem legível para humanos
+      required:
+        - message
+      description: Solicitação de magic link aceita
+    ApiErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          enum:
+            - false
+          description: Indica que ocorreu um erro
+        error:
+          type: string
+          description: Mensagem de erro
+        code:
+          type: string
+          description: Código do erro
+      required:
+        - success
+        - error
+      description: Resposta padrão de erro da API
+    SendMagicLinkBody:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: E-mail do usuário
+      required:
+        - email
+      description: Payload para solicitar um magic link
+    AuthenticateWithMagicLinkResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Mensagem legível para humanos
+      required:
+        - message
+      description: Sessão criada
+    LogoutResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Mensagem legível para humanos
+      required:
+        - message
+      description: Sessão encerrada com sucesso
+    GetAuthenticatedUserResponse:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+      required:
+        - user
+      description: Usuário autenticado retornado com sucesso
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID único do usuário
+        username:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: Nome de usuário único
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Nome de exibição do usuário
+        email:
+          type: string
+          format: email
+          description: E-mail do usuário
+        bio:
+          type: string
+          nullable: true
+          maxLength: 500
+          description: Biografia do usuário
+        pictureUrl:
+          type: string
+          nullable: true
+          maxLength: 500
+          description: URL da foto de perfil
+        createdAt:
+          type: string
+          format: date-time
+          description: Data/hora de criação da conta
+      required:
+        - id
+        - username
+        - name
+        - email
+        - bio
+        - pictureUrl
+        - createdAt
+      description: Representação pública do usuário
+    UpdateAuthenticatedUserResponse:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+      required:
+        - user
+      description: Usuário autenticado atualizado com sucesso
+    UpdateAuthenticatedUserBody:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: Novo nome de usuário
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Novo nome de exibição
+        bio:
+          type: string
+          nullable: true
+          maxLength: 500
+          description: Nova biografia
+        pictureUrl:
+          type: string
+          nullable: true
+          maxLength: 500
+          description: Nova URL da foto de perfil
+      description: Payload para atualizar os dados do usuário autenticado
+    GetBooksResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+          description: Indica se a requisição foi bem-sucedida
+        message:
+          type: string
+          description: Mensagem opcional de contexto
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Book"
+          description: Dados da resposta
+        pagination:
+          $ref: "#/components/schemas/PaginationViewModel"
+      description: Resposta de sucesso para GetBooksResponse
+    Book:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID único do livro
+        name:
+          type: string
+          maxLength: 100
+          description: Nome do livro
+        slug:
+          type: string
+          maxLength: 10
+          description: Slug do livro
+        niceName:
+          type: string
+          maxLength: 100
+          description: Nome amigável do livro
+        testament:
+          type: string
+          enum:
+            - OLD
+            - NEW
+          description: Testamento ao qual o livro pertence
+        totalChapters:
+          type: integer
+          minimum: 0
+          exclusiveMinimum: true
+          description: Número total de capítulos
+      required:
+        - id
+        - name
+        - slug
+        - niceName
+        - testament
+        - totalChapters
+      description: Livro da Bíblia
+    PaginationViewModel:
+      type: object
+      properties:
+        currentPage:
+          type: integer
+          minimum: 0
+          exclusiveMinimum: true
+          description: Página atual
+        totalPages:
+          type: integer
+          minimum: 0
+          exclusiveMinimum: true
+          description: Número total de páginas
+        totalItems:
+          type: integer
+          minimum: 0
+          description: Número total de itens
+        itemsPerPage:
+          type: integer
+          minimum: 0
+          exclusiveMinimum: true
+          description: Número de itens por página
+        hasNextPage:
+          type: boolean
+          description: Indica se existe próxima página
+        hasPrevPage:
+          type: boolean
+          description: Indica se existe página anterior
+      required:
+        - currentPage
+        - totalPages
+        - totalItems
+        - itemsPerPage
+        - hasNextPage
+        - hasPrevPage
+      description: Informações de paginação
+    GetBookByDynamicIdResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+          description: Indica se a requisição foi bem-sucedida
+        message:
+          type: string
+          description: Mensagem opcional de contexto
+        data:
+          allOf:
+            - $ref: "#/components/schemas/Book"
+            - description: Dados da resposta
+        pagination:
+          $ref: "#/components/schemas/PaginationViewModel"
+      description: Resposta de sucesso para GetBookByDynamicIdResponse
+    GetChaptersResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+          description: Indica se a requisição foi bem-sucedida
+        message:
+          type: string
+          description: Mensagem opcional de contexto
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Chapter"
+          description: Dados da resposta
+        pagination:
+          $ref: "#/components/schemas/PaginationViewModel"
+      description: Resposta de sucesso para GetChaptersResponse
+    Chapter:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID único do capítulo
+        bookId:
+          type: string
+          format: uuid
+          description: ID do livro ao qual o capítulo pertence
+        number:
+          type: integer
+          minimum: 0
+          exclusiveMinimum: true
+          description: Número do capítulo
+        totalVerses:
+          type: integer
+          minimum: 0
+          exclusiveMinimum: true
+          description: Número total de versículos
+      required:
+        - id
+        - bookId
+        - number
+        - totalVerses
+      description: Capítulo de um livro da Bíblia
+    GetChapterResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+          description: Indica se a requisição foi bem-sucedida
+        message:
+          type: string
+          description: Mensagem opcional de contexto
+        data:
+          allOf:
+            - $ref: "#/components/schemas/Chapter"
+            - description: Dados da resposta
+        pagination:
+          $ref: "#/components/schemas/PaginationViewModel"
+      description: Resposta de sucesso para GetChapterResponse
+    GetVersesResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+          description: Indica se a requisição foi bem-sucedida
+        message:
+          type: string
+          description: Mensagem opcional de contexto
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Verse"
+          description: Dados da resposta
+        pagination:
+          $ref: "#/components/schemas/PaginationViewModel"
+      description: Resposta de sucesso para GetVersesResponse
+    Verse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID único do versículo
+        chapterId:
+          type: string
+          format: uuid
+          description: ID do capítulo ao qual o versículo pertence
+        number:
+          type: integer
+          minimum: 0
+          exclusiveMinimum: true
+          description: Número do versículo
+        groupStart:
+          type: integer
+          nullable: true
+          description: Início do grupo de versículos (para agrupamento)
+        groupEnd:
+          type: integer
+          nullable: true
+          description: Fim do grupo de versículos (para agrupamento)
+        text:
+          type: string
+          description: Texto do versículo
+      required:
+        - id
+        - chapterId
+        - number
+        - text
+      description: Versículo de um capítulo da Bíblia
+    GetVerseResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+          description: Indica se a requisição foi bem-sucedida
+        message:
+          type: string
+          description: Mensagem opcional de contexto
+        data:
+          allOf:
+            - $ref: "#/components/schemas/Verse"
+            - description: Dados da resposta
+        pagination:
+          $ref: "#/components/schemas/PaginationViewModel"
+      description: Resposta de sucesso para GetVerseResponse
+  parameters: {}
+paths:
+  /api/v1/auth/magic-link:
+    post:
+      tags:
+        - Auth
+      summary: Enviar magic link
+      description: Envia um link mágico para autenticação via e-mail.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendMagicLinkBody"
+      responses:
+        "200":
+          description: Magic link enviado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SendMagicLinkResponse"
+        "400":
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+    get:
+      tags:
+        - Auth
+      summary: Autenticar com magic link
+      description: Cria uma sessão a partir de um token de magic link.
+      parameters:
+        - schema:
+            type: string
+            minLength: 1
+            description: Token do magic link (publicId.token)
+            example: aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee.xxxxxxxxxxxxxx
+          required: true
+          description: Token do magic link (publicId.token)
+          name: token
+          in: query
+      responses:
+        "200":
+          description: Login realizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthenticateWithMagicLinkResponse"
+        "400":
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "401":
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/v1/auth/logout:
+    post:
+      tags:
+        - Auth
+      summary: Encerrar sessão
+      description: Encerra a sessão atual baseada no cookie de sessão.
+      responses:
+        "200":
+          description: Logout realizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LogoutResponse"
+        "400":
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/v1/users/@me:
+    get:
+      tags:
+        - Users
+      summary: Obter usuário autenticado
+      description: Retorna os dados do usuário autenticado.
+      responses:
+        "200":
+          description: Usuário autenticado retornado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetAuthenticatedUserResponse"
+        "401":
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "404":
+          description: Recurso não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+    patch:
+      tags:
+        - Users
+      summary: Atualizar usuário autenticado
+      description: Atualiza os dados do usuário autenticado.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateAuthenticatedUserBody"
+      responses:
+        "200":
+          description: Usuário autenticado atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateAuthenticatedUserResponse"
+        "400":
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "401":
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "404":
+          description: Recurso não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/v1/users/@{username}:
+    get:
+      tags:
+        - Users
+      summary: Obter usuário por username
+      description: Retorna os dados públicos de um usuário pelo username.
+      parameters:
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 50
+            description: Nome de usuário
+            example: joao
+          required: true
+          description: Nome de usuário
+          name: username
+          in: path
+      responses:
+        "200":
+          description: Usuário retornado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetAuthenticatedUserResponse"
+        "404":
+          description: Recurso não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/v1/public/bible/books:
+    get:
+      tags:
+        - Bíblia
+      summary: Listar livros da Bíblia
+      description: Retorna uma lista paginada de todos os livros da Bíblia, com
+        informações como nome, slug, testamento e número de capítulos.
+      parameters:
+        - schema:
+            type: string
+            default: "1"
+            example: "1"
+            description: "Número da página (padrão: 1)"
+          required: false
+          description: "Número da página (padrão: 1)"
+          name: page
+          in: query
+        - schema:
+            type: string
+            default: "10"
+            example: "10"
+            description: "Limite de itens por página (padrão: 10)"
+          required: false
+          description: "Limite de itens por página (padrão: 10)"
+          name: limit
+          in: query
+      responses:
+        "200":
+          description: Lista de livros da Bíblia retornada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetBooksResponse"
+        "400":
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/v1/public/bible/books/{dynamicId}:
+    get:
+      tags:
+        - Bíblia
+      summary: Obter livro por slug ou nome
+      description: "Retorna um livro específico da Bíblia baseado em seu slug (ex:
+        'genesis') ou nome (ex: 'Gênesis')."
+      parameters:
+        - schema:
+            type: string
+            minLength: 1
+            example: genesis
+            description: "Slug ou nome do livro (ex: 'genesis' ou 'Gênesis')"
+          required: true
+          description: "Slug ou nome do livro (ex: 'genesis' ou 'Gênesis')"
+          name: dynamicId
+          in: path
+      responses:
+        "200":
+          description: Livro encontrado e retornado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetBookByDynamicIdResponse"
+        "400":
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "404":
+          description: Recurso não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/v1/public/bible/books/{dynamicId}/chapters:
+    get:
+      tags:
+        - Bíblia
+      summary: Listar capítulos de um livro
+      description: Retorna uma lista paginada de todos os capítulos de um livro
+        específico da Bíblia.
+      parameters:
+        - schema:
+            type: string
+            minLength: 1
+            example: genesis
+            description: "Slug ou nome do livro (ex: 'genesis' ou 'Gênesis')"
+          required: true
+          description: "Slug ou nome do livro (ex: 'genesis' ou 'Gênesis')"
+          name: dynamicId
+          in: path
+        - schema:
+            type: string
+            default: "1"
+            example: "1"
+            description: "Número da página (padrão: 1)"
+          required: false
+          description: "Número da página (padrão: 1)"
+          name: page
+          in: query
+        - schema:
+            type: string
+            default: "10"
+            example: "10"
+            description: "Limite de itens por página (padrão: 10)"
+          required: false
+          description: "Limite de itens por página (padrão: 10)"
+          name: limit
+          in: query
+      responses:
+        "200":
+          description: Lista de capítulos do livro retornada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetChaptersResponse"
+        "400":
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "404":
+          description: Recurso não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/v1/public/bible/books/{dynamicId}/chapters/{number}:
+    get:
+      tags:
+        - Bíblia
+      summary: Obter capítulo por número
+      description: Retorna um capítulo específico de um livro da Bíblia, identificado
+        pelo slug/nome do livro e número do capítulo.
+      parameters:
+        - schema:
+            type: string
+            minLength: 1
+            example: genesis
+            description: "Slug ou nome do livro (ex: 'genesis' ou 'Gênesis')"
+          required: true
+          description: "Slug ou nome do livro (ex: 'genesis' ou 'Gênesis')"
+          name: dynamicId
+          in: path
+        - schema:
+            type: string
+            pattern: ^\d+$
+            example: "1"
+            description: Número do capítulo
+          required: true
+          description: Número do capítulo
+          name: number
+          in: path
+      responses:
+        "200":
+          description: Capítulo encontrado e retornado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetChapterResponse"
+        "400":
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "404":
+          description: Recurso não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/v1/public/bible/books/{dynamicId}/chapters/{number}/verses:
+    get:
+      tags:
+        - Bíblia
+      summary: Listar versículos de um capítulo
+      description: Retorna uma lista paginada de todos os versículos de um capítulo
+        específico da Bíblia.
+      parameters:
+        - schema:
+            type: string
+            minLength: 1
+            example: genesis
+            description: "Slug ou nome do livro (ex: 'genesis' ou 'Gênesis')"
+          required: true
+          description: "Slug ou nome do livro (ex: 'genesis' ou 'Gênesis')"
+          name: dynamicId
+          in: path
+        - schema:
+            type: string
+            pattern: ^\d+$
+            example: "1"
+            description: Número do capítulo
+          required: true
+          description: Número do capítulo
+          name: number
+          in: path
+        - schema:
+            type: string
+            default: "1"
+            example: "1"
+            description: "Número da página (padrão: 1)"
+          required: false
+          description: "Número da página (padrão: 1)"
+          name: page
+          in: query
+        - schema:
+            type: string
+            default: "10"
+            example: "10"
+            description: "Limite de itens por página (padrão: 10)"
+          required: false
+          description: "Limite de itens por página (padrão: 10)"
+          name: limit
+          in: query
+      responses:
+        "200":
+          description: Lista de versículos do capítulo retornada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetVersesResponse"
+        "400":
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "404":
+          description: Recurso não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/v1/public/bible/books/{dynamicId}/chapters/{number}/verses/{verse}:
+    get:
+      tags:
+        - Bíblia
+      summary: Obter versículo por número
+      description: Retorna um versículo específico de um capítulo da Bíblia,
+        identificado pelo slug/nome do livro, número do capítulo e número do
+        versículo.
+      parameters:
+        - schema:
+            type: string
+            minLength: 1
+            example: genesis
+            description: "Slug ou nome do livro (ex: 'genesis' ou 'Gênesis')"
+          required: true
+          description: "Slug ou nome do livro (ex: 'genesis' ou 'Gênesis')"
+          name: dynamicId
+          in: path
+        - schema:
+            type: string
+            pattern: ^\d+$
+            example: "1"
+            description: Número do capítulo
+          required: true
+          description: Número do capítulo
+          name: number
+          in: path
+        - schema:
+            type: string
+            pattern: ^\d+$
+            example: "1"
+            description: Número do versículo
+          required: true
+          description: Número do versículo
+          name: verse
+          in: path
+      responses:
+        "200":
+          description: Versículo encontrado e retornado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetVerseResponse"
+        "400":
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "404":
+          description: Recurso não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"

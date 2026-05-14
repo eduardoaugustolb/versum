@@ -1,0 +1,1 @@
+{"type":"object","properties":{"message":{"type":"string","description":"Mensagem legível para humanos"}},"required":["message"],"description":"Sessão criada","x-readme-ref-name":"AuthenticateWithMagicLinkResponse"}
