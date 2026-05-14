@@ -105,7 +105,7 @@ export async function buildProject(): Promise<string> {
     JSON.stringify(loggerPkg, null, 2),
   );
 
-  // 4. Generate deploy package.json (excluding peer/dev deps)
+  // 4. Generate deploy package.json
   const apiPkg = JSON.parse(
     readFileSync(resolve(API_ROOT, "package.json"), "utf-8"),
   );
