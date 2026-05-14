@@ -1,11 +1,11 @@
 import {
-  existsSync,
-  mkdirSync,
   readdirSync,
   statSync,
-  writeFileSync,
+  readFileSync,
+  existsSync,
 } from "node:fs";
-import { relative, resolve } from "node:path";
+import { readdir, mkdir, rm, writeFile, stat } from "node:fs/promises";
+import { resolve, relative } from "node:path";
 import JSZip from "jszip";
 
 const IGNORED_DIRS = new Set([
@@ -24,47 +24,122 @@ const IGNORED_DIRS = new Set([
 
 const IGNORED_FILES = new Set([".DS_Store", "Thumbs.db"]);
 
-async function addToZip(
-  zip: JSZip,
-  sourcePath: string,
-  basePath: string,
-): Promise<void> {
-  const stat = statSync(sourcePath);
-  const parts = sourcePath.split(/[/\\]/);
-  const name = parts[parts.length - 1] ?? "";
+const API_ROOT = resolve(import.meta.dir, "..", "..", "..", "..");
+const WORKSPACE_ROOT = resolve(API_ROOT, "..", "..");
+const LOGGER_ROOT = resolve(WORKSPACE_ROOT, "packages", "logger");
 
-  if (IGNORED_DIRS.has(name)) return;
-
-  if (stat.isDirectory()) {
-    const entries = readdirSync(sourcePath);
-    for (const entry of entries) {
-      const fullPath = resolve(sourcePath, entry);
-      await addToZip(zip, fullPath, basePath);
-    }
-  } else {
-    if (IGNORED_FILES.has(name)) return;
-    if (name.startsWith(".env")) return;
-    if (name === "bun.lock" || name.endsWith(".lock")) return;
-
-    const archivePath = relative(basePath, sourcePath).replace(/\\/g, "/");
-    const content = await Bun.file(sourcePath).arrayBuffer();
-    zip.file(archivePath, new Uint8Array(content));
-  }
+function shouldIgnore(name: string): boolean {
+  if (IGNORED_DIRS.has(name)) return true;
+  if (IGNORED_FILES.has(name)) return true;
+  if (name.startsWith(".env")) return true;
+  if (name === "bun.lock" || name.endsWith(".lock")) return true;
+  return false;
 }
 
 export async function buildProject(): Promise<string> {
-  const rootDir = resolve(import.meta.dir, "..", "..", "..", "..");
   const projectName = "versum-api";
-  const outputDir = resolve(rootDir, ".build");
+  const buildDir = resolve(API_ROOT, ".build", projectName);
+  const outputDir = resolve(API_ROOT, ".build");
   const outputPath = resolve(outputDir, `${projectName}.zip`);
 
-  if (!existsSync(outputDir)) {
-    mkdirSync(outputDir, { recursive: true });
+  if (existsSync(buildDir)) {
+    await rm(buildDir, { recursive: true, force: true });
+  }
+  await mkdir(buildDir, { recursive: true });
+
+  // 1. Build server entry (compiles TS→JS, bundles internal code)
+  const serverBuild = Bun.spawnSync([
+    "bun",
+    "build",
+    "./src/server.ts",
+    "--outdir",
+    buildDir,
+    "--target",
+    "bun",
+  ], {
+    cwd: API_ROOT,
+  });
+
+  if (!serverBuild.success) {
+    throw new Error(
+      `Server build failed:\n${serverBuild.stderr.toString()}`,
+    );
   }
 
-  const zip = new JSZip();
+  // 2. Build logger package
+  const loggerBuildDir = resolve(buildDir, "packages", "logger");
+  await mkdir(loggerBuildDir, { recursive: true });
 
-  await addToZip(zip, rootDir, rootDir);
+  const loggerBuild = Bun.spawnSync([
+    "bun",
+    "build",
+    "./index.ts",
+    "--outdir",
+    loggerBuildDir,
+    "--target",
+    "bun",
+  ], {
+    cwd: LOGGER_ROOT,
+  });
+
+  if (!loggerBuild.success) {
+    throw new Error(
+      `Logger build failed:\n${loggerBuild.stderr.toString()}`,
+    );
+  }
+
+  // 3. Copy logger package.json with JS paths
+  const loggerPkg = JSON.parse(
+    readFileSync(resolve(LOGGER_ROOT, "package.json"), "utf-8"),
+  );
+  loggerPkg.module = "index.js";
+  loggerPkg.main = "index.js";
+  loggerPkg.types = "index.js";
+  loggerPkg.exports = { ".": "./index.js" };
+  delete loggerPkg.devDependencies;
+  delete loggerPkg.scripts;
+
+  await writeFile(
+    resolve(loggerBuildDir, "package.json"),
+    JSON.stringify(loggerPkg, null, 2),
+  );
+
+  // 4. Generate deploy package.json
+  const apiPkg = JSON.parse(
+    readFileSync(resolve(API_ROOT, "package.json"), "utf-8"),
+  );
+
+  const deployPkg: Record<string, unknown> = {
+    name: projectName,
+    version: apiPkg.version,
+    module: "server.js",
+    main: "server.js",
+    type: "module",
+    scripts: {
+      start: "bun run server.js",
+    },
+  };
+
+  const dependencies: Record<string, string> = {};
+  for (const [name, version] of Object.entries(
+    apiPkg.dependencies as Record<string, string>,
+  )) {
+    if (version === "workspace:*") {
+      dependencies[name] = "file:./packages/logger";
+    } else {
+      dependencies[name] = version;
+    }
+  }
+  deployPkg.dependencies = dependencies;
+
+  await writeFile(
+    resolve(buildDir, "package.json"),
+    JSON.stringify(deployPkg, null, 2),
+  );
+
+  // 5. Zip the build directory
+  const zip = new JSZip();
+  await addDirToZip(zip, buildDir, buildDir);
 
   const zipBuffer = await zip.generateAsync({
     type: "nodebuffer",
@@ -72,7 +147,38 @@ export async function buildProject(): Promise<string> {
     compressionOptions: { level: 6 },
   });
 
-  writeFileSync(outputPath, zipBuffer);
+  // 6. Clean up build dir and write final zip
+  await rm(buildDir, { recursive: true, force: true });
+  await writeFile(outputPath, new Uint8Array(zipBuffer));
 
   return outputPath;
+}
+
+async function addDirToZip(
+  zip: JSZip,
+  dirPath: string,
+  basePath: string,
+): Promise<void> {
+  const entries = await readdir(dirPath);
+
+  for (const entry of entries) {
+    if (shouldIgnore(entry)) continue;
+
+    const fullPath = resolve(dirPath, entry);
+    let isDir: boolean;
+
+    try {
+      isDir = (await stat(fullPath)).isDirectory();
+    } catch {
+      continue;
+    }
+
+    if (isDir) {
+      await addDirToZip(zip, fullPath, basePath);
+    } else {
+      const archivePath = relative(basePath, fullPath);
+      const content = await Bun.file(fullPath).arrayBuffer();
+      zip.file(archivePath, new Uint8Array(content));
+    }
+  }
 }
