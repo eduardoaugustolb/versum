@@ -11,6 +11,7 @@ export const mainMenu = async () =>
       { title: "Database", value: "database" },
       { title: "Gerar Docs OpenAPI", value: "openapi-doc" },
       { title: "Build", value: "build" },
+      { title: "Deploy (Square Cloud)", value: "deploy" },
       { title: "Sair", value: "exit" },
     ],
   });
