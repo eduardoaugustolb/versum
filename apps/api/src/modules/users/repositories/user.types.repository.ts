@@ -13,4 +13,5 @@ export interface iUserRepository {
   findByIdWithProfile(params: { id: string }): Promise<(User & { profile: Profile | undefined }) | null>;
   findByEmail(params: { email: string }): Promise<User | null>;
   updateUser(params: UpdateUserParams & { id: string }): Promise<User>;
+  deleteUser(params: { id: string }): Promise<void>;
 }

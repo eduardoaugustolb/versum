@@ -14,4 +14,5 @@ export interface iProfileRepository {
   findByUsername(params: { username: string }): Promise<Profile | null>;
   update(params: UpdateProfileParams & { id: string }): Promise<Profile>;
   existsByUsername(params: { username: string }): Promise<{ exists: boolean, profileId: string } | { exists: false }>;
+  deleteByUserId(params: { userId: string }): Promise<void>;
 }

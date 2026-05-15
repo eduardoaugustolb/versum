@@ -43,6 +43,12 @@ export class UsersCommonSchemasV1 {
     .openapi("UpdateAuthenticatedUserResponse", {
       description: "Usuário autenticado atualizado com sucesso",
     });
+
+  static readonly deleteAuthenticatedUserResponseSchema = z
+    .null()
+    .openapi("DeleteAuthenticatedUserResponse", {
+      description: "Usuário deletado com sucesso (sem conteúdo)",
+    });
 }
 
 export const userSchema = UsersCommonSchemasV1.userSchema;
@@ -52,6 +58,8 @@ export const updateAuthenticatedUserBodySchema =
   UsersCommonSchemasV1.updateAuthenticatedUserBodySchema;
 export const updateAuthenticatedUserResponseSchema =
   UsersCommonSchemasV1.updateAuthenticatedUserResponseSchema;
+export const deleteAuthenticatedUserResponseSchema =
+  UsersCommonSchemasV1.deleteAuthenticatedUserResponseSchema;
 
 export type UserSchema = z.infer<typeof UsersCommonSchemasV1.userSchema>;
 export type UpdateAuthenticatedUserBody = z.infer<

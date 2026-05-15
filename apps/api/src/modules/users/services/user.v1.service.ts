@@ -1,4 +1,6 @@
+import { AuthRepository } from "../../auth/repositories/auth.repository";
 import type { Profile } from "../repositories/profile.types.repository";
+import { ProfileRepository } from "../repositories/profile.repository";
 import { UserRepository } from "../repositories/user.repository";
 import type {
   CreateUserParams,
@@ -9,9 +11,21 @@ const MAX_EMAIL_LENGTH = 255;
 
 export class UserServiceV1 {
   private readonly repository: UserRepository;
+  private readonly authRepository: AuthRepository;
+  private readonly profileRepository: ProfileRepository;
 
-  constructor({ repository }: { repository?: UserRepository } = {}) {
+  constructor({
+    repository,
+    authRepository,
+    profileRepository,
+  }: {
+    repository?: UserRepository;
+    authRepository?: AuthRepository;
+    profileRepository?: ProfileRepository;
+  } = {}) {
     this.repository = repository ?? new UserRepository();
+    this.authRepository = authRepository ?? new AuthRepository();
+    this.profileRepository = profileRepository ?? new ProfileRepository();
   }
 
   private validateEmail(email: string): void {
@@ -88,5 +102,17 @@ export class UserServiceV1 {
       id: user.id,
       email: normalizedEmail,
     });
+  }
+
+  async deleteUser({ id }: { id: string }): Promise<void> {
+    const user = await this.repository.findById({ id });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    await this.authRepository.deleteSessionsByUserId({ userId: id });
+    await this.profileRepository.deleteByUserId({ userId: id });
+    await this.repository.deleteUser({ id });
   }
 }

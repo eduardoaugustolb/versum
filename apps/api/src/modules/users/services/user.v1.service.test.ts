@@ -15,26 +15,54 @@ describe("UserServiceV1", () => {
     db: {},
     create: vi.fn<() => Promise<User>>(),
     findById: vi.fn<() => Promise<User | null>>(),
+    findByIdWithProfile: vi.fn<() => Promise<User | null>>(),
     findByEmail: vi.fn<() => Promise<User | null>>(),
+    deleteUser: vi.fn<() => Promise<void>>(),
   });
+
+  const createMockAuthRepository = () => ({
+    db: {},
+    deleteSessionsByUserId: vi.fn<() => Promise<void>>(),
+  });
+
+  const createMockProfileRepository = () => ({
+    db: {},
+    deleteByUserId: vi.fn<() => Promise<void>>(),
+  });
+
+  const createService = ({
+    mockRepository,
+    mockAuthRepository,
+    mockProfileRepository,
+  }: {
+    mockRepository: ReturnType<typeof createMockRepository>;
+    mockAuthRepository: ReturnType<typeof createMockAuthRepository>;
+    mockProfileRepository: ReturnType<typeof createMockProfileRepository>;
+  }) =>
+    new UserServiceV1({
+      repository:
+        mockRepository as unknown as import("../repositories/user.repository").UserRepository,
+      authRepository:
+        mockAuthRepository as unknown as import("../../auth/repositories/auth.repository").AuthRepository,
+      profileRepository:
+        mockProfileRepository as unknown as import("../repositories/profile.repository").ProfileRepository,
+    });
 
   beforeEach(() => {
     const mockRepository = createMockRepository();
-    service = new UserServiceV1({
-      repository:
-        mockRepository as unknown as import("../repositories/user.repository").UserRepository,
-    });
+    const mockAuthRepository = createMockAuthRepository();
+    const mockProfileRepository = createMockProfileRepository();
+    service = createService({ mockRepository, mockAuthRepository, mockProfileRepository });
     vi.clearAllMocks();
   });
 
   describe("createUser", () => {
     it("should create a new user with normalized email", async () => {
       const mockRepository = createMockRepository();
+      const mockAuthRepository = createMockAuthRepository();
+      const mockProfileRepository = createMockProfileRepository();
       mockRepository.create.mockResolvedValue(mockUser);
-      service = new UserServiceV1({
-        repository:
-          mockRepository as unknown as import("../repositories/user.repository").UserRepository,
-      });
+      service = createService({ mockRepository, mockAuthRepository, mockProfileRepository });
 
       const createParams = {
         email: "John@Example.COM",
@@ -50,10 +78,9 @@ describe("UserServiceV1", () => {
 
     it("should throw error for invalid email format", async () => {
       const mockRepository = createMockRepository();
-      service = new UserServiceV1({
-        repository:
-          mockRepository as unknown as import("../repositories/user.repository").UserRepository,
-      });
+      const mockAuthRepository = createMockAuthRepository();
+      const mockProfileRepository = createMockProfileRepository();
+      service = createService({ mockRepository, mockAuthRepository, mockProfileRepository });
 
       await expect(
         service.createUser({ email: "invalid-email" }),
@@ -62,10 +89,9 @@ describe("UserServiceV1", () => {
 
     it("should throw error for empty email", async () => {
       const mockRepository = createMockRepository();
-      service = new UserServiceV1({
-        repository:
-          mockRepository as unknown as import("../repositories/user.repository").UserRepository,
-      });
+      const mockAuthRepository = createMockAuthRepository();
+      const mockProfileRepository = createMockProfileRepository();
+      service = createService({ mockRepository, mockAuthRepository, mockProfileRepository });
 
       await expect(service.createUser({ email: "   " })).rejects.toThrow(
         "Email is required",
@@ -74,10 +100,9 @@ describe("UserServiceV1", () => {
 
     it("should throw error for email exceeding max length", async () => {
       const mockRepository = createMockRepository();
-      service = new UserServiceV1({
-        repository:
-          mockRepository as unknown as import("../repositories/user.repository").UserRepository,
-      });
+      const mockAuthRepository = createMockAuthRepository();
+      const mockProfileRepository = createMockProfileRepository();
+      service = createService({ mockRepository, mockAuthRepository, mockProfileRepository });
 
       const longEmail = `${"a".repeat(250)}@example.com`;
       await expect(service.createUser({ email: longEmail })).rejects.toThrow(
@@ -89,11 +114,10 @@ describe("UserServiceV1", () => {
   describe("getUserById", () => {
     it("should return user when found", async () => {
       const mockRepository = createMockRepository();
+      const mockAuthRepository = createMockAuthRepository();
+      const mockProfileRepository = createMockProfileRepository();
       mockRepository.findById.mockResolvedValue(mockUser);
-      service = new UserServiceV1({
-        repository:
-          mockRepository as unknown as import("../repositories/user.repository").UserRepository,
-      });
+      service = createService({ mockRepository, mockAuthRepository, mockProfileRepository });
 
       const result = await service.getUserById({ id: mockUser.id });
 
@@ -103,11 +127,10 @@ describe("UserServiceV1", () => {
 
     it("should throw error when user not found", async () => {
       const mockRepository = createMockRepository();
+      const mockAuthRepository = createMockAuthRepository();
+      const mockProfileRepository = createMockProfileRepository();
       mockRepository.findById.mockResolvedValue(null);
-      service = new UserServiceV1({
-        repository:
-          mockRepository as unknown as import("../repositories/user.repository").UserRepository,
-      });
+      service = createService({ mockRepository, mockAuthRepository, mockProfileRepository });
 
       await expect(
         service.getUserById({ id: "nonexistent-id" }),
@@ -118,11 +141,10 @@ describe("UserServiceV1", () => {
   describe("getUserByEmail", () => {
     it("should return user when found", async () => {
       const mockRepository = createMockRepository();
+      const mockAuthRepository = createMockAuthRepository();
+      const mockProfileRepository = createMockProfileRepository();
       mockRepository.findByEmail.mockResolvedValue(mockUser);
-      service = new UserServiceV1({
-        repository:
-          mockRepository as unknown as import("../repositories/user.repository").UserRepository,
-      });
+      service = createService({ mockRepository, mockAuthRepository, mockProfileRepository });
 
       const result = await service.getUserByEmail({ email: mockUser.email });
 
@@ -134,17 +156,69 @@ describe("UserServiceV1", () => {
 
     it("should return null when user not found", async () => {
       const mockRepository = createMockRepository();
+      const mockAuthRepository = createMockAuthRepository();
+      const mockProfileRepository = createMockProfileRepository();
       mockRepository.findByEmail.mockResolvedValue(null);
-      service = new UserServiceV1({
-        repository:
-          mockRepository as unknown as import("../repositories/user.repository").UserRepository,
-      });
+      service = createService({ mockRepository, mockAuthRepository, mockProfileRepository });
 
       const result = await service.getUserByEmail({
         email: "nonexistent@example.com",
       });
 
       expect(result).toBeNull();
+    });
+  });
+
+  describe("deleteUser", () => {
+    it("should delete user and related data", async () => {
+      const mockRepository = createMockRepository();
+      const mockAuthRepository = createMockAuthRepository();
+      const mockProfileRepository = createMockProfileRepository();
+      mockRepository.findById.mockResolvedValue(mockUser);
+      mockAuthRepository.deleteSessionsByUserId.mockResolvedValue(undefined);
+      mockProfileRepository.deleteByUserId.mockResolvedValue(undefined);
+      mockRepository.deleteUser.mockResolvedValue(undefined);
+      service = createService({ mockRepository, mockAuthRepository, mockProfileRepository });
+
+      await service.deleteUser({ id: mockUser.id });
+
+      expect(mockRepository.findById).toHaveBeenCalledWith({ id: mockUser.id });
+      expect(mockAuthRepository.deleteSessionsByUserId).toHaveBeenCalledWith({ userId: mockUser.id });
+      expect(mockProfileRepository.deleteByUserId).toHaveBeenCalledWith({ userId: mockUser.id });
+      expect(mockRepository.deleteUser).toHaveBeenCalledWith({ id: mockUser.id });
+    });
+
+    it("should delete sessions before profile before user", async () => {
+      const mockRepository = createMockRepository();
+      const mockAuthRepository = createMockAuthRepository();
+      const mockProfileRepository = createMockProfileRepository();
+      mockRepository.findById.mockResolvedValue(mockUser);
+      service = createService({ mockRepository, mockAuthRepository, mockProfileRepository });
+
+      await service.deleteUser({ id: mockUser.id });
+
+      const sessionOrder = mockAuthRepository.deleteSessionsByUserId.mock.invocationCallOrder[0];
+      const profileOrder = mockProfileRepository.deleteByUserId.mock.invocationCallOrder[0];
+      const userOrder = mockRepository.deleteUser.mock.invocationCallOrder[0];
+
+      expect(sessionOrder).toBeLessThan(profileOrder!);
+      expect(profileOrder!).toBeLessThan(userOrder!);
+    });
+
+    it("should throw error when user not found", async () => {
+      const mockRepository = createMockRepository();
+      const mockAuthRepository = createMockAuthRepository();
+      const mockProfileRepository = createMockProfileRepository();
+      mockRepository.findById.mockResolvedValue(null);
+      service = createService({ mockRepository, mockAuthRepository, mockProfileRepository });
+
+      await expect(
+        service.deleteUser({ id: "nonexistent-id" }),
+      ).rejects.toThrow("User not found");
+
+      expect(mockAuthRepository.deleteSessionsByUserId).not.toHaveBeenCalled();
+      expect(mockProfileRepository.deleteByUserId).not.toHaveBeenCalled();
+      expect(mockRepository.deleteUser).not.toHaveBeenCalled();
     });
   });
 });

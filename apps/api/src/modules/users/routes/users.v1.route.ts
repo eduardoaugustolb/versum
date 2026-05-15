@@ -4,6 +4,7 @@ import { createErrorResponses } from "../../../utils/app/errors/openapi.ts";
 import { validationErrorHook } from "../../../utils/app/errors/validation.hook.ts";
 import type { UsersControllerV1 } from "../controllers/users.v1.controller.ts";
 import {
+  deleteAuthenticatedUserResponseSchema,
   getAuthenticatedUserResponseSchema,
   updateAuthenticatedUserBodySchema,
   updateAuthenticatedUserResponseSchema,
@@ -65,10 +66,26 @@ export const createUsersRoutesV1 = (controller: UsersControllerV1) => {
     },
   });
 
+  const deleteMeRoute = createRoute({
+    method: "delete",
+    path: "/@me",
+    tags: ["Users"],
+    summary: "Deletar usuário autenticado",
+    description: "Remove a conta do usuário e todos os dados associados (direito de eliminação LGPD Art. 18, VI).",
+    security: [{ cookieAuth: [] }],
+    responses: {
+      204: {
+        description: "Usuário deletado com sucesso",
+      },
+      ...createErrorResponses([401, 404, 429, 500]),
+    },
+  });
+
   router.use("/@me", authMiddleware.validateSession);
 
   router.openapi(getMeRoute, controller.getAuthenticatedUser);
   router.openapi(updateMeRoute, controller.updateAuthenticatedUser);
+  router.openapi(deleteMeRoute, controller.deleteAuthenticatedUser);
 
   return router;
 };

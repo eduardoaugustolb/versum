@@ -11,9 +11,11 @@ export * from "../../modules/bible/db/books.table.ts";
 
 // Chapters
 export * from "../../modules/bible/db/chapters.table.ts";
-
 // Verses
 export * from "../../modules/bible/db/verses.table.ts";
+// Consent Logs
+export * from "../../modules/consent-logs/db/consent-logs.relations.ts";
+export * from "../../modules/consent-logs/db/consent-logs.table.ts";
 export * from "../../modules/interactions/db/likes.relations.ts";
 // Likes
 export * from "../../modules/interactions/db/likes.table.ts";

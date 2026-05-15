@@ -65,4 +65,8 @@ export class UserRepository implements iUserRepository {
 
     return updated;
   }
+
+  async deleteUser({ id }: { id: string }): Promise<void> {
+    await this.db.delete(users).where(eq(users.id, id));
+  }
 }

@@ -191,4 +191,8 @@ export class AuthRepository implements iAuthRepository {
       })
       .where(and(eq(sessions.publicId, publicId), isNull(sessions.revokedAt)));
   }
+
+  async deleteSessionsByUserId({ userId }: { userId: string }): Promise<void> {
+    await this.db.delete(sessions).where(eq(sessions.userId, userId));
+  }
 }
