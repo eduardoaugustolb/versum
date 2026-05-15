@@ -57,6 +57,8 @@ export async function buildProject(): Promise<string> {
     buildDir,
     "--target",
     "bun",
+    "--external",
+    "argon2",
   ], {
     cwd: API_ROOT,
   });
