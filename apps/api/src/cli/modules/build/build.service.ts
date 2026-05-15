@@ -1,5 +1,5 @@
-import { readFileSync, existsSync } from "node:fs";
-import { readdir, mkdir, rm, writeFile, stat } from "node:fs/promises";
+import { readFileSync, existsSync, cpSync } from "node:fs";
+import { readdir, mkdir, rm, writeFile, stat, cp } from "node:fs/promises";
 import { resolve, relative } from "node:path";
 import JSZip from "jszip";
 
@@ -73,6 +73,11 @@ export async function buildProject(): Promise<string> {
         .join("\n")}`,
     );
   }
+
+  // Copy static assets — Bun.build doesn't know about files read via Bun.file() at runtime
+  await cp(resolve(API_ROOT, "src", "assets"), resolve(buildDir, "src", "assets"), {
+    recursive: true,
+  });
 
   // 2. Generate deploy package.json (only npm deps, workspace ones are bundled)
   const dependencies: Record<string, string> = {};
