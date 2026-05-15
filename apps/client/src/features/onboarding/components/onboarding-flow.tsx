@@ -2,7 +2,7 @@
 
 import { useMemo, useCallback } from "react";
 import { useOnboardingState } from "../hooks/use-onboarding-state";
-import { InStepView, FormStepView, OutStepView, ErrorStepView } from "./steps";
+import { InStepView, ConsentStepView, FormStepView, OutStepView, ErrorStepView } from "./steps";
 import { STEPS, FORM_STEPS } from "../constants";
 import { onboardingFormSchema } from "../types";
 
@@ -55,6 +55,15 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
             step={currentStep}
             direction={direction}
             onExitDone={goNext}
+          />
+        ) : currentStep.kind === "consent" ? (
+          <ConsentStepView
+            key={currentStep.id}
+            step={currentStep}
+            direction={direction}
+            onExitDone={goNext}
+            onNext={() => goNext({})}
+            onError={setError}
           />
         ) : currentStep.kind === "form" ? (
           <FormStepView

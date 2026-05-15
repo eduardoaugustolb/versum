@@ -76,6 +76,14 @@ export class UsersControllerV1 {
     }
   };
 
+  exportUserData = async (c: Context) => {
+    const session = c.get("session") as Session;
+
+    const data = await this.service.exportUserData({ id: session.userId });
+
+    return c.json(data, 200);
+  };
+
   deleteAuthenticatedUser = async (c: Context) => {
     const session = c.get("session") as Session;
 

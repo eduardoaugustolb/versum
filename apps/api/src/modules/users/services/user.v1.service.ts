@@ -5,7 +5,9 @@ import { UserRepository } from "../repositories/user.repository";
 import type {
   CreateUserParams,
   User,
+  UserExportData,
 } from "../repositories/user.types.repository";
+import type { ExportUserDataResponse } from "../schemas/v1/users.v1.common.schema";
 
 const MAX_EMAIL_LENGTH = 255;
 
@@ -114,5 +116,67 @@ export class UserServiceV1 {
     await this.authRepository.deleteSessionsByUserId({ userId: id });
     await this.profileRepository.deleteByUserId({ userId: id });
     await this.repository.deleteUser({ id });
+  }
+
+  async exportUserData({ id }: { id: string }): Promise<ExportUserDataResponse> {
+    const data = await this.repository.findByIdWithAllData({ id });
+
+    if (!data) {
+      throw new Error("User not found");
+    }
+
+    const sessions = (data.sessions ?? []).map((s: Record<string, unknown>) => ({
+      createdAt: (s.createdAt as Date).toISOString(),
+      ip: s.ip as string,
+      userAgent: s.userAgent as string,
+      expiresAt: (s.expiresAt as Date).toISOString(),
+    }));
+
+    return {
+      exportedAt: new Date().toISOString(),
+      user: {
+        email: data.user.email,
+        createdAt: data.user.createdAt.toISOString(),
+      },
+      profile: data.profile
+        ? {
+            username: data.profile.username,
+            name: data.profile.name,
+            bio: data.profile.bio ?? null,
+            pictureUrl: data.profile.pictureUrl ?? null,
+          }
+        : null,
+      sessions,
+      readingHistory: {
+        journey: (data.readings ?? []).map((r: Record<string, unknown>) => ({
+          chapterId: r.chapterId as string,
+          readAt: (r.readAt as Date).toISOString(),
+        })),
+        discovery: (data.discoveryReadings ?? []).map((r: Record<string, unknown>) => ({
+          verseId: r.verseId as string,
+          readAt: (r.readAt as Date).toISOString(),
+        })),
+      },
+      annotations: (data.marks ?? []).map((m: Record<string, unknown>) => ({
+        verseId: m.verseId as string,
+        selectedVerseId: m.selectedVerseId as string,
+        annotation: (m.annotation as string | null) ?? null,
+        isPublic: m.isPublic as boolean,
+        createdAt: (m.createdAt as Date).toISOString(),
+      })),
+      likes: (data.likes ?? []).map((l: Record<string, unknown>) => ({
+        verseId: l.verseId as string,
+        createdAt: (l.createdAt as Date).toISOString(),
+      })),
+      consentLogs: (data.consentLogs ?? []).map((c: Record<string, unknown>) => ({
+        id: c.id as string,
+        userId: c.userId as string,
+        purpose: c.purpose as string,
+        granted: c.granted as boolean,
+        ip: c.ip as string,
+        userAgent: c.userAgent as string,
+        createdAt: (c.createdAt as Date).toISOString(),
+      })),
+    };
   }
 }

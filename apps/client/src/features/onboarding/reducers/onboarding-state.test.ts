@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { onboardingReducer } from "./onboarding-state";
 import type { OnboardingReducerState } from "./onboarding-state";
+import { TOTAL_STEPS } from "../constants";
 
 function createState(overrides: Partial<OnboardingReducerState> = {}): OnboardingReducerState {
   return {
@@ -23,9 +24,10 @@ describe("onboardingReducer", () => {
     });
 
     it("não ultrapassa o último índice", () => {
-      const state = createState({ currentIndex: 4 });
+      const lastIndex = TOTAL_STEPS - 1;
+      const state = createState({ currentIndex: lastIndex });
       const next = onboardingReducer(state, { type: "NEXT" });
-      expect(next.currentIndex).toBe(4);
+      expect(next.currentIndex).toBe(lastIndex);
     });
 
     it("acumula patch nos collectedValues", () => {

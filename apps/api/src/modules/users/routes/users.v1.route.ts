@@ -5,6 +5,7 @@ import { validationErrorHook } from "../../../utils/app/errors/validation.hook.t
 import type { UsersControllerV1 } from "../controllers/users.v1.controller.ts";
 import {
   deleteAuthenticatedUserResponseSchema,
+  exportUserDataResponseSchema,
   getAuthenticatedUserResponseSchema,
   updateAuthenticatedUserBodySchema,
   updateAuthenticatedUserResponseSchema,
@@ -81,11 +82,32 @@ export const createUsersRoutesV1 = (controller: UsersControllerV1) => {
     },
   });
 
+  const exportMeRoute = createRoute({
+    method: "get",
+    path: "/@me/export",
+    tags: ["Users"],
+    summary: "Exportar dados do usuário autenticado",
+    description: "Exporta todos os dados pessoais do usuário (direito de portabilidade LGPD Art. 18, II e V).",
+    security: [{ cookieAuth: [] }],
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            schema: exportUserDataResponseSchema,
+          },
+        },
+        description: "Dados do usuário exportados com sucesso",
+      },
+      ...createErrorResponses([401, 404, 429, 500]),
+    },
+  });
+
   router.use("/@me", authMiddleware.validateSession);
 
   router.openapi(getMeRoute, controller.getAuthenticatedUser);
   router.openapi(updateMeRoute, controller.updateAuthenticatedUser);
   router.openapi(deleteMeRoute, controller.deleteAuthenticatedUser);
+  router.openapi(exportMeRoute, controller.exportUserData);
 
   return router;
 };

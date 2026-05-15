@@ -1,4 +1,6 @@
+export { deleteApiV1UsersMe } from "./deleteApiV1UsersMe.ts";
 export { getApiV1AuthMagicLink } from "./getApiV1AuthMagicLink.ts";
+export { getApiV1Consent } from "./getApiV1Consent.ts";
 export { getApiV1ProfilesMe } from "./getApiV1ProfilesMe.ts";
 export { getApiV1ProfilesUsername } from "./getApiV1ProfilesUsername.ts";
 export { getApiV1PublicBibleBooks } from "./getApiV1PublicBibleBooks.ts";
@@ -12,10 +14,12 @@ export { getApiV1ReadingsDiscoveryStats } from "./getApiV1ReadingsDiscoveryStats
 export { getApiV1ReadingsJourneyFeed } from "./getApiV1ReadingsJourneyFeed.ts";
 export { getApiV1ReadingsJourneyStatus } from "./getApiV1ReadingsJourneyStatus.ts";
 export { getApiV1UsersMe } from "./getApiV1UsersMe.ts";
+export { getApiV1UsersMeExport } from "./getApiV1UsersMeExport.ts";
 export { patchApiV1ProfilesMe } from "./patchApiV1ProfilesMe.ts";
 export { patchApiV1UsersMe } from "./patchApiV1UsersMe.ts";
 export { postApiV1AuthLogout } from "./postApiV1AuthLogout.ts";
 export { postApiV1AuthMagicLink } from "./postApiV1AuthMagicLink.ts";
+export { postApiV1Consent } from "./postApiV1Consent.ts";
 export { postApiV1ProfilesMe } from "./postApiV1ProfilesMe.ts";
 export { postApiV1ReadingsDiscovery } from "./postApiV1ReadingsDiscovery.ts";
 export { postApiV1ReadingsJourneyNext } from "./postApiV1ReadingsJourneyNext.ts";

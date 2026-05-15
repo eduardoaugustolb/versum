@@ -2,6 +2,7 @@ import {
   BadRequestError,
   ConflictError,
   NotFoundError,
+  ForbiddenError,
 } from "../../../utils/app/errors/index";
 import { ProfileRepository } from "../repositories/profile.repository";
 import type {
@@ -9,6 +10,7 @@ import type {
   Profile,
   UpdateProfileParams,
 } from "../repositories/profile.types.repository";
+import { ConsentLogsRepository } from "../../consent-logs/repositories/consent-logs.repository";
 
 const USERNAME_REGEX = /^[a-zA-Z0-9_]+$/;
 const MAX_NAME_LENGTH = 100;
@@ -19,9 +21,17 @@ const MAX_USERNAME_LENGTH = 50;
 
 export class ProfileServiceV1 {
   private readonly repository: ProfileRepository;
+  private readonly consentLogsRepository: ConsentLogsRepository;
 
-  constructor({ repository }: { repository?: ProfileRepository } = {}) {
+  constructor({
+    repository,
+    consentLogsRepository,
+  }: {
+    repository?: ProfileRepository;
+    consentLogsRepository?: ConsentLogsRepository;
+  } = {}) {
     this.repository = repository ?? new ProfileRepository();
+    this.consentLogsRepository = consentLogsRepository ?? new ConsentLogsRepository();
   }
 
   private sanitizeHtml(input: string): string {
@@ -131,6 +141,17 @@ export class ProfileServiceV1 {
   }
 
   async createProfile(params: CreateProfileParams): Promise<Profile> {
+    const hasConsent = await this.consentLogsRepository.hasConsent({
+      userId: params.userId,
+      purpose: "profile_content",
+    });
+
+    if (!hasConsent) {
+      throw new ForbiddenError(
+        "Consentimento para armazenar conteúdo do perfil não foi concedido",
+      );
+    }
+
     const existingProfile = await this.repository.findByUserId({
       userId: params.userId,
     });

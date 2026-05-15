@@ -11,7 +11,7 @@ import { faker } from "@faker-js/faker";
 export function createGetApiV1ProfilesUsernamePathParams(data?: Partial<GetApiV1ProfilesUsernamePathParams>): GetApiV1ProfilesUsernamePathParams {
 
   return {
-    ...{"username": faker.string.alpha({ length: { min: 1, max: 50 } })},
+    ...{"username": faker.helpers.fromRegExp("^[a-zA-Z0-9_]+$")},
     ...data || {}
   }
 }

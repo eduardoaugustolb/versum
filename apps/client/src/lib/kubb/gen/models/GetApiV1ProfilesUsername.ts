@@ -11,6 +11,7 @@ export type GetApiV1ProfilesUsernamePathParams = {
      * @description Username
      * @minLength 1
      * @maxLength 50
+     * @pattern ^[a-zA-Z0-9_]+$
      * @type string
     */
     username: string;

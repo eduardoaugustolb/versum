@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { User } from "../repositories/user.types.repository";
+import type { User, UserExportData } from "../repositories/user.types.repository";
 import { UserServiceV1 } from "./user.v1.service";
 
 describe("UserServiceV1", () => {
@@ -11,11 +11,86 @@ describe("UserServiceV1", () => {
     createdAt: new Date("2024-01-01T00:00:00Z"),
   };
 
+  const mockUserExportData: UserExportData = {
+    user: mockUser,
+    profile: {
+      id: "profile-id",
+      userId: mockUser.id,
+      username: "john",
+      name: "John Doe",
+      bio: "Bio text",
+      pictureUrl: "https://example.com/avatar.jpg",
+      createdAt: new Date("2024-01-01T00:00:00Z"),
+      updatedAt: new Date("2024-01-01T00:00:00Z"),
+    },
+    readings: [
+      {
+        id: "reading-1",
+        userId: mockUser.id,
+        chapterId: "chapter-1",
+        readAt: new Date("2024-06-01T00:00:00Z"),
+      },
+    ],
+    discoveryReadings: [
+      {
+        id: "dreading-1",
+        userId: mockUser.id,
+        verseId: "verse-1",
+        readAt: new Date("2024-06-15T00:00:00Z"),
+      },
+    ],
+    likes: [
+      {
+        id: "like-1",
+        userId: mockUser.id,
+        verseId: "verse-2",
+        createdAt: new Date("2024-06-10T00:00:00Z"),
+      },
+    ],
+    marks: [
+      {
+        id: "mark-1",
+        userId: mockUser.id,
+        verseId: "verse-3",
+        selectedVerseId: "verse-3",
+        annotation: "Great verse",
+        isPublic: false,
+        createdAt: new Date("2024-06-05T00:00:00Z"),
+      },
+    ],
+    sessions: [
+      {
+        id: "session-1",
+        publicId: "pub-session-1",
+        userId: mockUser.id,
+        ip: "127.0.0.1",
+        userAgent: "Mozilla/5.0",
+        tokenHash: "hash123",
+        createdAt: new Date("2024-01-01T00:00:00Z"),
+        updatedAt: new Date("2024-01-01T00:00:00Z"),
+        expiresAt: new Date("2025-01-01T00:00:00Z"),
+        revokedAt: null,
+      },
+    ],
+    consentLogs: [
+      {
+        id: "consent-1",
+        userId: mockUser.id,
+        purpose: "profile_content",
+        granted: true,
+        ip: "127.0.0.1",
+        userAgent: "Mozilla/5.0",
+        createdAt: new Date("2024-01-01T00:00:00Z"),
+      },
+    ],
+  };
+
   const createMockRepository = () => ({
     db: {},
     create: vi.fn<() => Promise<User>>(),
     findById: vi.fn<() => Promise<User | null>>(),
     findByIdWithProfile: vi.fn<() => Promise<User | null>>(),
+    findByIdWithAllData: vi.fn<() => Promise<UserExportData | null>>(),
     findByEmail: vi.fn<() => Promise<User | null>>(),
     deleteUser: vi.fn<() => Promise<void>>(),
   });
@@ -219,6 +294,75 @@ describe("UserServiceV1", () => {
       expect(mockAuthRepository.deleteSessionsByUserId).not.toHaveBeenCalled();
       expect(mockProfileRepository.deleteByUserId).not.toHaveBeenCalled();
       expect(mockRepository.deleteUser).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("exportUserData", () => {
+    it("should return all user data in export format", async () => {
+      const mockRepository = createMockRepository();
+      const mockAuthRepository = createMockAuthRepository();
+      const mockProfileRepository = createMockProfileRepository();
+      mockRepository.findByIdWithAllData.mockResolvedValue(mockUserExportData);
+      service = createService({ mockRepository, mockAuthRepository, mockProfileRepository });
+
+      const result = await service.exportUserData({ id: mockUser.id });
+
+      expect(result.user.email).toBe("john@example.com");
+      expect(result.profile).not.toBeNull();
+      expect(result.profile!.username).toBe("john");
+      expect(result.profile!.name).toBe("John Doe");
+      expect(result.sessions).toHaveLength(1);
+      expect(result.sessions[0].ip).toBe("127.0.0.1");
+      expect(result.sessions[0]).not.toHaveProperty("tokenHash");
+      expect(result.readingHistory.journey).toHaveLength(1);
+      expect(result.readingHistory.discovery).toHaveLength(1);
+      expect(result.annotations).toHaveLength(1);
+      expect(result.annotations[0].annotation).toBe("Great verse");
+      expect(result.likes).toHaveLength(1);
+      expect(result.consentLogs).toHaveLength(1);
+      expect(result.exportedAt).toBeDefined();
+      expect(mockRepository.findByIdWithAllData).toHaveBeenCalledWith({ id: mockUser.id });
+    });
+
+    it("should throw error when user not found", async () => {
+      const mockRepository = createMockRepository();
+      const mockAuthRepository = createMockAuthRepository();
+      const mockProfileRepository = createMockProfileRepository();
+      mockRepository.findByIdWithAllData.mockResolvedValue(null);
+      service = createService({ mockRepository, mockAuthRepository, mockProfileRepository });
+
+      await expect(
+        service.exportUserData({ id: "nonexistent-id" }),
+      ).rejects.toThrow("User not found");
+    });
+
+    it("should return partial data when profile/sessions are empty", async () => {
+      const mockRepository = createMockRepository();
+      const mockAuthRepository = createMockAuthRepository();
+      const mockProfileRepository = createMockProfileRepository();
+      const partialData: UserExportData = {
+        user: mockUser,
+        profile: null,
+        readings: [],
+        discoveryReadings: [],
+        likes: [],
+        marks: [],
+        sessions: [],
+        consentLogs: [],
+      };
+      mockRepository.findByIdWithAllData.mockResolvedValue(partialData);
+      service = createService({ mockRepository, mockAuthRepository, mockProfileRepository });
+
+      const result = await service.exportUserData({ id: mockUser.id });
+
+      expect(result.profile).toBeNull();
+      expect(result.sessions).toHaveLength(0);
+      expect(result.readingHistory.journey).toHaveLength(0);
+      expect(result.readingHistory.discovery).toHaveLength(0);
+      expect(result.annotations).toHaveLength(0);
+      expect(result.likes).toHaveLength(0);
+      expect(result.consentLogs).toHaveLength(0);
+      expect(result.user.email).toBe("john@example.com");
     });
   });
 });

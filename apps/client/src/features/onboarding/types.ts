@@ -22,7 +22,23 @@ export const onboardingFormSchema = z.object({
 
 export type OnboardingValues = z.infer<typeof onboardingFormSchema>;
 
-export type StepKind = "in" | "form" | "out" | "error";
+export type StepKind = "in" | "consent" | "form" | "out" | "error";
+
+export const CONSENT_PURPOSES = [
+  "profile_content",
+  "annotations",
+  "likes",
+  "terms",
+] as const;
+
+export type ConsentPurpose = (typeof CONSENT_PURPOSES)[number];
+
+export interface ConsentOption {
+  purpose: ConsentPurpose;
+  label: string;
+  description: string;
+  required: boolean;
+}
 
 export interface BaseStep {
   id: string;
@@ -32,6 +48,11 @@ export interface BaseStep {
 export interface InStep extends BaseStep {
   kind: "in";
   label: string;
+}
+
+export interface ConsentStep extends BaseStep {
+  kind: "consent";
+  options: ConsentOption[];
 }
 
 export interface FormStep extends BaseStep {
@@ -53,4 +74,4 @@ export interface ErrorStep extends BaseStep {
   title: string;
 }
 
-export type OnboardingStep = InStep | FormStep | OutStep | ErrorStep;
+export type OnboardingStep = InStep | ConsentStep | FormStep | OutStep | ErrorStep;

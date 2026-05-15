@@ -7,8 +7,11 @@ export type {
   OnboardingStep,
   OnboardingValues,
   InStep,
+  ConsentStep,
   FormStep,
   OutStep,
   ErrorStep,
   StepKind,
+  ConsentPurpose,
+  ConsentOption,
 } from "./types";

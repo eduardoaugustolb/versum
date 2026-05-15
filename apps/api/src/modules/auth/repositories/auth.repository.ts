@@ -1,4 +1,4 @@
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq, isNotNull, isNull, lt, sql } from "drizzle-orm";
 import { db as drizzle } from "../../../infrastructure/db/index.ts";
 import { magicLinks } from "../db/magic-links.table.ts";
 import { sessions } from "../db/sessions.table.ts";
@@ -194,5 +194,49 @@ export class AuthRepository implements iAuthRepository {
 
   async deleteSessionsByUserId({ userId }: { userId: string }): Promise<void> {
     await this.db.delete(sessions).where(eq(sessions.userId, userId));
+  }
+
+  async deleteExpiredMagicLinks(): Promise<number> {
+    const thirtyDaysAgo = sql`now() - interval '30 days'`;
+    const sevenDaysAgo = sql`now() - interval '7 days'`;
+
+    const usedResult = await this.db
+      .delete(magicLinks)
+      .where(
+        and(
+          isNotNull(magicLinks.usedAt),
+          lt(magicLinks.expiresAt, thirtyDaysAgo),
+        ),
+      )
+      .returning({ id: magicLinks.id });
+
+    const abandonedResult = await this.db
+      .delete(magicLinks)
+      .where(
+        and(
+          isNull(magicLinks.usedAt),
+          isNull(magicLinks.invalidatedAt),
+          lt(magicLinks.expiresAt, sevenDaysAgo),
+        ),
+      )
+      .returning({ id: magicLinks.id });
+
+    return usedResult.length + abandonedResult.length;
+  }
+
+  async deleteExpiredSessions(): Promise<number> {
+    const ninetyDaysAgo = sql`now() - interval '90 days'`;
+
+    const result = await this.db
+      .delete(sessions)
+      .where(
+        and(
+          isNotNull(sessions.revokedAt),
+          lt(sessions.revokedAt, ninetyDaysAgo),
+        ),
+      )
+      .returning({ id: sessions.id });
+
+    return result.length;
   }
 }

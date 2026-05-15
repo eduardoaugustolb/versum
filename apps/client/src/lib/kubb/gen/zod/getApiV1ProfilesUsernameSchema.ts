@@ -8,7 +8,7 @@ import { profileSchema } from "./profileSchema.ts";
 import { z } from "zod/v4";
 
 export const getApiV1ProfilesUsernamePathParamsSchema = z.object({
-    "username": z.string().min(1).max(50).describe("Username")
+    "username": z.string().min(1).max(50).regex(/^[a-zA-Z0-9_]+$/).describe("Username")
     })
 
 /**
