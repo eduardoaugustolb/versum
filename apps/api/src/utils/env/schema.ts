@@ -12,4 +12,5 @@ export const envSchema = z.object({
   DEBUG: z.string().optional(),
   WEB_CLIENT_APP_URL: z.url(),
   DISCORD_WEBHOOK_URL: z.string(),
+  CRON_ENABLED: z.string().default("true"),
 });

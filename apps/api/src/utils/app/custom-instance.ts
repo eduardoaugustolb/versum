@@ -2,6 +2,7 @@ import { OpenAPIHono } from "@hono/zod-openapi";
 import type { Hono } from "hono";
 import { logger } from "@versum/logger";
 import { validationErrorHook } from "@/utils/app/errors/validation.hook.ts";
+import { SetupCron } from "./setups/setup-cron.ts";
 import { SetupListeners } from "./setups/setup-listeners.ts";
 import { SetupMiddlewares } from "./setups/setup-middlewares.ts";
 import { SetupPlugins } from "./setups/setup-plugins.ts";
@@ -21,6 +22,7 @@ export class App {
     new SetupListeners({ app: this.hono });
     new SetupMiddlewares({ app: this.hono });
     new SetupRoutes({ app: this.hono });
+    new SetupCron();
   }
 
   route(path: string, app: Hono) {
