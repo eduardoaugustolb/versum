@@ -3,8 +3,9 @@ import {
   statSync,
   readFileSync,
   existsSync,
+  renameSync,
 } from "node:fs";
-import { readdir, mkdir, rm, writeFile, stat } from "node:fs/promises";
+import { readdir, mkdir, rm, writeFile, stat, rename } from "node:fs/promises";
 import { resolve, relative } from "node:path";
 import JSZip from "jszip";
 
@@ -66,6 +67,13 @@ export async function buildProject(): Promise<string> {
     );
   }
 
+  // Move server.js to src/ so SquareCloud's entry point detection works
+  await mkdir(resolve(buildDir, "src"), { recursive: true });
+  await rename(
+    resolve(buildDir, "server.js"),
+    resolve(buildDir, "src", "server.js"),
+  );
+
   // 2. Build logger package
   const loggerBuildDir = resolve(buildDir, "packages", "logger");
   await mkdir(loggerBuildDir, { recursive: true });
@@ -113,11 +121,11 @@ export async function buildProject(): Promise<string> {
   const deployPkg: Record<string, unknown> = {
     name: projectName,
     version: apiPkg.version,
-    module: "server.js",
-    main: "server.js",
+    module: "src/server.js",
+    main: "src/server.js",
     type: "module",
     scripts: {
-      start: "bun run server.js",
+      start: "bun run src/server.js",
     },
   };
 
