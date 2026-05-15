@@ -1,186 +1,9 @@
-import {
-  readdirSync,
-  statSync,
-  readFileSync,
-  existsSync,
-  renameSync,
-} from "node:fs";
-import { readdir, mkdir, rm, writeFile, stat, rename } from "node:fs/promises";
+import { readFileSync, existsSync } from "node:fs";
+import { readdir, mkdir, rm, writeFile, stat } from "node:fs/promises";
 import { resolve, relative } from "node:path";
 import JSZip from "jszip";
 
-const IGNORED_DIRS = new Set([
-  "node_modules",
-  ".git",
-  ".vscode",
-  ".idea",
-  "dist",
-  "build",
-  ".cache",
-  ".tmp",
-  ".temp",
-  ".output",
-  ".build",
-]);
-
-const IGNORED_FILES = new Set([".DS_Store", "Thumbs.db"]);
-
 const API_ROOT = resolve(import.meta.dir, "..", "..", "..", "..");
-const WORKSPACE_ROOT = resolve(API_ROOT, "..", "..");
-const LOGGER_ROOT = resolve(WORKSPACE_ROOT, "packages", "logger");
-
-function shouldIgnore(name: string): boolean {
-  if (IGNORED_DIRS.has(name)) return true;
-  if (IGNORED_FILES.has(name)) return true;
-  if (name.startsWith(".env")) return true;
-  if (name.endsWith(".lock") && name !== "bun.lock") return true;
-  return false;
-}
-
-export async function buildProject(): Promise<string> {
-  const projectName = "versum-api";
-  const buildDir = resolve(API_ROOT, ".build", projectName);
-  const outputDir = resolve(API_ROOT, ".build");
-  const outputPath = resolve(outputDir, `${projectName}.zip`);
-
-  if (existsSync(buildDir)) {
-    await rm(buildDir, { recursive: true, force: true });
-  }
-  await mkdir(buildDir, { recursive: true });
-
-  // 1. Build server entry (compiles TS→JS, bundles internal code)
-  const serverBuild = Bun.spawnSync([
-    "bun",
-    "build",
-    "./src/server.ts",
-    "--outdir",
-    buildDir,
-    "--target",
-    "bun",
-    "--external",
-    "argon2",
-  ], {
-    cwd: API_ROOT,
-  });
-
-  if (!serverBuild.success) {
-    throw new Error(
-      `Server build failed:\n${serverBuild.stderr.toString()}`,
-    );
-  }
-
-  // Move server.js to src/ so SquareCloud's entry point detection works
-  await mkdir(resolve(buildDir, "src"), { recursive: true });
-  await rename(
-    resolve(buildDir, "server.js"),
-    resolve(buildDir, "src", "server.js"),
-  );
-
-  // 2. Build logger package
-  const loggerBuildDir = resolve(buildDir, "packages", "logger");
-  await mkdir(loggerBuildDir, { recursive: true });
-
-  const loggerBuild = Bun.spawnSync([
-    "bun",
-    "build",
-    "./index.ts",
-    "--outdir",
-    loggerBuildDir,
-    "--target",
-    "bun",
-  ], {
-    cwd: LOGGER_ROOT,
-  });
-
-  if (!loggerBuild.success) {
-    throw new Error(
-      `Logger build failed:\n${loggerBuild.stderr.toString()}`,
-    );
-  }
-
-  // 3. Copy logger package.json with JS paths
-  const loggerPkg = JSON.parse(
-    readFileSync(resolve(LOGGER_ROOT, "package.json"), "utf-8"),
-  );
-  loggerPkg.module = "index.js";
-  loggerPkg.main = "index.js";
-  loggerPkg.types = "index.js";
-  loggerPkg.exports = { ".": "./index.js" };
-  delete loggerPkg.devDependencies;
-  delete loggerPkg.peerDependencies;
-  delete loggerPkg.scripts;
-
-  await writeFile(
-    resolve(loggerBuildDir, "package.json"),
-    JSON.stringify(loggerPkg, null, 2),
-  );
-
-  // 4. Generate deploy package.json
-  const apiPkg = JSON.parse(
-    readFileSync(resolve(API_ROOT, "package.json"), "utf-8"),
-  );
-
-  const deployPkg: Record<string, unknown> = {
-    name: projectName,
-    version: apiPkg.version,
-    module: "src/server.js",
-    main: "src/server.js",
-    type: "module",
-    scripts: {
-      start: "bun run src/server.js",
-    },
-  };
-
-  const dependencies: Record<string, string> = {};
-  for (const [name, version] of Object.entries(
-    apiPkg.dependencies as Record<string, string>,
-  )) {
-    if (version === "workspace:*") {
-      dependencies[name] = "file:./packages/logger";
-    } else {
-      dependencies[name] = version;
-    }
-  }
-  deployPkg.dependencies = dependencies;
-
-  await writeFile(
-    resolve(buildDir, "package.json"),
-    JSON.stringify(deployPkg, null, 2),
-  );
-
-  // 5. Generate lockfile by running bun install
-  const installResult = Bun.spawnSync(["bun", "install"], {
-    cwd: buildDir,
-  });
-
-  if (!installResult.success) {
-    throw new Error(
-      `Dependency installation failed:\n${installResult.stderr.toString()}`,
-    );
-  }
-
-  // 6. Remove node_modules (keep zip small, SquareCloud will reinstall)
-  await rm(resolve(buildDir, "node_modules"), {
-    recursive: true,
-    force: true,
-  });
-
-  // 7. Zip the build directory
-  const zip = new JSZip();
-  await addDirToZip(zip, buildDir, buildDir);
-
-  const zipBuffer = await zip.generateAsync({
-    type: "nodebuffer",
-    compression: "DEFLATE",
-    compressionOptions: { level: 6 },
-  });
-
-  // 6. Clean up build dir and write final zip
-  await rm(buildDir, { recursive: true, force: true });
-  await writeFile(outputPath, new Uint8Array(zipBuffer));
-
-  return outputPath;
-}
 
 async function addDirToZip(
   zip: JSZip,
@@ -190,7 +13,8 @@ async function addDirToZip(
   const entries = await readdir(dirPath);
 
   for (const entry of entries) {
-    if (shouldIgnore(entry)) continue;
+    if (entry === "node_modules" || entry === ".build") continue;
+    if (entry.startsWith(".env")) continue;
 
     const fullPath = resolve(dirPath, entry);
     let isDir: boolean;
@@ -209,4 +33,101 @@ async function addDirToZip(
       zip.file(archivePath, new Uint8Array(content));
     }
   }
+}
+
+export async function buildProject(): Promise<string> {
+  const buildDir = resolve(API_ROOT, ".build", "versum-api");
+  const outputPath = resolve(API_ROOT, ".build", "versum-api.zip");
+
+  if (existsSync(buildDir)) {
+    await rm(buildDir, { recursive: true, force: true });
+  }
+  await mkdir(buildDir, { recursive: true });
+
+  // Read package.json to know which deps are workspace vs npm
+  const apiPkg = JSON.parse(
+    readFileSync(resolve(API_ROOT, "package.json"), "utf-8"),
+  );
+
+  // Externalize all npm deps (only workspace deps are bundled inline)
+  const npmDeps = Object.entries(
+    apiPkg.dependencies as Record<string, string>,
+  )
+    .filter(([, version]) => version !== "workspace:*")
+    .map(([name]) => name);
+
+  // 1. Build with Bun.build — bundles source + workspace deps,
+  //    externalizes npm packages so they load from node_modules at runtime
+  const result = await Bun.build({
+    entrypoints: [resolve(API_ROOT, "src/server.ts")],
+    outdir: resolve(buildDir, "src"),
+    target: "bun",
+    external: npmDeps,
+  });
+
+  if (!result.success) {
+    throw new Error(
+      `Server build failed:\n${result.logs
+        .filter((l) => l.level === "error")
+        .map((l) => l.message)
+        .join("\n")}`,
+    );
+  }
+
+  // 2. Generate deploy package.json (only npm deps, workspace ones are bundled)
+  const dependencies: Record<string, string> = {};
+  for (const [name, version] of Object.entries(
+    apiPkg.dependencies as Record<string, string>,
+  )) {
+    if (version !== "workspace:*") {
+      dependencies[name] = version;
+    }
+  }
+
+  const deployPkg = {
+    name: "versum-api",
+    version: apiPkg.version,
+    module: "src/server.js",
+    main: "src/server.js",
+    type: "module",
+    scripts: {
+      start: "bun run src/server.js",
+    },
+    dependencies,
+  };
+
+  await writeFile(
+    resolve(buildDir, "package.json"),
+    JSON.stringify(deployPkg, null, 2),
+  );
+
+  // 3. Generate lockfile
+  const install = Bun.spawnSync(["bun", "install"], { cwd: buildDir });
+
+  if (!install.success) {
+    throw new Error(
+      `bun install failed:\n${install.stderr.toString()}`,
+    );
+  }
+
+  // 4. Remove node_modules (SquareCloud runs bun install on deploy)
+  await rm(resolve(buildDir, "node_modules"), {
+    recursive: true,
+    force: true,
+  });
+
+  // 5. Zip
+  const zip = new JSZip();
+  await addDirToZip(zip, buildDir, buildDir);
+
+  const zipBuffer = await zip.generateAsync({
+    type: "nodebuffer",
+    compression: "DEFLATE",
+    compressionOptions: { level: 6 },
+  });
+
+  await rm(buildDir, { recursive: true, force: true });
+  await writeFile(outputPath, new Uint8Array(zipBuffer));
+
+  return outputPath;
 }
