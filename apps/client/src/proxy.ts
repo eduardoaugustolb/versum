@@ -5,9 +5,17 @@ import { getSessionCookieName } from "./lib/auth";
 class Response {
   res?: NextResponse;
 
-  next({ url }: { url: URL }) {
+  next({ url, req }: { url: URL; req: NextRequest }) {
     console.debug("🛡️ Proxy executando para:", `"${url.pathname}"`);
-    this.res = NextResponse.next();
+
+    const requestHeaders = new Headers(req.headers);
+    requestHeaders.set("x-invoke-path", url.pathname);
+
+    this.res = NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
 
     this.setupHeaders({ url, res: this.res });
 
@@ -62,7 +70,7 @@ export default function proxy(req: NextRequest) {
     return response.redirect(routeRedirect, { url });
   }
 
-  return response.next({ url });
+  return response.next({ url, req });
 }
 
 export const config = {

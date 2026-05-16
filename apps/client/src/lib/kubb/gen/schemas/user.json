@@ -1,1 +1,0 @@
-{"type":"object","properties":{"email":{"type":"string","maxLength":255,"format":"email","description":"E-mail do usuário","example":"john@example.com"}},"required":["email"],"description":"Dados privados do usuário","x-readme-ref-name":"User"}

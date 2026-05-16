@@ -10,22 +10,23 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const sessionCookieName = getSessionCookieName();
-  const pathname = (await headers()).get("next-url") ?? "/";
+  const pathname = (await headers()).get("x-invoke-path") ?? "/";
   const sessionCookie = (await cookies()).get(sessionCookieName);
 
   const isAuthenticated = !!sessionCookie;
 
   let onboardingComplete = false;
   if (isAuthenticated) {
-    try {
-      const userData = await getCachedUserAuth(
-        sessionCookie?.value,
-        process.env.NEXT_PUBLIC_API_URL,
-      );
-      onboardingComplete = userData?.onboardingIsCompleted ?? false;
-    } catch (error) {
-      console.error("Erro ao verificar onboarding:", error);
+    const userData = await getCachedUserAuth(
+      sessionCookie?.value,
+      process.env.NEXT_PUBLIC_API_URL,
+    );
+
+    if (!userData) {
+      redirect("/auth/clear-session");
     }
+
+    onboardingComplete = userData.onboardingIsCompleted;
   }
 
   const guard = matchGuard(pathname);

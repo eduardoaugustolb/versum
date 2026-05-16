@@ -1,5 +1,5 @@
 import { cache } from "react";
-import { getApiV1UsersMe } from "@/lib/kubb/gen";
+import { getApiV1UsersMe } from "@/dal/orval/fetch/users/users";
 import { getSessionCookieName } from "@/lib/auth";
 
 export const getCachedUserAuth = cache(
@@ -10,10 +10,10 @@ export const getCachedUserAuth = cache(
         headers: sessionToken
           ? { Cookie: `${getSessionCookieName()}=${encodeURIComponent(sessionToken)}` }
           : undefined,
-      });
+      } as RequestInit & { baseURL?: string });
     } catch (err) {
       console.error("Failed to fetch user session", err);
-      return { onboardingIsCompleted: true };
+      return null;
     }
   },
 );

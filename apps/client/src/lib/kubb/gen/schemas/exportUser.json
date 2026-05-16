@@ -1,1 +1,0 @@
-{"type":"object","properties":{"email":{"type":"string","format":"email"},"createdAt":{"type":"string","format":"date-time"}},"required":["email","createdAt"],"description":"Dados do usuário","x-readme-ref-name":"ExportUser"}

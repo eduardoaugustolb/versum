@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import type { OutStep } from "../../types";
+import type { OnboardingValues, OutStep } from "../../types";
 import { onboardingFormSchema } from "../../types";
 import type { StepTransitionHandle } from "../step-transition";
 import { StepTransition } from "../step-transition";

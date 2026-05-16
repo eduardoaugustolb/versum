@@ -1,3 +1,5 @@
+"use client";
+
 import { OnboardingFlow } from "./onboarding-flow";
 import { Toaster } from "@/components/ui/sonner";
 

@@ -15,7 +15,7 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { postApiV1AuthMagicLink } from "@/lib/kubb/gen";
+import { postApiV1AuthMagicLink } from "@/dal/orval/fetch/auth/auth";
 
 const formSchema = z.object({
   email: z.email("Digite um email válido"),

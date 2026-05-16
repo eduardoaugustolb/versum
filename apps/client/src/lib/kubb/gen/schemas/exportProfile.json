@@ -1,1 +1,0 @@
-{"type":"object","nullable":true,"properties":{"username":{"type":"string"},"name":{"type":"string"},"bio":{"type":"string","nullable":true},"pictureUrl":{"type":"string","nullable":true}},"required":["username","name","bio","pictureUrl"],"description":"Perfil do usuário","x-readme-ref-name":"ExportProfile"}

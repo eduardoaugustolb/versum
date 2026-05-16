@@ -2,7 +2,6 @@ import argon2 from "argon2";
 import { EmailProvider } from "../../../infrastructure/resend/email-provider.ts";
 import {
   InternalServerError,
-  NotFoundError,
   UnauthorizedError,
 } from "../../../utils/app/errors/index.ts";
 import { env } from "../../../utils/env/index.ts";
@@ -179,7 +178,7 @@ export class AuthServiceV1 {
       id: validatedSession.id,
     });
 
-    if (!updatedSession) throw new NotFoundError("Session not found");
+    if (!updatedSession) throw new UnauthorizedError("Session not found");
 
     return {
       token: `${updatedSession.publicId}.${sessionToken}`,

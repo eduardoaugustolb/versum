@@ -12,7 +12,7 @@ import { ActionButton } from "../ui/action-button";
 import { FieldError } from "../ui/field-error";
 import { useGSAP } from "@gsap/react";
 import { SplitText, gsap } from "gsap/src/all";
-import { postApiV1ProfilesMe } from "@/lib/kubb/gen";
+import { postApiV1ProfilesMe } from "@/dal/orval/fetch/profiles/profiles";
 import { toast } from "sonner";
 
 interface StepAnimationProps {

@@ -4,7 +4,7 @@ import { useMemo, useCallback } from "react";
 import { useOnboardingState } from "../hooks/use-onboarding-state";
 import { InStepView, ConsentStepView, FormStepView, OutStepView, ErrorStepView } from "./steps";
 import { STEPS, FORM_STEPS } from "../constants";
-import { onboardingFormSchema } from "../types";
+import { onboardingFormSchema, type OnboardingValues } from "../types";
 
 interface OnboardingFlowProps {
   onComplete: (values: OnboardingValues) => void;

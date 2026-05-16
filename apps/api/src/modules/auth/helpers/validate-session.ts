@@ -1,7 +1,4 @@
-import {
-  NotFoundError,
-  UnauthorizedError,
-} from "../../../utils/app/errors/index.ts";
+import { UnauthorizedError } from "../../../utils/app/errors/index.ts";
 import type { Session } from "../repositories/auth.types.repository.ts";
 
 export class ValidateSession {
@@ -14,7 +11,7 @@ export class ValidateSession {
     session?: Session | null;
     forwardedFor?: string;
   }) {
-    if (!session) throw new NotFoundError("Session not found");
+    if (!session) throw new UnauthorizedError("Session not found");
     if (session.expiresAt.getTime() < Date.now())
       throw new UnauthorizedError("Session expired");
     if (session.revokedAt)

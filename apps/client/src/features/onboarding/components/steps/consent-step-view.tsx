@@ -9,7 +9,7 @@ import { StepTransition } from "../step-transition";
 import { ActionButton } from "../ui/action-button";
 import { useGSAP } from "@gsap/react";
 import { SplitText, gsap } from "gsap/src/all";
-import { postApiV1Consent } from "@/lib/kubb/gen";
+import { postApiV1Consent } from "@/dal/orval/fetch/consent-logs/consent-logs";
 import { toast } from "sonner";
 
 interface StepAnimationProps {
