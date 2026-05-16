@@ -17,10 +17,7 @@ export default async function Layout({
 
   let onboardingComplete = false;
   if (isAuthenticated) {
-    const userData = await getCachedUserAuth(
-      sessionCookie?.value,
-      process.env.NEXT_PUBLIC_API_URL,
-    );
+    const userData = await getCachedUserAuth(sessionCookie?.value);
 
     if (!userData) {
       redirect("/auth/clear-session");

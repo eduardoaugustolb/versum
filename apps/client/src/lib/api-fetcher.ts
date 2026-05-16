@@ -1,29 +1,49 @@
-type CustomRequestInit = RequestInit & { baseURL?: string }
+type CustomRequestInit = RequestInit & { baseURL?: string };
+
+type ErrorResponse = {
+  status: number;
+  data: unknown;
+};
+
+class ApiError extends Error {
+  response: ErrorResponse;
+
+  constructor(message: string, response: ErrorResponse) {
+    super(message);
+    this.response = response;
+  }
+}
+
+const isAbsoluteUrl = (input: string) =>
+  input.startsWith("http://") || input.startsWith("https://");
 
 export default async function apiFetcher<T>(
   url: string,
   options?: CustomRequestInit,
 ): Promise<T> {
-  const { baseURL = process.env.NEXT_PUBLIC_API_URL, ...fetchOptions } = options ?? {}
-  const fullUrl = baseURL
-    ? `${baseURL.replace(/\/+$/, "")}${url}`
-    : url
+  const { baseURL, ...fetchOptions } = options ?? {};
+  const resolvedBaseURL = baseURL ?? process.env.NEXT_PUBLIC_API_URL;
+  const fullUrl =
+    resolvedBaseURL && !isAbsoluteUrl(url)
+      ? `${resolvedBaseURL.replace(/\/+$/, "")}${url}`
+      : url;
 
   const response = await fetch(fullUrl, {
-    credentials: 'include',
+    credentials: "include",
     ...fetchOptions,
-  } as RequestInit)
+  });
 
   if (!response.ok) {
-    const errorBody = await response.json().catch(() => ({}))
-    const error = new Error(errorBody.message ?? `HTTP ${response.status}`)
-    ;(error as any).response = { status: response.status, data: errorBody }
-    throw error
+    const errorBody = await response.json().catch(() => ({}));
+    throw new ApiError(errorBody.message ?? `HTTP ${response.status}`, {
+      status: response.status,
+      data: errorBody,
+    });
   }
 
   if (response.status === 204 || response.status === 205) {
-    return undefined as T
+    return undefined as T;
   }
 
-  return response.json()
+  return response.json();
 }
