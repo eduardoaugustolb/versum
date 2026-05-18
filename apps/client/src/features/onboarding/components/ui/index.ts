@@ -1,2 +1,2 @@
-export { ActionButton } from "./action-button";
-export { FieldError } from "./field-error";
+export { ActionButton } from "@/components/shared/action-button";
+export { FieldError } from "@/components/shared/field-error";

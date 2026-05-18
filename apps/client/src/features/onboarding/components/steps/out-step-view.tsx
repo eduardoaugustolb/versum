@@ -3,9 +3,9 @@
 import { useRef } from "react";
 import type { OnboardingValues, OutStep, StepDirection } from "../../types";
 import { onboardingFormSchema } from "../../types";
-import type { StepTransitionHandle } from "../step-transition";
-import { StepTransition } from "../step-transition";
-import { ActionButton } from "../ui/action-button";
+import type { StepTransitionHandle } from "@/components/shared/step-transition";
+import { StepTransition } from "@/components/shared/step-transition";
+import { ActionButton } from "@/components/shared/action-button";
 import { useGSAP } from "@gsap/react";
 import { SplitText, gsap } from "gsap/src/all";
 import { useRouter } from "next/navigation";

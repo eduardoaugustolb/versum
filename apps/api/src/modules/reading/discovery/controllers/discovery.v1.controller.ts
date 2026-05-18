@@ -2,13 +2,13 @@ import type { Context } from "hono";
 import { SuccessViewModel } from "@/view-models/default/success.view-model.ts";
 import type { Session } from "@/modules/auth/repositories/auth.types.repository.ts";
 import type { VerseWithContext } from "../services/discovery.v1.service.ts";
-import { DiscoveryService } from "../services/discovery.v1.service.ts";
+import { DiscoveryServiceV1 } from "../services/discovery.v1.service.ts";
 
 export class DiscoveryControllerV1 {
-  private readonly service: DiscoveryService;
+  private readonly service: DiscoveryServiceV1;
 
-  constructor({ service }: { service?: DiscoveryService } = {}) {
-    this.service = service ?? new DiscoveryService();
+  constructor({ service }: { service?: DiscoveryServiceV1 } = {}) {
+    this.service = service ?? new DiscoveryServiceV1();
   }
 
   getNextVerses = async (c: Context) => {
