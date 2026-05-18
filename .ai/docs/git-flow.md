@@ -22,6 +22,28 @@ main (produção)
 4. Após revisão, faça merge em `development`
 5. Releases: `development` → `release/x.y.z` → `main`
 
+## Pós-Merge (PR aprovado)
+
+Sempre que um PR for aprovado e mergeado no remoto:
+
+```bash
+# 1. Atualizar branches base
+git checkout development
+git pull origin development
+
+git checkout main
+git pull origin main
+
+# 2. Limpar branch de feature (local e remoto)
+git branch -d <nome-da-branch>
+git push origin --delete <nome-da-branch>
+
+# 3. Voltar para development para iniciar próxima tarefa
+git checkout development
+```
+
+**Segurança:** `git fetch` / `git pull` são operações seguras. Elas NUNCA sobrescrevem arquivos não trackeados (`.env`, `.certs`, `node_modules` estão no `.gitignore`).
+
 ## Sandbox para Agentes de IA
 
 Branches criadas por IA **devem** usar prefixo `ai-` para fácil identificação:
