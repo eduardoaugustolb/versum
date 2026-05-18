@@ -1,6 +1,5 @@
 "use client";
 
-import { memo } from "react";
 import { cn } from "@/lib/utils";
 
 interface ActionButtonProps {
@@ -10,7 +9,7 @@ interface ActionButtonProps {
   disabled?: boolean;
 }
 
-export const ActionButton = memo(function ActionButton({
+export function ActionButton({
   label,
   onClick,
   type = "button",
@@ -31,4 +30,4 @@ export const ActionButton = memo(function ActionButton({
       {label}
     </button>
   );
-});
+}
