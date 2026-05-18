@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { DiscoveryRepository } from "../repositories/discovery.repository";
-import { DiscoveryService } from "./discovery.service";
+import type { DiscoveryRepositoryV1 } from "../repositories/discovery.v1.repository";
+import { DiscoveryServiceV1 } from "./discovery.v1.service";
 
-describe("DiscoveryService", () => {
-  let service: DiscoveryService;
+describe("DiscoveryServiceV1", () => {
+  let service: DiscoveryServiceV1;
 
   const mockChapter = {
     chapter: {
@@ -40,8 +40,8 @@ describe("DiscoveryService", () => {
 
   beforeEach(() => {
     const mockRepository = createMockRepository();
-    service = new DiscoveryService({
-      repository: mockRepository as unknown as DiscoveryRepository,
+    service = new DiscoveryServiceV1({
+      repository: mockRepository as unknown as DiscoveryRepositoryV1,
     });
     vi.clearAllMocks();
   });
@@ -51,8 +51,8 @@ describe("DiscoveryService", () => {
       const mockRepository = createMockRepository();
       mockRepository.findChapterById.mockResolvedValue(mockChapter);
       mockRepository.getRandomVersesForChapter.mockResolvedValue(mockVerses);
-      service = new DiscoveryService({
-        repository: mockRepository as unknown as DiscoveryRepository,
+      service = new DiscoveryServiceV1({
+        repository: mockRepository as unknown as DiscoveryRepositoryV1,
       });
 
       const result = await service.getNextVerses(mockChapter.chapter.id);
@@ -92,8 +92,8 @@ describe("DiscoveryService", () => {
     it("should throw error when chapter not found", async () => {
       const mockRepository = createMockRepository();
       mockRepository.findChapterById.mockResolvedValue(null);
-      service = new DiscoveryService({
-        repository: mockRepository as unknown as DiscoveryRepository,
+      service = new DiscoveryServiceV1({
+        repository: mockRepository as unknown as DiscoveryRepositoryV1,
       });
 
       await expect(
@@ -106,8 +106,8 @@ describe("DiscoveryService", () => {
       const chapterId = "test-chapter-id";
       mockRepository.findChapterById.mockResolvedValue(mockChapter);
       mockRepository.getRandomVersesForChapter.mockResolvedValue(mockVerses);
-      service = new DiscoveryService({
-        repository: mockRepository as unknown as DiscoveryRepository,
+      service = new DiscoveryServiceV1({
+        repository: mockRepository as unknown as DiscoveryRepositoryV1,
       });
 
       await service.getNextVerses(chapterId);
@@ -122,8 +122,8 @@ describe("DiscoveryService", () => {
       const mockRepository = createMockRepository();
       mockRepository.findChapterById.mockResolvedValue(mockChapter);
       mockRepository.getRandomVersesForChapter.mockResolvedValue([]);
-      service = new DiscoveryService({
-        repository: mockRepository as unknown as DiscoveryRepository,
+      service = new DiscoveryServiceV1({
+        repository: mockRepository as unknown as DiscoveryRepositoryV1,
       });
 
       const result = await service.getNextVerses(mockChapter.chapter.id);
@@ -136,8 +136,8 @@ describe("DiscoveryService", () => {
     it("should call repository with correct params", async () => {
       const mockRepository = createMockRepository();
       mockRepository.getVersesByIds.mockResolvedValue([]);
-      service = new DiscoveryService({
-        repository: mockRepository as unknown as DiscoveryRepository,
+      service = new DiscoveryServiceV1({
+        repository: mockRepository as unknown as DiscoveryRepositoryV1,
       });
 
       const userId = "user-123";
@@ -153,8 +153,8 @@ describe("DiscoveryService", () => {
     it("should return stats with verses read count", async () => {
       const mockRepository = createMockRepository();
       mockRepository.getReadVersesCount.mockResolvedValue(42);
-      service = new DiscoveryService({
-        repository: mockRepository as unknown as DiscoveryRepository,
+      service = new DiscoveryServiceV1({
+        repository: mockRepository as unknown as DiscoveryRepositoryV1,
       });
 
       const result = await service.getStats("user-123");
@@ -168,8 +168,8 @@ describe("DiscoveryService", () => {
     it("should return 0 verses read when user has no readings", async () => {
       const mockRepository = createMockRepository();
       mockRepository.getReadVersesCount.mockResolvedValue(0);
-      service = new DiscoveryService({
-        repository: mockRepository as unknown as DiscoveryRepository,
+      service = new DiscoveryServiceV1({
+        repository: mockRepository as unknown as DiscoveryRepositoryV1,
       });
 
       const result = await service.getStats("user-with-no-readings");
