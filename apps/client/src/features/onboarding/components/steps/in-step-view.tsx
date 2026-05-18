@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { cn } from "@/lib/utils";
-import type { InStep } from "../../types";
+import type { InStep, StepDirection } from "../../types";
 import type { StepTransitionHandle } from "../step-transition";
 import { StepTransition } from "../step-transition";
 import { ActionButton } from "../ui/action-button";
@@ -10,7 +10,7 @@ import { useGSAP } from "@gsap/react";
 import { SplitText, gsap } from "gsap/src/all";
 
 interface StepAnimationProps {
-  direction: 1 | -1;
+  direction: StepDirection;
   onExitDone: () => void;
 }
 

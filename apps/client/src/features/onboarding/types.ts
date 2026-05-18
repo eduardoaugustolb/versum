@@ -75,3 +75,6 @@ export interface ErrorStep extends BaseStep {
 }
 
 export type OnboardingStep = InStep | ConsentStep | FormStep | OutStep | ErrorStep;
+
+/** Direção da transição entre steps: 1 = avançar, -1 = voltar */
+export type StepDirection = 1 | -1;

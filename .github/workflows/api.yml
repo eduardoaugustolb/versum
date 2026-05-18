@@ -6,7 +6,7 @@ on:
       - "apps/api/**"
 
   push:
-    branches: [main]
+    branches: [main, development]
     paths:
       - "apps/api/**"
       - ".github/workflows/**"
@@ -35,6 +35,9 @@ jobs:
 
       - name: Run Lint
         run: cd apps/api && bun run lint
+
+      - name: Run Type Check
+        run: cd apps/api && bun run typecheck
 
   test:
     needs: lint

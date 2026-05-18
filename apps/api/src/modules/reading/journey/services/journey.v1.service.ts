@@ -1,8 +1,8 @@
 import { logger } from "@versum/logger";
 import {
   type ChapterWithContent,
-  JourneyRepository,
-} from "../repositories/journey.repository.ts";
+  JourneyRepositoryV1,
+} from "../repositories/journey.v1.repository.ts";
 
 export interface ChapterWithContentResponse {
   chapter: {
@@ -45,11 +45,11 @@ export interface StatusResponse {
   isAtEnd: boolean;
 }
 
-export class JourneyService {
-  private readonly repository: JourneyRepository;
+export class JourneyServiceV1 {
+  private readonly repository: JourneyRepositoryV1;
 
-  constructor({ repository }: { repository?: JourneyRepository } = {}) {
-    this.repository = repository ?? new JourneyRepository();
+  constructor({ repository }: { repository?: JourneyRepositoryV1 } = {}) {
+    this.repository = repository ?? new JourneyRepositoryV1();
   }
 
   private mapChapter(result: ChapterWithContent): ChapterWithContentResponse {

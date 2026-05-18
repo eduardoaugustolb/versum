@@ -1,6 +1,7 @@
 import type { Context } from "hono";
-import { BadRequestError, NotFoundError } from "../../../utils/app/errors/index";
-import type { Session } from "../../auth/repositories/auth.types.repository";
+import type { Session } from "@/modules/auth/repositories/auth.types.repository";
+import { BadRequestError, NotFoundError } from "@/utils/app/errors/index";
+import { SuccessViewModel } from "@/view-models/default/success.view-model";
 import { ProfileServiceV1 } from "../services/profile.v1.service";
 
 export class ProfileControllerV1 {
@@ -19,7 +20,7 @@ export class ProfileControllerV1 {
       userId: session.userId,
     });
 
-    return c.json({ profile }, 201);
+    return c.json(SuccessViewModel.create(profile), 201);
   };
 
   getAuthenticatedProfile = async (c: Context) => {
@@ -33,7 +34,7 @@ export class ProfileControllerV1 {
       throw new NotFoundError("Profile not found");
     }
 
-    return c.json({ profile }, 200);
+    return c.json(SuccessViewModel.create(profile), 200);
   };
 
   updateAuthenticatedProfile = async (c: Context) => {
@@ -45,7 +46,7 @@ export class ProfileControllerV1 {
       userId: session.userId,
     });
 
-    return c.json({ profile }, 200);
+    return c.json(SuccessViewModel.create(profile), 200);
   };
 
   getProfileByUsername = async (c: Context) => {
@@ -63,6 +64,6 @@ export class ProfileControllerV1 {
       throw new NotFoundError("Profile not found");
     }
 
-    return c.json({ profile }, 200);
+    return c.json(SuccessViewModel.create(profile), 200);
   };
 }

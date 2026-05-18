@@ -1,9 +1,9 @@
 import { TOTAL_STEPS } from "../constants";
-import type { OnboardingValues } from "../types";
+import type { OnboardingValues, StepDirection } from "../types";
 
 export interface OnboardingReducerState {
   currentIndex: number;
-  direction: 1 | -1;
+  direction: StepDirection;
   collectedValues: Partial<OnboardingValues>;
   isComplete: boolean;
   error: string | null;

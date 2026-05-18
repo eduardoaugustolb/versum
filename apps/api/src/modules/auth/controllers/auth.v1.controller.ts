@@ -1,6 +1,7 @@
 import type { Context } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
-import { BadRequestError } from "../../../utils/app/errors/index.ts";
+import { BadRequestError } from "@/utils/app/errors/index.ts";
+import { SuccessViewModel } from "@/view-models/default/success.view-model.ts";
 import { AuthServiceV1 } from "../services/auth.v1.service.ts";
 
 const isSecure = Bun.env.COOKIE_SECURE === "true";
@@ -33,7 +34,10 @@ export class AuthControllerV1 {
       expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
     });
 
-    return c.json({ message: "Logged in successfully!" }, 200);
+    return c.json(
+      SuccessViewModel.create(undefined, undefined, "Logged in successfully!"),
+      200,
+    );
   };
 
   createAndSendMagicLink = async (c: Context) => {
@@ -47,7 +51,10 @@ export class AuthControllerV1 {
       magicLink,
     });
 
-    return c.json({ message: "Magic link sent!" }, 200);
+    return c.json(
+      SuccessViewModel.create(undefined, undefined, "Magic link sent!"),
+      200,
+    );
   };
 
   logout = async (c: Context) => {
@@ -61,6 +68,9 @@ export class AuthControllerV1 {
       ...cookieOptions,
       expires: new Date(0),
     });
-    return c.json({ message: "Logged out successfully!" }, 200);
+    return c.json(
+      SuccessViewModel.create(undefined, undefined, "Logged out successfully!"),
+      200,
+    );
   };
 }

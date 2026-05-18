@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import type { ConsentStep } from "../../types";
+import type { ConsentStep, StepDirection } from "../../types";
 import { CONSENT_PURPOSES } from "../../types";
 import type { StepTransitionHandle } from "../step-transition";
 import { StepTransition } from "../step-transition";
@@ -13,7 +13,7 @@ import { postApiV1Consent } from "@/dal/orval/fetch/consent-logs/consent-logs";
 import { toast } from "sonner";
 
 interface StepAnimationProps {
-  direction: 1 | -1;
+  direction: StepDirection;
   onExitDone: () => void;
 }
 

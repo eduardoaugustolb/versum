@@ -6,7 +6,7 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 
 export interface StepTransitionHandle {
-  triggerExit: (direction: 1 | -1, onDone: () => void) => void;
+  triggerExit: (direction: number, onDone: () => void) => void;
 }
 
 interface StepTransitionProps {
@@ -30,7 +30,7 @@ export const StepTransition = forwardRef<StepTransitionHandle, StepTransitionPro
     }, []);
 
     useImperativeHandle(ref, () => ({
-      triggerExit: (_direction: 1 | -1, onDone: () => void) => {
+      triggerExit: (_direction: number, onDone: () => void) => {
         const el = elRef.current;
         if (!el) {
           onDone();

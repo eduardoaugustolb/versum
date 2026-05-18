@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import type { OnboardingValues, OutStep } from "../../types";
+import type { OnboardingValues, OutStep, StepDirection } from "../../types";
 import { onboardingFormSchema } from "../../types";
 import type { StepTransitionHandle } from "../step-transition";
 import { StepTransition } from "../step-transition";
@@ -11,7 +11,7 @@ import { SplitText, gsap } from "gsap/src/all";
 import { useRouter } from "next/navigation";
 
 interface StepAnimationProps {
-  direction: 1 | -1;
+  direction: StepDirection;
   onExitDone: () => void;
 }
 

@@ -1,10 +1,8 @@
 import type { Context } from "hono";
 import { setCookie } from "hono/cookie";
-import {
-  BadRequestError,
-  ConflictError,
-} from "../../../utils/app/errors/index";
-import type { Session } from "../../auth/repositories/auth.types.repository";
+import type { Session } from "@/modules/auth/repositories/auth.types.repository";
+import { BadRequestError, ConflictError } from "@/utils/app/errors/index";
+import { SuccessViewModel } from "@/view-models/default/success.view-model";
 import { UserServiceV1 } from "../services/user.v1.service";
 
 const isSecure = Bun.env.COOKIE_SECURE === "true";
@@ -34,12 +32,12 @@ export class UsersControllerV1 {
     const onboardingIsCompleted = !!user.profile;
 
     return c.json(
-      {
+      SuccessViewModel.create({
         user: {
           email: user.email,
         },
         onboardingIsCompleted,
-      },
+      }),
       200,
     );
   };
@@ -61,11 +59,11 @@ export class UsersControllerV1 {
       });
 
       return c.json(
-        {
+        SuccessViewModel.create({
           user: {
             email: user.email,
           },
-        },
+        }),
         200,
       );
     } catch (error) {
@@ -81,7 +79,7 @@ export class UsersControllerV1 {
 
     const data = await this.service.exportUserData({ id: session.userId });
 
-    return c.json(data, 200);
+    return c.json(SuccessViewModel.create(data), 200);
   };
 
   deleteAuthenticatedUser = async (c: Context) => {

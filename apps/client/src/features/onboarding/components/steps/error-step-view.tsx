@@ -7,9 +7,11 @@ import { ActionButton } from "../ui/action-button";
 import { useGSAP } from "@gsap/react";
 import { SplitText, gsap } from "gsap/src/all";
 
+import type { StepDirection } from "../../types";
+
 interface ErrorStepViewProps {
   error: string;
-  direction: 1 | -1;
+  direction: StepDirection;
   onRetry: () => void;
 }
 

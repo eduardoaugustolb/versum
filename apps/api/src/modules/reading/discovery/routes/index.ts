@@ -1,5 +1,5 @@
-import { DiscoveryRoutes } from "./discovery.route.ts";
+import { DiscoveryRoutesV1 } from "./discovery.v1.route.ts";
 
-export const createDiscoveryRoutes = () => {
-  return new DiscoveryRoutes().router;
+export const createDiscoveryRoutesV1 = () => {
+  return new DiscoveryRoutesV1().router;
 };

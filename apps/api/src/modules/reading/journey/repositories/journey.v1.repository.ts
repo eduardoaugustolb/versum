@@ -13,7 +13,7 @@ export type ChapterWithContent = {
   verses: (typeof bibleVerses.$inferSelect)[];
 };
 
-export class JourneyRepository {
+export class JourneyRepositoryV1 {
   private readonly db: typeof drizzle;
 
   constructor({ db }: { db?: typeof drizzle } = {}) {
