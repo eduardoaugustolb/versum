@@ -8,7 +8,7 @@ import type {
   CreateProfileBody,
   CreateProfileResponse,
   GetAuthenticatedProfileResponse,
-  Profile,
+  GetProfileByUsernameResponse,
   UpdateAuthenticatedProfileBody,
   UpdateAuthenticatedProfileResponse
 } from '../schemas';
@@ -102,9 +102,9 @@ export const getGetApiV1ProfilesUsernameUrl = (username: string,) => {
  * Retorna os dados públicos de um perfil pelo username.
  * @summary Obter perfil por username
  */
-export const getApiV1ProfilesUsername = async (username: string, options?: RequestInit): Promise<Profile> => {
+export const getApiV1ProfilesUsername = async (username: string, options?: RequestInit): Promise<GetProfileByUsernameResponse> => {
 
-  return getApiV1ProfilesUsernameMutator<Profile>(getGetApiV1ProfilesUsernameUrl(username),
+  return getApiV1ProfilesUsernameMutator<GetProfileByUsernameResponse>(getGetApiV1ProfilesUsernameUrl(username),
   {
     ...options,
     method: 'GET'

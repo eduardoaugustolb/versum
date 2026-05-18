@@ -11,13 +11,13 @@ export const CONSENT_OPTIONS: ConsentOption[] = [
     purpose: "annotations",
     label: "Anotações",
     description: "Permitir salvar minhas anotações e marcadores nos versículos.",
-    required: false,
+    required: true,
   },
   {
     purpose: "likes",
     label: "Favoritos",
     description: "Permitir salvar meus versículos favoritos.",
-    required: false,
+    required: true,
   },
   {
     purpose: "terms",

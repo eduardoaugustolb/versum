@@ -9,6 +9,8 @@
  * Sessão criada
  */
 export interface AuthenticateWithMagicLinkResponse {
+  /** Indica se a requisição foi bem-sucedida */
+  success?: boolean;
   /** Mensagem legível para humanos */
-  message: string;
+  message?: string;
 }

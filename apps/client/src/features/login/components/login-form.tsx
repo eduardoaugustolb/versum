@@ -16,7 +16,7 @@ export function LoginForm() {
   const titleRef = useRef<HTMLParagraphElement | null>(null);
   const subtitleRef = useRef<HTMLParagraphElement | null>(null);
 
-  const form = useLoginForm();
+  const { form, isPending } = useLoginForm();
 
   useGSAP(() => {
     if (titleRef.current && subtitleRef.current) {
@@ -111,11 +111,9 @@ export function LoginForm() {
           </form.Field>
 
           <ActionButton
-            label={
-              form.state.isSubmitting ? "Enviando..." : "Enviar magic link"
-            }
+            label={isPending ? "Enviando..." : "Enviar magic link"}
             type="submit"
-            disabled={form.state.isSubmitting}
+            disabled={isPending}
           />
         </form>
 

@@ -9,6 +9,8 @@
  * Solicitação de magic link aceita
  */
 export interface SendMagicLinkResponse {
+  /** Indica se a requisição foi bem-sucedida */
+  success?: boolean;
   /** Mensagem legível para humanos */
-  message: string;
+  message?: string;
 }

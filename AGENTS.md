@@ -49,20 +49,31 @@ versum/
 
 ## Regras Obrigatórias para Agentes de IA
 
-### 1. Versionamento (Git Flow)
-- **Branch base:** `development`
+### 1. Versionamento (Git Flow) — REGRA ABSOLUTA
+- **Branch base:** `development` — **NUNCA trabalhe diretamente nela**
 - **Nomenclatura:** `feat/<descricao>`, `fix/<descricao>`, `refactor/<descricao>`, `docs/<descricao>`, `chore/<descricao>`
 - **Commits:** Conventional Commits — `tipo(escopo): descrição`
 - **Sandbox:** Branches criadas por IA usam prefixo `feat/ai-` ou `fix/ai-`
 - **PR:** Sempre abrir PR para `development` ao finalizar
+- ⚠️ **Violar esta regra = quebra o fluxo de revisão e integração contínua**
 
-### 2. Antes de Codificar
-1. Leia `AGENTS.md` (este arquivo)
-2. Leia `.ai/prd.md`
-3. Leia `.ai/docs/` pertinente ao que vai fazer
-4. Leia `.ai/rules/` pertinente
-5. Crie branch a partir de `development`
-6. Verifique exemplos existentes no código antes de criar algo novo
+### 2. Antes de Codificar — CHECKLIST OBRIGATÓRIO
+1. Leia `AGENTS.md` (este arquivo) — **todo, do início ao fim**
+2. Leia `.ai/docs/git-flow.md` — **entenda o fluxo de branches**
+3. Leia `.ai/prd.md`
+4. Leia `.ai/docs/` pertinente ao que vai fazer
+5. Leia `.ai/rules/` pertinente
+6. **Verifique a branch atual** com `git branch --show-current`
+   - Se estiver em `development`, **PARE** e crie uma sub-branch
+   - Se estiver em outra branch sem prefixo `ai-`, considere criar uma nova
+7. Crie branch a partir de `development`: `git checkout -b <tipo>/ai-<descricao> development`
+8. **Atualize o repositório local** sem comprometer alterações:
+   ```bash
+   git stash
+   git pull origin development --rebase
+   git stash pop
+   ```
+9. Verifique exemplos existentes no código antes de criar algo novo
 
 ### 3. Regras de Código
 - **Database:** `snake_case` nas colunas, `camelCase` nas propriedades Drizzle

@@ -9,7 +9,7 @@ import { StepTransition } from "@/components/shared/step-transition";
 import { ActionButton } from "@/components/shared/action-button";
 import { useGSAP } from "@gsap/react";
 import { SplitText, gsap } from "gsap/src/all";
-import { postApiV1Consent } from "@/dal/orval/fetch/consent-logs/consent-logs";
+import { usePostApiV1Consent } from "@/dal/orval/tanstackQuery/consent-logs/consent-logs";
 import { toast } from "sonner";
 
 interface StepAnimationProps {
@@ -40,7 +40,7 @@ export function ConsentStepView({
       return opt?.required ?? false;
     })),
   );
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { mutateAsync: postConsent, isPending } = usePostApiV1Consent();
 
   function toggle(purpose: string) {
     const opt = step.options.find((o) => o.purpose === purpose);
@@ -72,14 +72,14 @@ export function ConsentStepView({
       return;
     }
 
-    setIsSubmitting(true);
-
     try {
-      await postApiV1Consent({
-        consents: CONSENT_PURPOSES.map((purpose) => ({
-          purpose,
-          granted: selected.has(purpose),
-        })),
+      await postConsent({
+        data: {
+          consents: CONSENT_PURPOSES.map((purpose) => ({
+            purpose,
+            granted: selected.has(purpose),
+          })),
+        },
       });
 
       transitionRef.current?.triggerExit(direction, () => {
@@ -90,8 +90,6 @@ export function ConsentStepView({
       const message = e instanceof Error ? e.message : "Não foi possível registrar seu consentimento.";
       toast.error(message);
       onError(message);
-    } finally {
-      setIsSubmitting(false);
     }
   }
 
@@ -177,7 +175,7 @@ export function ConsentStepView({
         <ActionButton
           label="Confirmar e continuar"
           onClick={handleConfirm}
-          disabled={isSubmitting}
+          disabled={isPending}
         />
       </div>
     </StepTransition>

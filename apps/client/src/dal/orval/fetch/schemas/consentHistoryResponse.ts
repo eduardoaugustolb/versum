@@ -4,11 +4,15 @@
  * Versum API
  * OpenAPI spec version: 1.3.2
  */
-import type { ConsentLog } from './consentLog';
+import type { ConsentHistoryData } from './consentHistoryData';
 
 /**
- * Histórico de consentimentos do usuário
+ * Resposta de sucesso para ConsentHistoryResponse
  */
 export interface ConsentHistoryResponse {
-  consents: ConsentLog[];
+  /** Indica se a requisição foi bem-sucedida */
+  success?: boolean;
+  /** Mensagem opcional de contexto */
+  message?: string;
+  data?: ConsentHistoryData;
 }

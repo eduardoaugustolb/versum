@@ -28,7 +28,7 @@ import type {
   CreateProfileBody,
   CreateProfileResponse,
   GetAuthenticatedProfileResponse,
-  Profile,
+  GetProfileByUsernameResponse,
   UpdateAuthenticatedProfileBody,
   UpdateAuthenticatedProfileResponse
 } from '../schemas';
@@ -417,7 +417,7 @@ export const usePatchApiV1ProfilesMe = <TError = ApiErrorResponse,
       return useMutation(getPatchApiV1ProfilesMeMutationOptions(options), queryClient);
     }
     export type getApiV1ProfilesUsernameResponse200 = {
-  data: Profile
+  data: GetProfileByUsernameResponse
   status: 200
 }
 

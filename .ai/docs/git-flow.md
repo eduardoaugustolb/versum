@@ -58,12 +58,32 @@ Branches criadas por IA **devem** usar prefixo `ai-` para fácil identificação
 
 ### Regras para Agentes de IA
 
-1. **Sempre** crie branch a partir de `development`
-2. Nunca force push (`git push --force`)
-3. Commits devem seguir **Conventional Commits** (veja abaixo)
-4. Execute `biome check` e `tsc --noEmit` antes de cada commit
-5. Ao finalizar, abra PR para `development` com descrição clara
-6. Nunca faça merge direto em `main` ou `development`
+1. **Sempre** crie branch a partir de `development` — **nunca trabalhe direto em `development`**
+2. Antes de começar, **verifique a branch atual** com `git branch --show-current`
+3. Se estiver em `development`, **PARE** e crie uma sub-branch imediatamente
+4. Nunca force push (`git push --force`)
+5. Commits devem seguir **Conventional Commits** (veja abaixo)
+6. Execute `biome check` e `tsc --noEmit` antes de cada commit
+7. Ao finalizar, abra PR para `development` com descrição clara
+8. Nunca faça merge direto em `main` ou `development`
+
+### Fluxo Correto ao Iniciar uma Tarefa
+
+```bash
+# 1. Verificar branch atual
+git branch --show-current
+# → development  (PRECISO CRIAR UMA SUB-BRANCH)
+
+# 2. Atualizar repositório local sem perder alterações
+git stash
+git pull origin development --rebase
+git stash pop
+
+# 3. Criar sub-branch a partir de development
+git checkout -b feat/ai-<descricao> development
+
+# 4. Desenvolver, commitar, abrir PR
+```
 
 ## Conventional Commits
 

@@ -1,13 +1,15 @@
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import { loginFormSchema } from "../types";
-import { postApiV1AuthMagicLink } from "@/dal/orval/fetch/auth/auth";
+import { usePostApiV1AuthMagicLink } from "@/dal/orval/tanstackQuery/auth/auth";
 
 interface UseLoginFormOptions {
   onSuccess?: () => void;
 }
 
 export function useLoginForm({ onSuccess }: UseLoginFormOptions = {}) {
+  const { mutateAsync: sendMagicLink, isPending } = usePostApiV1AuthMagicLink();
+
   const form = useForm({
     defaultValues: { email: "" },
     validators: {
@@ -21,8 +23,13 @@ export function useLoginForm({ onSuccess }: UseLoginFormOptions = {}) {
       const toastId = toast.loading("Enviando magic link...");
 
       try {
-        const res = await postApiV1AuthMagicLink({ email: value.email });
-        toast.success(res.message, { id: toastId });
+        const res = await sendMagicLink({ data: { email: value.email } });
+
+        if (res.status !== 200) {
+          throw new Error("Ocorreu um erro desconhecido.");
+        }
+
+        toast.success(res.data.message, { id: toastId });
         form.reset();
         onSuccess?.();
       } catch (error) {
@@ -43,5 +50,5 @@ export function useLoginForm({ onSuccess }: UseLoginFormOptions = {}) {
     },
   });
 
-  return form;
+  return { form, isPending };
 }

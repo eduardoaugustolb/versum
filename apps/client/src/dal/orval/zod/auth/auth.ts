@@ -15,8 +15,11 @@ export const PostApiV1AuthMagicLinkBody = zod.object({
   "email": zod.email().describe('E-mail do usuário')
 }).describe('Payload para solicitar um magic link')
 
+export const postApiV1AuthMagicLinkResponseSuccessDefault = true;
+
 export const PostApiV1AuthMagicLinkResponse = zod.object({
-  "message": zod.string().describe('Mensagem legível para humanos')
+  "success": zod.boolean().default(postApiV1AuthMagicLinkResponseSuccessDefault).describe('Indica se a requisição foi bem-sucedida'),
+  "message": zod.string().optional().describe('Mensagem legível para humanos')
 }).describe('Solicitação de magic link aceita')
 
 /**
@@ -30,15 +33,21 @@ export const GetApiV1AuthMagicLinkQueryParams = zod.object({
   "token": zod.string().min(1).describe('Token do magic link (public_id.token)')
 })
 
+export const getApiV1AuthMagicLinkResponseSuccessDefault = true;
+
 export const GetApiV1AuthMagicLinkResponse = zod.object({
-  "message": zod.string().describe('Mensagem legível para humanos')
+  "success": zod.boolean().default(getApiV1AuthMagicLinkResponseSuccessDefault).describe('Indica se a requisição foi bem-sucedida'),
+  "message": zod.string().optional().describe('Mensagem legível para humanos')
 }).describe('Sessão criada')
 
 /**
  * Encerra a sessão atual baseada no cookie de sessão.
  * @summary Encerrar sessão
  */
+export const postApiV1AuthLogoutResponseSuccessDefault = true;
+
 export const PostApiV1AuthLogoutResponse = zod.object({
-  "message": zod.string().describe('Mensagem legível para humanos')
+  "success": zod.boolean().default(postApiV1AuthLogoutResponseSuccessDefault).describe('Indica se a requisição foi bem-sucedida'),
+  "message": zod.string().optional().describe('Mensagem legível para humanos')
 }).describe('Sessão encerrada com sucesso')
 

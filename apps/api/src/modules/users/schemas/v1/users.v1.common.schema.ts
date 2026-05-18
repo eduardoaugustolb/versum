@@ -1,4 +1,5 @@
 import { z } from "@hono/zod-openapi";
+import { createSuccessResponseSchema } from "@/utils/app/schemas/success-response.ts";
 
 export class UsersCommonSchemasV1 {
   static readonly emailSchema = z
@@ -19,14 +20,20 @@ export class UsersCommonSchemasV1 {
       description: "Dados privados do usuário",
     });
 
-  static readonly getAuthenticatedUserResponseSchema = z
+  static readonly authenticatedUserDataSchema = z
     .object({
       user: this.userSchema,
       onboardingIsCompleted: z.boolean(),
     })
-    .openapi("GetAuthenticatedUserResponse", {
-      description: "Usuário autenticado retornado com sucesso",
+    .openapi("AuthenticatedUserData", {
+      description: "Dados do usuário autenticado",
     });
+
+  static readonly getAuthenticatedUserResponseSchema =
+    createSuccessResponseSchema(
+      "GetAuthenticatedUserResponse",
+      this.authenticatedUserDataSchema,
+    );
 
   static readonly updateAuthenticatedUserBodySchema = z
     .object({
@@ -36,13 +43,19 @@ export class UsersCommonSchemasV1 {
       description: "Payload para atualizar os dados do usuário autenticado",
     });
 
-  static readonly updateAuthenticatedUserResponseSchema = z
+  static readonly updatedUserDataSchema = z
     .object({
       user: this.userSchema,
     })
-    .openapi("UpdateAuthenticatedUserResponse", {
-      description: "Usuário autenticado atualizado com sucesso",
+    .openapi("UpdatedUserData", {
+      description: "Dados do usuário atualizado",
     });
+
+  static readonly updateAuthenticatedUserResponseSchema =
+    createSuccessResponseSchema(
+      "UpdateAuthenticatedUserResponse",
+      this.updatedUserDataSchema,
+    );
 
   static readonly deleteAuthenticatedUserResponseSchema = z
     .null()
@@ -64,7 +77,7 @@ export class UsersCommonSchemasV1 {
       description: "Registro de consentimento",
     });
 
-  static readonly exportUserDataResponseSchema = z
+  static readonly exportDataObjectSchema = z
     .object({
       exportedAt: z.string().datetime().openapi({
         description: "Data e hora da exportação",
@@ -122,9 +135,15 @@ export class UsersCommonSchemasV1 {
         description: "Histórico de consentimento",
       }),
     })
-    .openapi("ExportUserDataResponse", {
-      description: "Dados do usuário exportados com sucesso (LGPD Art. 18, II e V)",
+    .openapi("ExportUserData", {
+      description: "Dados exportados do usuário",
     });
+
+  static readonly exportUserDataResponseSchema =
+    createSuccessResponseSchema(
+      "ExportUserDataResponse",
+      this.exportDataObjectSchema,
+    );
 }
 
 export const userSchema = UsersCommonSchemasV1.userSchema;

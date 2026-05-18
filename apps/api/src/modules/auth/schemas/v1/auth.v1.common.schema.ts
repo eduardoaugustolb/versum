@@ -3,7 +3,8 @@ import { z } from "@hono/zod-openapi";
 export class AuthCommonSchemasV1 {
   static readonly messageSchema = z
     .object({
-      message: z.string().describe("Mensagem legível para humanos"),
+      success: z.boolean().default(true).describe("Indica se a requisição foi bem-sucedida"),
+      message: z.string().optional().describe("Mensagem legível para humanos"),
     })
     .openapi("AuthMessageResponse", {
       description: "Resposta simples com mensagem",

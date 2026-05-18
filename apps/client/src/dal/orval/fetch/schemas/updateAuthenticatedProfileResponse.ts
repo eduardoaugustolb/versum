@@ -4,11 +4,15 @@
  * Versum API
  * OpenAPI spec version: 1.3.2
  */
-import type { Profile } from './profile';
+import type { FullProfile } from './fullProfile';
 
 /**
- * Perfil atualizado com sucesso
+ * Resposta de sucesso para UpdateAuthenticatedProfileResponse
  */
 export interface UpdateAuthenticatedProfileResponse {
-  profile: Profile;
+  /** Indica se a requisição foi bem-sucedida */
+  success?: boolean;
+  /** Mensagem opcional de contexto */
+  message?: string;
+  data?: FullProfile;
 }
