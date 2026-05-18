@@ -188,14 +188,21 @@ Regras:
 
 ## 9. Stack
 
-* Frontend: **Next.js**
-* Backend / API REST: **AzuraJS**
-* Database: **PostgreSQL**
-* Auth: **E-mail Magic Link**
-
-  * Sessão infinita (Infinity Session)
-* Cache: opcional
-* Seed bíblico: JSON normalizado
+| Camada | Tecnologia |
+|--------|-----------|
+| Frontend | **Next.js 16** (App Router) + **React 19** |
+| Backend / API REST | **Hono** (OpenAPIHono) + **Drizzle ORM** |
+| Database | **PostgreSQL** |
+| Auth | **E-mail Magic Link** + Sessão infinita (cookie httpOnly) |
+| Package Manager | **Bun** |
+| Linter/Formatter | **Biome** |
+| Test | **Vitest** |
+| Codegen | **Orval** (OpenAPI → TanStack Query + Zod) |
+| Email | **Resend** |
+| Cache | Redis (opcional) |
+| UI | Tailwind CSS v4 + shadcn/ui + phosphor-icons |
+| Animações | GSAP + SplitText + Lenis |
+| Seed bíblico | JSON normalizado em `src/assets/json/bible.json` |
 
 ---
 

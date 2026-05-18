@@ -1,14 +1,14 @@
 import type { Context } from "hono";
 import { ZodError } from "zod";
-import { SuccessViewModel } from "../../../../view-models/default/success.view-model.ts";
-import type { Session } from "../../../auth/repositories/auth.types.repository.ts";
-import { JourneyService } from "../services/journey.service.ts";
+import { SuccessViewModel } from "@/view-models/default/success.view-model.ts";
+import type { Session } from "@/modules/auth/repositories/auth.types.repository.ts";
+import { JourneyServiceV1 } from "../services/journey.v1.service.ts";
 
-export class JourneyController {
-  private readonly service: JourneyService;
+export class JourneyControllerV1 {
+  private readonly service: JourneyServiceV1;
 
-  constructor({ service }: { service?: JourneyService } = {}) {
-    this.service = service ?? new JourneyService();
+  constructor({ service }: { service?: JourneyServiceV1 } = {}) {
+    this.service = service ?? new JourneyServiceV1();
   }
 
   getFeed = async (c: Context) => {

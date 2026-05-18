@@ -1,10 +1,10 @@
 import type { Context } from "hono";
-import { SuccessViewModel } from "../../../../view-models/default/success.view-model.ts";
-import type { Session } from "../../../auth/repositories/auth.types.repository.ts";
-import type { VerseWithContext } from "../services/discovery.service.ts";
-import { DiscoveryService } from "../services/discovery.service.ts";
+import { SuccessViewModel } from "@/view-models/default/success.view-model.ts";
+import type { Session } from "@/modules/auth/repositories/auth.types.repository.ts";
+import type { VerseWithContext } from "../services/discovery.v1.service.ts";
+import { DiscoveryService } from "../services/discovery.v1.service.ts";
 
-export class DiscoveryController {
+export class DiscoveryControllerV1 {
   private readonly service: DiscoveryService;
 
   constructor({ service }: { service?: DiscoveryService } = {}) {

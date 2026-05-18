@@ -1,25 +1,25 @@
 import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
-import { AuthMiddleware } from "../../../../middlewares/auth.middleware.ts";
-import { createErrorResponses } from "../../../../utils/app/errors/openapi.ts";
-import { validationErrorHook } from "../../../../utils/app/errors/validation.hook.ts";
-import { JourneyController } from "../controllers/journey.controller.ts";
+import { AuthMiddleware } from "@/middlewares/auth.middleware.ts";
+import { createErrorResponses } from "@/utils/app/errors/openapi.ts";
+import { validationErrorHook } from "@/utils/app/errors/validation.hook.ts";
+import { JourneyControllerV1 } from "../controllers/journey.v1.controller.ts";
 import {
   feedQuerySchema,
   feedResponseSchema,
   nextProgressResponseSchema,
   statusResponseSchema,
-} from "../schemas/journey.schema.ts";
+} from "../schemas/journey.v1.schema.ts";
 
-export class JourneyRoutes {
+export class JourneyRoutesV1 {
   router = new OpenAPIHono({
     defaultHook: validationErrorHook,
   });
 
-  constructor({ controller }: { controller?: JourneyController } = {}) {
-    this.setupRoutes(controller ?? new JourneyController());
+  constructor({ controller }: { controller?: JourneyControllerV1 } = {}) {
+    this.setupRoutes(controller ?? new JourneyControllerV1());
   }
 
-  private setupRoutes(controller: JourneyController) {
+  private setupRoutes(controller: JourneyControllerV1) {
     const authMiddleware = new AuthMiddleware();
 
     this.router.use("/*", authMiddleware.validateSession.bind(authMiddleware));

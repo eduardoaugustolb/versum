@@ -6,7 +6,7 @@ import {
   bibleVerses,
 } from "../../../../infrastructure/db/schema.ts";
 
-export class DiscoveryRepository {
+export class DiscoveryRepositoryV1 {
   private readonly db: typeof drizzle;
 
   constructor({ db }: { db?: typeof drizzle } = {}) {

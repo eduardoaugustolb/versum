@@ -4,14 +4,15 @@ export type { StepTransitionHandle } from "./components";
 export { STEPS, FORM_STEPS, TOTAL_STEPS } from "./constants";
 
 export type {
+  ConsentOption,
+  ConsentPurpose,
+  ConsentStep,
+  ErrorStep,
+  FormStep,
+  InStep,
   OnboardingStep,
   OnboardingValues,
-  InStep,
-  ConsentStep,
-  FormStep,
   OutStep,
-  ErrorStep,
+  StepDirection,
   StepKind,
-  ConsentPurpose,
-  ConsentOption,
 } from "./types";

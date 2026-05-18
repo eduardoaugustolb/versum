@@ -3,24 +3,24 @@ import { AuthMiddleware } from "@/middlewares/auth.middleware.ts";
 import { createErrorResponses } from "@/utils/app/errors/openapi.ts";
 import { validationErrorHook } from "@/utils/app/errors/validation.hook.ts";
 import { logger } from "@versum/logger";
-import { DiscoveryController } from "../controllers/discovery.controller.ts";
+import { DiscoveryControllerV1 } from "../controllers/discovery.v1.controller.ts";
 import {
   discoveryStatsResponseSchema,
   markVersesRequestSchema,
   markVersesResponseSchema,
   nextVersesResponseSchema,
-} from "../schemas/discovery.schema.ts";
+} from "../schemas/discovery.v1.schema.ts";
 
-export class DiscoveryRoutes {
+export class DiscoveryRoutesV1 {
   router = new OpenAPIHono({
     defaultHook: validationErrorHook,
   });
 
-  constructor({ controller }: { controller?: DiscoveryController } = {}) {
-    this.setupRoutes(controller ?? new DiscoveryController());
+  constructor({ controller }: { controller?: DiscoveryControllerV1 } = {}) {
+    this.setupRoutes(controller ?? new DiscoveryControllerV1());
   }
 
-  private setupRoutes(controller: DiscoveryController) {
+  private setupRoutes(controller: DiscoveryControllerV1) {
     const authMiddleware = new AuthMiddleware();
     logger("debug", "[Discovery] routes setup");
 

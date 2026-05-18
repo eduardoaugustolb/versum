@@ -6,7 +6,7 @@ on:
       - "apps/client/**"
 
   push:
-    branches:
+    branches: [main, development]
     paths:
       - "apps/client/**"
 

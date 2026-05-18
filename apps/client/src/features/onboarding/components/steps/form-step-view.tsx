@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { cn } from "@/lib/utils";
 import { useForm } from "@tanstack/react-form";
 import type z from "zod";
-import type { FormStep, OnboardingValues } from "../../types";
+import type { FormStep, OnboardingValues, StepDirection } from "../../types";
 import { onboardingFormSchema } from "../../types";
 import type { StepTransitionHandle } from "../step-transition";
 import { StepTransition } from "../step-transition";
@@ -16,7 +16,7 @@ import { postApiV1ProfilesMe } from "@/dal/orval/fetch/profiles/profiles";
 import { toast } from "sonner";
 
 interface StepAnimationProps {
-  direction: 1 | -1;
+  direction: StepDirection;
   onExitDone: () => void;
 }
 

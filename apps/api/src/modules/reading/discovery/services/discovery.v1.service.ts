@@ -1,4 +1,4 @@
-import { DiscoveryRepository } from "../repositories/discovery.repository.ts";
+import { DiscoveryRepositoryV1 } from "../repositories/discovery.v1.repository.ts";
 
 export interface VerseWithContext {
   id: string;
@@ -19,11 +19,11 @@ export interface DiscoveryStats {
   versesRead: number;
 }
 
-export class DiscoveryService {
-  private readonly repository: DiscoveryRepository;
+export class DiscoveryServiceV1 {
+  private readonly repository: DiscoveryRepositoryV1;
 
-  constructor({ repository }: { repository?: DiscoveryRepository } = {}) {
-    this.repository = repository ?? new DiscoveryRepository();
+  constructor({ repository }: { repository?: DiscoveryRepositoryV1 } = {}) {
+    this.repository = repository ?? new DiscoveryRepositoryV1();
   }
 
   async getNextVerses(chapterId: string): Promise<VerseWithContext[]> {
