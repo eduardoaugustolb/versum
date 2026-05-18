@@ -7,7 +7,7 @@ import {
   createProfileBodySchema,
   createProfileResponseSchema,
   getAuthenticatedProfileResponseSchema,
-  profileSchema,
+  getProfileByUsernameResponseSchema,
   updateAuthenticatedProfileBodySchema,
   updateAuthenticatedProfileResponseSchema,
   usernameParamSchema,
@@ -113,7 +113,7 @@ export const createProfileRoutesV1 = (controller: ProfileControllerV1) => {
       200: {
         content: {
           "application/json": {
-            schema: profileSchema,
+            schema: getProfileByUsernameResponseSchema,
           },
         },
         description: "Perfil retornado com sucesso",

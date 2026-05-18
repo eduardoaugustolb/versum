@@ -4,12 +4,15 @@
  * Versum API
  * OpenAPI spec version: 1.3.2
  */
-import type { User } from './user';
+import type { AuthenticatedUserData } from './authenticatedUserData';
 
 /**
- * Usuário autenticado retornado com sucesso
+ * Resposta de sucesso para GetAuthenticatedUserResponse
  */
 export interface GetAuthenticatedUserResponse {
-  user: User;
-  onboardingIsCompleted: boolean;
+  /** Indica se a requisição foi bem-sucedida */
+  success?: boolean;
+  /** Mensagem opcional de contexto */
+  message?: string;
+  data?: AuthenticatedUserData;
 }

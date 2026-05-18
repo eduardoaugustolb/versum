@@ -25,7 +25,12 @@ export const PostApiV1ConsentBody = zod.object({
  * Retorna todos os registros de consentimento do usuário autenticado.
  * @summary Obter histórico de consentimentos
  */
+export const getApiV1ConsentResponseSuccessDefault = true;
+
 export const GetApiV1ConsentResponse = zod.object({
+  "success": zod.boolean().default(getApiV1ConsentResponseSuccessDefault).describe('Indica se a requisição foi bem-sucedida'),
+  "message": zod.string().optional().describe('Mensagem opcional de contexto'),
+  "data": zod.object({
   "consents": zod.array(zod.object({
   "id": zod.uuid(),
   "userId": zod.uuid(),
@@ -35,5 +40,6 @@ export const GetApiV1ConsentResponse = zod.object({
   "userAgent": zod.string(),
   "createdAt": zod.iso.datetime({"offset":true})
 }).describe('Registro de consentimento'))
-}).describe('Histórico de consentimentos do usuário')
+}).optional().describe('Dados da resposta')
+}).describe('Resposta de sucesso para ConsentHistoryResponse')
 

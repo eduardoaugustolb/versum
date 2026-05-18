@@ -12,7 +12,7 @@ import { ActionButton } from "@/components/shared/action-button";
 import { FieldError } from "@/components/shared/field-error";
 import { useGSAP } from "@gsap/react";
 import { SplitText, gsap } from "gsap/src/all";
-import { postApiV1ProfilesMe } from "@/dal/orval/fetch/profiles/profiles";
+import { usePostApiV1ProfilesMe } from "@/dal/orval/tanstackQuery/profiles/profiles";
 import { toast } from "sonner";
 
 interface StepAnimationProps {
@@ -69,6 +69,7 @@ export function FormStepView({
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const labelRef = useRef<HTMLParagraphElement | null>(null);
   const subtitleRef = useRef<HTMLParagraphElement | null>(null);
+  const { mutateAsync: createProfile, isPending } = usePostApiV1ProfilesMe();
 
   const form = useForm({
     defaultValues: {
@@ -90,12 +91,22 @@ export function FormStepView({
         const allValues = onboardingFormSchema.parse({ ...collectedValues, ...patch });
 
         try {
-          const res = await postApiV1ProfilesMe({
-            name: allValues.name,
-            username: allValues.username,
-            bio: allValues.bio,
+          const res = await createProfile({
+            data: {
+              name: allValues.name,
+              username: allValues.username,
+              bio: allValues.bio,
+            },
           });
-          toast.success(`Bem-vindo, ${res.profile.name}!`);
+
+          if (res.status !== 201) {
+            throw new Error("Não foi possível completar o cadastro.");
+          }
+
+          const profile = res.data?.data;
+          if (profile) {
+            toast.success(`Bem-vindo, ${profile.name}!`);
+          }
         } catch (e) {
           const message = e instanceof Error ? e.message : "Não foi possível completar o cadastro.";
           toast.error(message);
@@ -191,7 +202,7 @@ export function FormStepView({
             )}
           </form.Field>
 
-          <ActionButton label="Continuar" type="submit" disabled={form.state.isSubmitting} />
+          <ActionButton label="Continuar" type="submit" disabled={isPending} />
         </form>
 
         {!isFirstFormStep && (

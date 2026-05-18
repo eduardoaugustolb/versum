@@ -11,16 +11,21 @@ import * as zod from 'zod';
  * Retorna os dados do usuário autenticado.
  * @summary Obter usuário autenticado
  */
-export const getApiV1UsersMeResponseUserEmailMax = 255;
+export const getApiV1UsersMeResponseSuccessDefault = true;
+export const getApiV1UsersMeResponseDataUserEmailMax = 255;
 
 
 
 export const GetApiV1UsersMeResponse = zod.object({
+  "success": zod.boolean().default(getApiV1UsersMeResponseSuccessDefault).describe('Indica se a requisição foi bem-sucedida'),
+  "message": zod.string().optional().describe('Mensagem opcional de contexto'),
+  "data": zod.object({
   "user": zod.object({
-  "email": zod.email().max(getApiV1UsersMeResponseUserEmailMax).describe('E-mail do usuário')
+  "email": zod.email().max(getApiV1UsersMeResponseDataUserEmailMax).describe('E-mail do usuário')
 }).describe('Dados privados do usuário'),
   "onboardingIsCompleted": zod.boolean()
-}).describe('Usuário autenticado retornado com sucesso')
+}).optional().describe('Dados da resposta')
+}).describe('Resposta de sucesso para GetAuthenticatedUserResponse')
 
 /**
  * Atualiza os dados do usuário autenticado.
@@ -34,21 +39,31 @@ export const PatchApiV1UsersMeBody = zod.object({
   "email": zod.email().max(patchApiV1UsersMeBodyEmailMax).describe('E-mail do usuário')
 }).describe('Payload para atualizar os dados do usuário autenticado')
 
-export const patchApiV1UsersMeResponseUserEmailMax = 255;
+export const patchApiV1UsersMeResponseSuccessDefault = true;
+export const patchApiV1UsersMeResponseDataUserEmailMax = 255;
 
 
 
 export const PatchApiV1UsersMeResponse = zod.object({
+  "success": zod.boolean().default(patchApiV1UsersMeResponseSuccessDefault).describe('Indica se a requisição foi bem-sucedida'),
+  "message": zod.string().optional().describe('Mensagem opcional de contexto'),
+  "data": zod.object({
   "user": zod.object({
-  "email": zod.email().max(patchApiV1UsersMeResponseUserEmailMax).describe('E-mail do usuário')
+  "email": zod.email().max(patchApiV1UsersMeResponseDataUserEmailMax).describe('E-mail do usuário')
 }).describe('Dados privados do usuário')
-}).describe('Usuário autenticado atualizado com sucesso')
+}).optional().describe('Dados da resposta')
+}).describe('Resposta de sucesso para UpdateAuthenticatedUserResponse')
 
 /**
  * Exporta todos os dados pessoais do usuário (direito de portabilidade LGPD Art. 18, II e V).
  * @summary Exportar dados do usuário autenticado
  */
+export const getApiV1UsersMeExportResponseSuccessDefault = true;
+
 export const GetApiV1UsersMeExportResponse = zod.object({
+  "success": zod.boolean().default(getApiV1UsersMeExportResponseSuccessDefault).describe('Indica se a requisição foi bem-sucedida'),
+  "message": zod.string().optional().describe('Mensagem opcional de contexto'),
+  "data": zod.object({
   "exportedAt": zod.iso.datetime({"offset":true}).describe('Data e hora da exportação'),
   "user": zod.object({
   "email": zod.email(),
@@ -96,5 +111,6 @@ export const GetApiV1UsersMeExportResponse = zod.object({
   "userAgent": zod.string().describe('User-Agent'),
   "createdAt": zod.iso.datetime({"offset":true}).describe('Data do registro')
 }).describe('Registro de consentimento')).describe('Histórico de consentimento')
-}).describe('Dados do usuário exportados com sucesso (LGPD Art. 18, II e V)')
+}).optional().describe('Dados da resposta')
+}).describe('Resposta de sucesso para ExportUserDataResponse')
 

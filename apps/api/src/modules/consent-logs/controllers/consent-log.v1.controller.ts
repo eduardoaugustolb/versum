@@ -1,6 +1,7 @@
 import type { Context } from "hono";
 import { BadRequestError } from "../../../utils/app/errors/index";
 import type { Session } from "../../auth/repositories/auth.types.repository";
+import { SuccessViewModel } from "@/view-models/default/success.view-model.ts";
 import { ConsentLogServiceV1 } from "../services/consent-log.v1.service";
 
 const consentLogService = new ConsentLogServiceV1();
@@ -30,7 +31,7 @@ export class ConsentLogControllerV1 {
       userAgent,
     });
 
-    return c.json({ consents: logs }, 201);
+    return c.json(SuccessViewModel.create({ consents: logs }), 201);
   };
 
   getConsentHistory = async (c: Context) => {
@@ -38,6 +39,6 @@ export class ConsentLogControllerV1 {
 
     const logs = await this.service.getUserConsents({ userId: session.userId });
 
-    return c.json({ consents: logs }, 200);
+    return c.json(SuccessViewModel.create({ consents: logs }), 200);
   };
 }

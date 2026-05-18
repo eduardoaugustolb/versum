@@ -1,4 +1,5 @@
 import { z } from "@hono/zod-openapi";
+import { createSuccessResponseSchema } from "@/utils/app/schemas/success-response.ts";
 
 const USERNAME_REGEX = /^[a-zA-Z0-9_]+$/;
 
@@ -48,6 +49,21 @@ export class ProfilesCommonSchemasV1 {
       example: "https://example.com/avatar.jpg",
     });
 
+  static readonly fullProfileSchema = z
+    .object({
+      id: z.string().uuid().describe("ID único do perfil"),
+      userId: z.string().uuid().describe("ID do usuário"),
+      username: this.usernameSchema,
+      name: this.nameSchema,
+      bio: this.bioSchema,
+      pictureUrl: this.pictureUrlSchema,
+      createdAt: z.string().datetime().describe("Data de criação"),
+      updatedAt: z.string().datetime().describe("Data de atualização"),
+    })
+    .openapi("FullProfile", {
+      description: "Perfil completo do usuário",
+    });
+
   static readonly profileSchema = z
     .object({
       username: this.usernameSchema,
@@ -70,21 +86,17 @@ export class ProfilesCommonSchemasV1 {
       description: "Payload para criar o perfil do usuário",
     });
 
-  static readonly createProfileResponseSchema = z
-    .object({
-      profile: this.profileSchema,
-    })
-    .openapi("CreateProfileResponse", {
-      description: "Perfil criado com sucesso",
-    });
+  static readonly createProfileResponseSchema =
+    createSuccessResponseSchema(
+      "CreateProfileResponse",
+      this.fullProfileSchema,
+    );
 
-  static readonly getAuthenticatedProfileResponseSchema = z
-    .object({
-      profile: this.profileSchema,
-    })
-    .openapi("GetAuthenticatedProfileResponse", {
-      description: "Perfil do usuário autenticado",
-    });
+  static readonly getAuthenticatedProfileResponseSchema =
+    createSuccessResponseSchema(
+      "GetAuthenticatedProfileResponse",
+      this.fullProfileSchema,
+    );
 
   static readonly updateAuthenticatedProfileBodySchema = z
     .object({
@@ -97,13 +109,17 @@ export class ProfilesCommonSchemasV1 {
       description: "Payload para atualizar o perfil do usuário autenticado",
     });
 
-  static readonly updateAuthenticatedProfileResponseSchema = z
-    .object({
-      profile: this.profileSchema,
-    })
-    .openapi("UpdateAuthenticatedProfileResponse", {
-      description: "Perfil atualizado com sucesso",
-    });
+  static readonly updateAuthenticatedProfileResponseSchema =
+    createSuccessResponseSchema(
+      "UpdateAuthenticatedProfileResponse",
+      this.fullProfileSchema,
+    );
+
+  static readonly getProfileByUsernameResponseSchema =
+    createSuccessResponseSchema(
+      "GetProfileByUsernameResponse",
+      this.fullProfileSchema,
+    );
 
   static readonly usernameParamSchema = z.object({
     username: z
@@ -138,6 +154,8 @@ export const updateAuthenticatedProfileBodySchema =
 export const updateAuthenticatedProfileResponseSchema =
   ProfilesCommonSchemasV1.updateAuthenticatedProfileResponseSchema;
 export const usernameParamSchema = ProfilesCommonSchemasV1.usernameParamSchema;
+export const getProfileByUsernameResponseSchema =
+  ProfilesCommonSchemasV1.getProfileByUsernameResponseSchema;
 
 export type ProfileSchema = z.infer<
   typeof ProfilesCommonSchemasV1.profileSchema

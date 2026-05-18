@@ -61,7 +61,7 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
             key={currentStep.id}
             step={currentStep}
             direction={direction}
-            onExitDone={goNext}
+            onExitDone={noop}
             onNext={() => goNext({})}
             onError={setError}
           />

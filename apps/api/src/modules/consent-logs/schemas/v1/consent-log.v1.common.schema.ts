@@ -1,4 +1,5 @@
 import { z } from "@hono/zod-openapi";
+import { createSuccessResponseSchema } from "@/utils/app/schemas/success-response.ts";
 
 export const CONSENT_PURPOSES = [
   "profile_content",
@@ -56,19 +57,26 @@ export class ConsentLogCommonSchemasV1 {
       description: "Registro de consentimento",
     });
 
-  static readonly consentHistoryResponseSchema = z
+  static readonly consentHistoryDataSchema = z
     .object({
       consents: z.array(this.consentLogSchema),
     })
-    .openapi("ConsentHistoryResponse", {
-      description: "Histórico de consentimentos do usuário",
+    .openapi("ConsentHistoryData", {
+      description: "Dados do histórico de consentimentos",
     });
+
+  static readonly consentHistoryResponseSchema =
+    createSuccessResponseSchema(
+      "ConsentHistoryResponse",
+      this.consentHistoryDataSchema,
+    );
 }
 
 export const consentPurposeSchema = ConsentLogCommonSchemasV1.consentPurposeSchema;
 export const consentItemSchema = ConsentLogCommonSchemasV1.consentItemSchema;
 export const recordConsentBodySchema = ConsentLogCommonSchemasV1.recordConsentBodySchema;
 export const consentLogSchema = ConsentLogCommonSchemasV1.consentLogSchema;
+export const consentHistoryDataSchema = ConsentLogCommonSchemasV1.consentHistoryDataSchema;
 export const consentHistoryResponseSchema = ConsentLogCommonSchemasV1.consentHistoryResponseSchema;
 
 export type ConsentItem = z.infer<typeof ConsentLogCommonSchemasV1.consentItemSchema>;

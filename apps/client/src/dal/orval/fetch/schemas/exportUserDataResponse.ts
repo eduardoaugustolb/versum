@@ -4,29 +4,15 @@
  * Versum API
  * OpenAPI spec version: 1.3.2
  */
-import type { ExportConsentLog } from './exportConsentLog';
-import type { ExportProfile } from './exportProfile';
-import type { ExportReadingHistory } from './exportReadingHistory';
-import type { ExportUser } from './exportUser';
-import type { ExportUserDataResponseAnnotationsItem } from './exportUserDataResponseAnnotationsItem';
-import type { ExportUserDataResponseLikesItem } from './exportUserDataResponseLikesItem';
-import type { ExportUserDataResponseSessionsItem } from './exportUserDataResponseSessionsItem';
+import type { ExportUserData } from './exportUserData';
 
 /**
- * Dados do usuário exportados com sucesso (LGPD Art. 18, II e V)
+ * Resposta de sucesso para ExportUserDataResponse
  */
 export interface ExportUserDataResponse {
-  /** Data e hora da exportação */
-  exportedAt: string;
-  user: ExportUser;
-  profile: ExportProfile | null;
-  /** Sessões do usuário */
-  sessions: ExportUserDataResponseSessionsItem[];
-  readingHistory: ExportReadingHistory;
-  /** Anotações do usuário */
-  annotations: ExportUserDataResponseAnnotationsItem[];
-  /** Favoritos do usuário */
-  likes: ExportUserDataResponseLikesItem[];
-  /** Histórico de consentimento */
-  consentLogs: ExportConsentLog[];
+  /** Indica se a requisição foi bem-sucedida */
+  success?: boolean;
+  /** Mensagem opcional de contexto */
+  message?: string;
+  data?: ExportUserData;
 }

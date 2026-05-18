@@ -23,7 +23,7 @@ export default async function Layout({
       redirect("/auth/clear-session");
     }
 
-    onboardingComplete = userData.onboardingIsCompleted;
+    onboardingComplete = userData?.data?.onboardingIsCompleted ?? false;
   }
 
   const guard = matchGuard(pathname);

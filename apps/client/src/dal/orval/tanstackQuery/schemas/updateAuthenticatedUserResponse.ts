@@ -4,11 +4,15 @@
  * Versum API
  * OpenAPI spec version: 1.3.2
  */
-import type { User } from './user';
+import type { UpdatedUserData } from './updatedUserData';
 
 /**
- * Usuário autenticado atualizado com sucesso
+ * Resposta de sucesso para UpdateAuthenticatedUserResponse
  */
 export interface UpdateAuthenticatedUserResponse {
-  user: User;
+  /** Indica se a requisição foi bem-sucedida */
+  success?: boolean;
+  /** Mensagem opcional de contexto */
+  message?: string;
+  data?: UpdatedUserData;
 }

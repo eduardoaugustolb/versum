@@ -4,11 +4,15 @@
  * Versum API
  * OpenAPI spec version: 1.3.2
  */
-import type { Profile } from './profile';
+import type { FullProfile } from './fullProfile';
 
 /**
- * Perfil criado com sucesso
+ * Resposta de sucesso para CreateProfileResponse
  */
 export interface CreateProfileResponse {
-  profile: Profile;
+  /** Indica se a requisição foi bem-sucedida */
+  success?: boolean;
+  /** Mensagem opcional de contexto */
+  message?: string;
+  data?: FullProfile;
 }
