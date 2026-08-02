@@ -12,15 +12,18 @@ perfil social.
 ## Estado do projeto
 
 O repositório está em pré-alpha. A arquitetura e o produto foram definidos; a
-implementação ainda não começou.
+implementação começou pelo corpus bíblico canônico e pelas ferramentas de
+qualidade do repositório. A API do servidor ainda não existe.
 
-## Estrutura planejada
+## Estrutura
 
 ```text
-api/             API Go, worker e migrations
-web/             leitor online em Next.js
-mobile/          aplicativo Android em React Native/Expo
-infra/           ambiente local e deploy
+api/             módulo Go do servidor (ainda vazio)
+bible/           corpus bíblico canônico versionado e sua ferramenta de geração
+tools/vaultlint  verificador de metadados e links do vault Obsidian
+web/             leitor online em Next.js (planejado)
+mobile/          aplicativo Android em React Native/Expo (planejado)
+infra/           ambiente local e deploy (planejado)
 Obsidian Vault/  documentação do projeto
 ```
 
@@ -50,6 +53,10 @@ O vault Obsidian concentra a documentação humana do projeto:
 Leia [CONTRIBUTING.md](CONTRIBUTING.md) antes de abrir uma issue ou pull request.
 Mudanças de produto e arquitetura devem atualizar o vault quando alterarem uma
 decisão que continuará relevante.
+
+Rode `npm install` na raiz uma vez para instalar os hooks de commit do Husky
+(bloqueiam coautoria de agentes de IA e rodam as verificações do repositório
+antes de cada commit).
 
 ## Licença
 
