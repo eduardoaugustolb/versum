@@ -1,13 +1,18 @@
 ---
-title: PRD
-tags:
-  - versum
-  - product
-  - mvp
+title: "PRD"
+section: Product
+type: product-requirements
 status: approved
+tags: [versum, product, mvp]
+up: "[[_Index|Home]]"
+prev: "[[_Index|Home]]"
+next: "[[Docs/_Index|Documentação]]"
+related: ["[[Docs/Architecture/_Index]]"]
 ---
 
 # PRD — Versum
+
+🏠 [[_Index|Home]] › **Produto**
 
 ## Visão
 
@@ -68,4 +73,9 @@ de devoção e não participa de ranking.
 
 ## Próximos documentos
 
-- [[Docs/Arquitetura|Arquitetura]]
+- [[Docs/_Index|Documentação]]
+- [[Docs/Architecture/_Index|Arquitetura]]
+
+---
+
+◀ [[_Index|Home]] · próxima: [[Docs/_Index|Documentação]] ▶
