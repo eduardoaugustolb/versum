@@ -1,0 +1,558 @@
+{
+  "id": "1pe",
+  "order": 67,
+  "name": "Primeira Epístola de S. Pedro",
+  "testament": "new",
+  "chapters": [
+    {
+      "number": 1,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Pedro, Apóstolo de Jesus Cristo, aos eleitos que são estrangeiros dispersos pelo Ponto, Galácia, Capadócia, Ásia e Bilínia,"
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "a esses que foram eleitos segundo a presciência de Deus Pai, e santificados pelo Espirito (Santo), para prestarem obediência a Jesus Cristo e serem aspergidos com o seu sangue. Graça e paz vos sejam dadas em abundância."
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "Bendito seja Deus, o Pai de Nosso Senhor Jesus Cristo, que, segundo a sua grande misericórdia, nos regenerou para uma esperança viva, pela ressurreição de Jesus Cristo dentre os mortos,"
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "para uma herança incorruptível, que não pode contaminar-se, nem murchar, reservada nos céus para vós,"
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "a quem o poder de Deus guarda pela fé para a salvação, que está preparada para se manifestar no último tempo."
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "Por isso exultais, embora presentemente convenha que sejais afligidos por um pouco de tempo com várias provações,"
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "a fim de que a prova da vossa fé, muito mais preciosa que o ouro, o qual, embora perecível, se prova com o fogo, se ache digna de louvor, de glória e de honra, quando Jesus Cristo se manifestar (como juiz)."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Este Jesus, vós o amais, sem nunca o ter visto, credes nele sem o ver ainda, e exultais com uma alegria inefável e cheia de glória,"
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "seguros de obter o fim da vossa fé: a salvação das vossas almas."
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "Desta salvação inquiriram e indagaram os profetas, que predisseram a graça que havia de vir a vós,"
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "procurando descobrir qual o tempo e quais as circunstâncias (em que devia vir o Messias), indicadas por aquele que estava neles, o Espírito de Cristo, ao predizer os sofrimentos reservados a Cristo e as glórias que se lhes seguiriam."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Foi-lhes revelado que eles, não para si, mas para vós, eram dispensadores daquelas coisas que agora vos são anunciadas por aqueles que, pelo Espírito Santo, enviado do céu, vos pregaram o Evangelho. Nessas coisas reveladas os próprios anjos desejam penetrar com os seus olhares."
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "Portanto, cingidos os rins da vossa mente, sendo sóbrios, esperai inteiramente naquela graça (da vida eterna), que vos será oferecida na manifestação de Jesus Cristo."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Como filhos obedientes, não vos conformeis com os desejos do vosso passado quando estáveis na ignorância,"
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "mas, à imitação do (Deus) Santo que vos chamou, sede vós também santos em todas as ações,"
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "porque está escrito: Sereis santos, porque eu sou santo (Lv. 11, 44)."
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "E, se invocais como pai aquele que sem acepção de pessoas julga segundo as obras de cada um, vivei em temor durante o tempo da vossa peregrinação (sobre a terra),"
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "sabendo que fostes resgastados da nossa vã maneira de viver recebida de vossos pais, não a preço de coisas corruptíveis, de prata ou de ouro,"
+        },
+        {
+          "number": 19,
+          "part": 1,
+          "text": "mas pelo precioso sangue de Cristo, o cordeiro sem defeito e sem mancha."
+        },
+        {
+          "number": 20,
+          "part": 1,
+          "text": "designado (por Deus para nosso Salvador) antes da criação do mundo, e manifestado nos últimos tempos por amor de vós."
+        },
+        {
+          "number": 21,
+          "part": 1,
+          "text": "Por ele tendes fé em Deus, o qual o ressuscitou dos mortos e o glorificou, de maneira que a vossa fé e a vossa esperança estejam em Deus."
+        },
+        {
+          "number": 22,
+          "part": 1,
+          "text": "Purificando as vossas almas na obediência à verdade, para vos amardes como irmãos. Do intimo do coração amai-vos, pois, intensamente uns aos outros,"
+        },
+        {
+          "number": 23,
+          "part": 1,
+          "text": "renascidos como sois (para um a vida nova), não de uma semente corruptível, mas incorruptível: a palavra de Deus, que vive e permanece eternamente."
+        },
+        {
+          "number": 24,
+          "part": 1,
+          "text": "Com efeito, toda a carne é como a erva, e toda a sua glória como a flor da erva; seca-se a erva e cai a sua flor,"
+        },
+        {
+          "number": 25,
+          "part": 1,
+          "text": "mas a palavra do Senhor permanece eternamente (Is. 40, 6-8). Ora esta palavra é a que vos foi anunciada."
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Deixando, pois, toda a malícia, todo o engano, dissimulações, invejas e toda a sorte de detrações,"
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "como meninos recém-nascidos, desejai ardentemente o puro leite espiritual, para, por meio dele, crescerdes para a salvação —"
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "se é que saboreastes como é doce o Senhor (Ps. 33, 9)"
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "Aproximai-vos dele, pedra viva, rejeitada pelos homens, mas escolhida e honrada por Deus,"
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "e vós também, como pedras vivas, prestai-vos a entrar na edificação de uma casa espiritual, para formar assim o sacerdócio santo para oferecer sacrifícios espirituais, agradáveis a Deus por Jesus Cristo."
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "Por isso se lê na Escritura: Eis que ponho em Sião uma pedra angular, escolhida, preciosa, e o que confiar nela não será confundido (Is. 28, 16)."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "Honra, pois, a vós, crentes; para os incrédulos, porém, a pedra que os construtores regeitaram tornou-se cabeça do ângulo,"
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "pedra de tropeço e pedra de escândalo (Ps. 117, 22; Is. 8, 14). Eles tropeçam, porque se recusam a crer na palavra (do Evangelho): é a isso que estão destinados."
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "Vós, porém, sois uma geração escolhida, um sacerdócio real, uma gente santa, um povo adquirido por Deus, para que publiqueis as perfeições daquele que das trevas vos chamou à luz admirável."
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "Vós, que outrora não éreis seu povo, agora sois povo de Deus: vós, que não tínheis alcançado misericórdia (Os. 2, 23), agora alcançastes misericórdia."
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "Carrissimos, rogo-vos que, como estrangeiros e peregrinos (que sois neste mundo), vos abstenhais dos desejos carnais que combatem contra a alma."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Tende bom proceder entre os gentios, para que, naquilo mesmo sobre que vos caluniam como malfeitores, cheguem, reparando nas vossas boas obras, a dar glória a Deus no dia em que os visitar (chamando-os à fé)."
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "Sede submissos a toda a instituição humana, por causa do Senhor, quer ao rei, como a soberano,"
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "quer aos governadores, como enviados por ele para punir os malfeitores e louvar os bons,"
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "porque a vontade de Deus é que, fazendo o bem, façais emudecer a ignorância dos homens insensatos."
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "Procedei como homens livres, não como homens que têm a liberdade por véu para encobrir a malícia, mas como servos de Deus."
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "Honrai a todos, amai os irmãos, temei a Deus, respeitai o rei."
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "Servos, sede obedientes aos vossos senhores com grande respeito, não só aos bons e moderados, mas também aos de carácter difícil,"
+        },
+        {
+          "number": 19,
+          "part": 1,
+          "text": "porque é uma coisa agradável a Deus o suportar alguém contrariedades, sofrendo injustamente pelo conhecimento do que deve a Deus."
+        },
+        {
+          "number": 20,
+          "part": 1,
+          "text": "Efetivamente, que glória (mereceis) se, depois de ter cometido uma falta, suportais pacientemente a punição? Mas, se fazendo bem, sofreis com paciência, isto é que é agradável diante de Deus."
+        },
+        {
+          "number": 21,
+          "part": 1,
+          "text": "Com efeito para isto é que vós fostes chamados, pois que Cristo também sofreu por vós deixando-vos o exemplo, para que sigais as suas pisadas,"
+        },
+        {
+          "number": 22,
+          "part": 1,
+          "text": "ele que não cometeu pecado, e em cuja boca se não encontrou engano (Is. 53, 9);"
+        },
+        {
+          "number": 23,
+          "part": 1,
+          "text": "quando o injuriavam, não injuriava, sofrendo, não ameaçava, mas entregava-se ao justo Juiz;"
+        },
+        {
+          "number": 24,
+          "part": 1,
+          "text": "foi ele mesmo que levou os nossos pecados em seu corpo sobre o madeiro (da cruz), a fim de que, mortos para os pecados, vivamos para a justiça: por suas chagas fostes sarados (Is. 53, 5)."
+        },
+        {
+          "number": 25,
+          "part": 1,
+          "text": "Porque vós éreis como ovelhas desgarradas, mas agora vos convertestes aos pastor e guarda das vossas almas."
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Igualmente, vós, mulheres, sede submissas a vossos maridos, para que, se alguns não crêem na palavra, sejam ganhados pelo proceder de suas mulheres, sem a palavra,"
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "considerando a vossa vida casta e cheia de respeito."
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "Não seja o vosso adorno exterior: cabelos frisados, adereços de ouro, gala e preparo dos vestidos —"
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "mas (resida) no interior do vosso coração, na incorruptibilidade de uma alma doce e serena; eis o que é de grande valor diante de Deus."
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "Era também assim que outrora se adornavam as santas mulheres, que esperavam em Deus, submissas a seus maridos,"
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "como Sara que obedecia a Abraão, chamando-lhe senhor, da qual sois filhas, se fizerdes o bem, não temendo qualquer ameaça."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "Do mesmo modo, vós, maridos, convivei compreensivamente com vossas mulheres, seres mais fracos, tratai-as com honra, como herdeiras convosco da graça da Vida (eterna), a fim de que não sejam impedidas (na sua eficácia, pela discórdia) as vossas orações (que fazeis em comum)."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Finalmente sede todos de um mesmo coração, compassivos, amantes dos irmãos, misericordiosos, humildes,"
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "não retribuindo mal por mal, nem injúria por injúria, mas pelo contrário, bendizendo, pois para isto fostes chamados, a fim de que possuais a bênção (celeste) como herança."
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "O que quer amar a vida e viver dias felizes, refreie a sua língua do mal, e os seus lábios não prefiram engano,"
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "Aparte-se do mal e faça o bem; busque a paz e vá após ela,"
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "porque os olhos do Senhor estão sobre os justos, e os seus ouvidos estão atentos às suas orações, mas o seu rosto está contra os que fazem o mal Ps. 33, 13-17."
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "E quem é que vos poderá fazer mal, se fordes zelosos pelo bem?"
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Até, se alguma coisa sofrerdes pela justiça, sereis bem-aventurados. Não temais as suas ameaças e não vos turbeis."
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "Mas tratai santamente o Cristo Senhor em vossos corações, prontos sempre para responder a todo o que vos pedir razão daquela esperança que há em vós;"
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "mas fazei isso com doçura e respeito, tendo uma boa consciência, para que, naquilo em que vos caluniam sejam confundidos os que difamam o vosso bom proceder em Cristo."
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "Com efeito, é melhor sofrer, se Deus assim quiser, fazendo bem, que fazendo mal,"
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "porque também Cristo morreu uma vez pelos nossos pecados, ele justo pelos injustos, para nos levar a Deus, sendo efetivamente morto segundo a carne, mas vivificado pelo espírito."
+        },
+        {
+          "number": 19,
+          "part": 1,
+          "text": "Com este mesmo espírito ele também foi pregar aos espíritos que estavam no cárcere (do Limbo),"
+        },
+        {
+          "number": 20,
+          "part": 1,
+          "text": "os quais outrora tinham sido incrédulos, quando nos dias de Noé a paciência de Deus estava esperando (a sua conversão), enquanto se fabricava a arca, na qual um pequeno número, isto é, oito pessoas apenas se salvaram através da água."
+        },
+        {
+          "number": 21,
+          "part": 1,
+          "text": "Esta água prefigurava o batismo que agora vos salva, o qual não é a purificação das imundícies da carne, mas o pedido feito a Deus de uma boa consciência, graças à ressurreição de Jesus Cristo,"
+        },
+        {
+          "number": 22,
+          "part": 1,
+          "text": "que tendo subido ao céu, está à direita de Deus, depois de ter recebido a submissão dos anjos, das dominações e das potestades."
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Tendo, pois, Cristo sofrido (por nós) na carne, armai-vos também vós do mesmo pensamento: aquele que sofreu na carne, deixou de pecar,"
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "para viver durante o tempo que lhe resta (passar) na carne, não segundo as paixões humanas, mas segundo a vontade de Deus."
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "Pois basta no tempo passado ter feito a vontade dos gentios, entregando-se aos desregramentos, às paixões, à embriaguez, aos excessos do comer e do beber, e ao ilícito culto dos ídolos."
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "Por isso é que (os infiéis) estranham agora que não concorrais ao mesmo transbordar de devassidões, e enchem-vos de vitupérios."
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "Mas eles darão conta àquele que está pronto para julgar os vivos e os mortos."
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "Por isso foi o Evangelho também pregado aos mortos, para que, julgados (ou castigados) diante dos homens na carne, vivam segundo Deus no espírito."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "Ora o fim de todas as coisas está próximo. Portanto sede prudentes e sóbrios para vos entregardes à oração."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Sobretudo tende uns para com os outros uma caridade ardente, porque a caridade cobre uma multidão de pecados (Pv. 10, 12) (levando Deus a perdoá-los)."
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "Exercei a hospitalidade uns com os outros, sem murmuração."
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "Cada um ponha ao serviço dos outros o dom que recebeu, como bons despenseiros da multiforme graça de Deus."
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "Se alguém fala, fale com palavras de Deus; se alguém exerce um ministério, exerça-o como por uma virtude que Deus dá, para que em todas as coisas seja Deus honrado por Jesus Cristo, a quem pertence a glória e o império pelos séculos dos séculos. Amen."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Caríssimos, não estranheis o fogo (da tribulação), que se acendeu no meio de vós para vos provar, como se vos acontecesse alguma coisa de extraordinário ;"
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "mas alegrai-vos de serdes participantes dos sofrimentos de Cristo, para que vos alegreis também e exulteis, quando se manifestar a sua glória."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Se sois ultrajados por causa do nome de Cristo, bem-aventurados sois, porque o Espírito de glória, o Espírito de Deus repousa sobre vós."
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "Nenhum de vós sofra como homicida, ladrão, malfeitor ou delator."
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "Mas, se (sofre) como cristão, não se envergonhe, antes glorifique a Deus por tal nome."
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "Porque chegou o tempo de começar o juízo pela casa de Deus. Ora, se começa por nós, qual será o fim daqueles que não obedecem ao Evangelho de Deus ?"
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "Se o justo a custo será salvo, o que acontecerá ao impio e ao pecador? (Pv. 11, 31)."
+        },
+        {
+          "number": 19,
+          "part": 1,
+          "text": "Por isso também aqueles que sofrem segundo a vontade de Deus, encomendam as suas almas ao Criador fiel, praticando o bem."
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Aos anciães, que estão entre vós, rogo eu, ancião como eles e testemunha dos sofrimentos de Cristo, e que tomarei parte com eles naquela glória que será manifestada um dia"
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "Apascentai o rebanho de Deus, que vos está confiado, tende cuidado dele, não constrangidos, mas de boa vontade, segundo Deus; não por amor de lucro vil, mas por dedicação;"
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "não como para dominar aqueles que vos couberam em sorte, mas fazendo-vos exemplares do rebanho."
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "Quando aparecer o príncipe dos pastores, recebereis a coroa imarcescível de glória."
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "Igualmente vós, ó jovens, obedecei aos anciães. Revesti-vos todos de humildade, nas vossas relações mútuas, porque Deus resiste aos soberbos e dá a sua graça aos humildes (Pv. 3, 34)."
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "Humilhai-vos, pois, sob a mão poderosa de Deus, para que ele vos exalte no tempo determinado."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "Descarregai sobre ele todas as vossas preocupações, porque ele tem cuidado de vós."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Sede sóbrios e vigiai, porque o demônio, vosso adversário, anda ao redor, como um leão que ruge, buscando a quem devorar."
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "Resisti-lhe, fortes na fé, sabendo que os vossos irmãos, espalhados pelo mundo, sofrem as mesmas coisas."
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "Mas o Deus de toda a graça, que vos chamou em Jesus Cristo à sua eterna glória, depois que tiverdes sofrido um pouco, vos aperfeiçoará, fortificará, consolidará, vos tornará inabaláveis."
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "A ele, o império pelos séculos dos séculos. Amen."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Por meio de Silvano, que tenho por irmão fiel, vos escrevo estas poucas palavras, exortando-vos e garantindo-vos que a verdadeira graça de Deus é esta, na qual estais firmes."
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "A Igreja de Babilônia, escolhida (por Deus) como vós, saúda-vos, assim como Marcos, meu filho."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Saudai-vos uns aos outros com ósculo de caridade. Paz a vós todos que estais (unidos) em Cristo."
+        }
+      ]
+    }
+  ]
+}

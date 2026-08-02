@@ -12,7 +12,9 @@ next: null
 
 # 🗄️ Arquivo de Planos
 
-Ainda não há planos concluídos ou substituídos.
+| Plano | Resultado |
+| :-- | :-- |
+| [[Plans/Archive/02 - Corpus Bíblico Canônico]] | Corpus v1 gerado e validado |
 
 ---
 

@@ -10,6 +10,7 @@ Thumbs.db
 .vscode/
 
 # JavaScript clients
+node_modules/
 web/node_modules/
 web/.next/
 web/out/
@@ -21,6 +22,8 @@ mobile/dist/
 api/bin/
 api/tmp/
 api/coverage.out
+tools/vaultlint/vaultlint
+bible/tools/bin/
 
 # Test reports
 coverage/

@@ -1,0 +1,38 @@
+name: Bible integrity
+
+on:
+  pull_request:
+    paths:
+      - "bible/**"
+      - ".github/workflows/bible-integrity.yml"
+  push:
+    branches: [main]
+    paths:
+      - "bible/**"
+      - ".github/workflows/bible-integrity.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Verify canonical corpus
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: bible/tools/go.mod
+
+      - name: Run corpus tests
+        working-directory: bible/tools
+        run: go test ./internal/biblecorpus
+
+      - name: Verify versioned corpus
+        working-directory: bible/tools
+        run: go run ./cmd/bible-integrity -root ../corpus/v1

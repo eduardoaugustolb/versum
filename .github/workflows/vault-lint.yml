@@ -1,0 +1,40 @@
+name: Vault lint
+
+on:
+  pull_request:
+    paths:
+      - "Obsidian Vault/**"
+      - "tools/vaultlint/**"
+      - ".github/workflows/vault-lint.yml"
+  push:
+    branches: [main]
+    paths:
+      - "Obsidian Vault/**"
+      - "tools/vaultlint/**"
+      - ".github/workflows/vault-lint.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Check metadata and links
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: tools/vaultlint/go.mod
+
+      - name: Run vaultlint tests
+        working-directory: tools/vaultlint
+        run: go test ./...
+
+      - name: Lint vault
+        working-directory: tools/vaultlint
+        run: go run . -root "../../Obsidian Vault"

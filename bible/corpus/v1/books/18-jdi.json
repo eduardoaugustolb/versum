@@ -1,0 +1,1813 @@
+{
+  "id": "jdi",
+  "order": 18,
+  "name": "Livro de Judit",
+  "testament": "old",
+  "chapters": [
+    {
+      "number": 1,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Arfaxad, rei dos Medes, tinha sujeitado ao seu império muitas nações. Edificou uma cidade poderosíssima, a que chamou Ecbatana,"
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "de pedras cortadas à esquadria; fez os seus muros de setenta côvados de alto, de trinta côvados de largo, e pôs-lhes torres de cem côvados de altura."
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "Estas eram quadradas, e cada lado estendia-se por espaço de vinte pés. Fez as suas portas proporcionadas à altura das torres,"
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "e gloriava-se da invencível força do seu exército e da magnificência dos seus carros (de guerra)."
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "Porém, no ano duodécimo do seu reinado, Nabucodonosor, rei dos Assírios, que reinava na grande cidade de Nínive, fez guerra a Arfaxad, e venceu-o"
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "na grande planície, que se chama de Ragau, junto do Eufrates, do Tigre e do Jadason, na planície de Eríoc, rei dos Elicos."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "Então elevou-se o reino de Nabucodonosor, e o seu coração ensoberbeceu-se. Enviou mensageiros a todos os que habitavam na Cilícia, em Damasco, no Líbano,"
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "aos povos que habitavam no Carmelo e em Cedar, aos habitantes da Galileia, na vasta campina de Esdrelon,"
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "e a todos os que viviam na Samaria e da banda de além do rio Jordão, até Jerusalém, e em toda a terra de Gessen, até aos confins da Etiópia."
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "A todos estes enviou Nabucodonosor, rei dos Assírios, mensageiros,"
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "mas todos, de comum acordo, protestaram, despediram-nos de mãos vazias, e até chegaram a lançá-los fora com desprezo."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Então o rei Nabucodonosor, indignado contra todas aquelas nações, jurou, pelo seu trono e pelo seu reino, que se havia de vingar de todas elas."
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "No ano décimo terceiro do rei Nabucodonosor, aos vinte e dois dias do primeiro mês, foi resolvido no palácio de Nabucodonosor, rei dos Assírios, que ele se vingaria."
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "Convocou todos os anciãos, todos os seus chefes e guerreiros, e teve com eles um conselho secreto."
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "Declarou que era sua intenção sujeitar ao seu império toda a terra."
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "Tendo sido esta proposta unanimemente aprovada, o rei Nabucodonosor chamou Holofernes, chefe supremo das suas tropas,"
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "e disse-lhe: Vai atacar os reinos do Ocidente, principalmente aqueles que desprezaram as minhas ordens."
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "O teu olho não perdoará a nenhum reino, e tu me sujeitarás todas as cidades fortes."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "Então Holofernes convocou os generais e oficiais do exército dos Assírios, e contou, para se pôr em campanha, segundo a ordem que lhe deu o rei, cento e vinte mil combatentes de pé, e doze mil frecheiros a cavalo."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Mandou ir a diante de todo o seu exército uma multidão inumerável de camelos, com abundância de provisões para o exército, assim como manadas de bois e rebanhos de ovelhas sem número."
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "Mandou que em toda a Síria se aprontasse trigo para quando ele passasse."
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "Também levou da casa do rei ouro e prata em grandíssima quantidade."
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "Partiu ele, e todo o exército, com os carros, cavaleiros e frecheiros, que cobriam a face da terra como gafanhotos."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Depois de passar os confins dá Assíria, chegou aos grandes montes de Auge, que ficam à esquerda da Cilícia, penetrou em todos os seus castelos e apoderou-se de todas as praças fortes."
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "Destruiu a famosíssima cidade de Melitene, saqueou todos os filhos de Tarsis e os filhos de Ismael, que habitavam em frente do deserto, ao meio-dia da terra de Celon."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Em seguida passou o Eufrates, foi à Mesopotâmia e forçou todas as cidades fortes que ali havia, desde a ribeira de Chaboras até ao mar."
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "Em seguida assenhoreou-se de todos os territórios (ao longo do Eufrates) desde a Cilícia até aos confins de Jafet, que estão ao meio-dia."
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "Levou consigo todos os filhos de Madian, saqueou todas as suas riquezas, e passou ao fio da espada todos os que lhe resistiam."
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "Depois desceu aos campos de Damasco, no tempo da ceifa, queimou todas as searas e mandou cortar todas as árvores e as vinhas."
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "O terror (do seu exército) invadiu todos os habitantes da terra."
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Então os reis e os príncipes de todas as cidades e províncias, a saber, da Síria, da Mesopotâmia, da Síria de Sobal, da Líbia, e da Cilícia, enviaram os seus embaixadores, os quais, apresentando-se a Holofernes, disseram;"
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "Cesse a tua indignação contra nós, porque é melhor que vivamos sendo vassalos do grande rei Nabucodonosor, sujeitando-nos a ti, do que morramos, depois de havermos sofrido os males da escravidão."
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "Todas as nossas cidades, todas as nossas possessões, todas as nossas montanhas e colinas, os nossos campos, as nossas manadas de bois, rebanhos de ovelhas e de cabras, cavalos e camelos, todas as nossas riquezas e famílias estão diante de ti (à tua disposição);"
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "tudo está debaixo da tua lei."
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "Nós e nossos filhos somos teus escravos."
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "Vem a nós como um senhor pacifico e emprega os nossos serviços como bem te aprouver."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "Então ele (sem fazer caso destas propostas) desceu dos montes com as suas poderosas forças de cavalaria e apoderou-se de todas as cidades e de todos os habitantes daquela terra."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Tomou de todas as cidades, para suas tropas auxiliares, os homens robustos e aptos para a guerra."
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "Foi tão grande o medo que se apoderou daquelas províncias, que os habitantes principais de todas as cidades, as pessoas mais distintas, à sua chegada, saíam-lhe ao encontro juntamente com os povos,"
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "recebendo-o com coroas e com archotes, dançando ao som de tambores e de flautas."
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "Todavia, nem mesmo fazendo isto, puderam abrandar a ferocidade daquele coração,"
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "porque não só lhes destruiu as suas cidades, mas também lhes cortou os seus bosques sagrados."
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "Efectivamente o rei Nabucodonosor tinha-lhe mandado que exterminasse todos os deuses da terra, a fim de que só ele fosse chamado deus por aquelas nações que pudessem ser subjugadas pelo poder de Holofernes."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Este, atravessando a Síria de Sobal, toda a Apaméa e toda a Mesopotâmia, chegou aos Idumeus na terra de Cabaa."
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "Depois de haver conquistado as suas cidades, demorou-se lá trinta dias, durante os quais mandou que se juntassem todas as tropas do seu exército,"
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Então, ouvindo estas coisas os filhos de Israel, que habitavam na terra de Judá, tiveram muito medo da aproximação (de Holofernes)."
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "O susto e o pavor apoderou-se dos seus corações, temendo que ele fizesse a Jerusalém e ao templo do Senhor o que tinha feito às outras cidades e aos seus templos."
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "Enviaram (gente) a toda a fronteira da Samaria, até Jericó, e ocuparam todos os cumes dos montes;"
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "cercaram as suas aldeias de muros e fizeram provisão de trigos, preparando-se para a guerra."
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "O pontífice Eliaquim também escreveu a todos os que habitavam em frente de Esdrelon, que está fronteira à grande planície junto ao Dotain, e a todos os dos lugares por onde (Holofernes) podia passar,"
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "que ocupassem as vertentes dos montes, por onde se podia ir a Jerusalém, e que pusessem guarnições nos desfiladeiros que podiam proporcionar um caminho entre as montanhas."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "Os filhos de Israel fizeram como lhes tinha mandado Eliaquim, pontífice do Senhor."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Todo o povo clamou ao Senhor com grande instância. Humilharam suas almas com jejuns e orações, eles e suas mulheres."
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "Os sacerdotes vestiram-se de cilício, os meninos prostaram-se diante do templo do Senhor, e cobriu-se de cilício o altar do Senhor."
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "Clamaram unânimemente ao Senhor Deus de Israel, que não fossem dados em presa seus filhos, nem roubadas suas mulheres, nem destruídas as suas cidades, nem profanado o seu santuário, nem eles se tornassem o opróbrio das nações."
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "Então Eliaquim, sumo sacerdote do Senhor, percorreu todo o Israel e falou ao povo,"
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "nestes termos: Sabei que o Senhor ouvirá as vossas súplicas, se permanecerdes constantes nos jejuns e nas orações diante do Senhor."
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "Lembrai-vos de Moisés, servo do Senhor, o qual, não combatendo com ferro, mas suplicando com santas orações, destroçou Amalec, que confiava na sua força, no seu poder, no seu exército, nos seus escudos, nos seus carros e cavaleiros."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Assim sucederá a todos os inimigos de Israel, se vós perseverardes nesta obra que começastes."
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "Com tais exortações, os Israelitas permaneciam na presença do Senhor, orando ao Senhor;"
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "mesmo aqueles que ofereciam os holocaustos ao Senhor, ofereciam-nos, vestidos de cilícios e com as suas cabeças cobertas de cinza."
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "Todos rogavam a Deus, de todo o seu coração, que visitasse o seu povo de Israel."
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Avisaram Holofernes, chefe do exército dos Assírios, de que os filhos de Israel se preparavam para resistir e que tinham fechado as passagens dos montes."
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "Cheio de furor e inflamado de grande cólera, chamou todos os príncipes de Moab e os chefes dos Amonitas,"
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "e disse-lhes: Dizei-me que povo é este, que ocupa os montes, quais e quantas são as suas cidades, qual é a sua força e o seu número, qual é o general do seu exército,"
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "e por que motivo, dentre todos os que habitam no Oriente, estes nos desprezaram e não vieram ao nosso encontro, para nos receberem em paz?"
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "Então Aquior, chefe de todos os filhos de Amon, respondeu; Meu senhor, se te dignas ouvir-me, eu te direi a verdade na tua presença, relativamente a este povo, que habita nos montes; da minha boca não sairá palavra falsa."
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "Este povo é da raça dos Caldeus;"
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "habitou primeiramente na Mesopotâmia. porque não quiseram seguir os deuses de seus pais, que moravam na terra dos Caldeus."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Abandonados os ritos de seus pais, que prestavam culto a muitos deuses,"
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "adoraram um só Deus do céu, o qual lhe mandou que saíssem dali e que fossem habitar em Canan (ou Canaan). Quando sobreveio em todo o país uma grande fome, desceram ao Egipto, e ali, durante quatrocentos anos, multiplicaram-se de tal sorte que o seu exército era inumerável."
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "Como o rei do Egipto os tratasse duramente, sujeitando-os a trabalhar em barro e ladrilhos para edificar as suas cidades, clamaram ao seu Senhor, e este feriu toda a terra do Egipto com várias pragas."
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "A praga cessou, quando os Egípcios os expulsaram da sua terra. Porém quiseram outra vez sujeitá-los e reduzi-los à sua escravidão."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Então os Israelitas fugiram; entretanto o Deus do céu abriu-lhes o mar, de modo que duma e outra parte as águas tornaram-se sólidas como um muro, e eles passaram, em pé enxuto, o fundo do mar."
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "Na ocasião em que o inumerável exército dos Egípcios ia em alcance deles, neste lugar, foi de tal modo submergido pelas águas, que não escapou nem sequer um, que contasse à sua posteridade o acontecimento."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Depois de saírem do Mar Vermelho, acamparam nos desertos do monte Sinai, onde nunca homem algum pôde habitar, onde ninguém se pôde fixar."
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "Ali as fontes amargosas tornaram-se doces para eles beberem, e por espaço de quarenta anos receberam do céu o alimento."
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "Em toda a parte onde entraram sem arco e sem frecha, sem escudo e sem espada, o seu Deus pelejou a favor deles e venceu."
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "Não houve ninguém que insultasse este povo, senão quando ele se apartou do culto do Senhor, seu Deus."
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "Porém, todas as vezes que eles adoraram outro deus, que não fosse o seu, foram entregues ao roubo, à espada e ao opróbrio."
+        },
+        {
+          "number": 19,
+          "part": 1,
+          "text": "E todas as vezes que se arrependeram de ter abandonado o culto do seu Deus, o Deus do céu lhes deu forças para resistirem."
+        },
+        {
+          "number": 20,
+          "part": 1,
+          "text": "Por último derrotaram os reis Cananeus, Jebuseus, Fereseus, Heteus, Heveus, Amorreus, todos os poderosos de Hesebon, o tomaram posse das suas terras e das suas cidades."
+        },
+        {
+          "number": 21,
+          "part": 1,
+          "text": "Enquanto não pecaram contra o seu Deus, eram felizes, porque o seu Deus aborrece a iniquidade."
+        },
+        {
+          "number": 22,
+          "part": 1,
+          "text": "Ainda há poucos anos, tendo-se desviado do caminho, em que Deus lhes ordenara que andassem, foram dispersos em batalhas por muitas nações, e muitos deles foram levados cativos para uma terra estranha."
+        },
+        {
+          "number": 23,
+          "part": 1,
+          "text": "Mas agora há pouco, tendo-se voltado para o Senhor seu Deus, tornaram-se a juntar dos lugares, por onde tinham sido dispersos, retomaram a posse das suas montanhas, assim como de Jerusalém, onde têm o seu santuário."
+        },
+        {
+          "number": 24,
+          "part": 1,
+          "text": "Agora, pois, meu senhor, informa-te se este povo cometeu algum pecado na presença do seu Deus; (se cometeu) marchemos contra eles, porque o seu Deus, sem dúvida, os entregará nas tuas mãos, e ficarão sujeitos debaixo do teu poder;"
+        },
+        {
+          "number": 25,
+          "part": 1,
+          "text": "mas se este povo não ofendeu o seu Deus, nós não lhe poderemos resistir, porque o seu Deus os defenderá, e nós seremos o opróbrio de toda a terra."
+        },
+        {
+          "number": 26,
+          "part": 1,
+          "text": "Quando Aquior acabou de falar, todos os magnatas de Holofernes, encolerizados, pensavam em o matar, dizendo uns para os outros:"
+        },
+        {
+          "number": 27,
+          "part": 1,
+          "text": "Quem é este que ousa dizer que os filhos de Israel podem resistir ao rei Nabucodonosor e aos seus exércitos, sendo eles homens sem armas, sem forças e desconhecedores da arte da guerra?"
+        },
+        {
+          "number": 28,
+          "part": 1,
+          "text": "Ora, para que Aquior conheça que nos engana, subamos aos montes; depois que forem tomados os valentes dentre eles, então o passaremos com eles ao fio da espada,"
+        },
+        {
+          "number": 29,
+          "part": 1,
+          "text": "a fim de que toda a gente saiba que Nabucodonosor é o deus da terra e que, fora ele, não há outro."
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "A estas palavras, Holofernes, muito indignado, disse a Aquior:"
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "Já que tu profetizaste que ó povo de Israel há-de ser defendido pelo seu Deus, vou-te mostrar que não há outro deus, senão Nabucodonosor:"
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "quando nós os tivermos matado a todos como a um só homem, então tu mesmo cairás também com eles debaixo do ferro dos Assírios; todo o povo de Israel perecerá contigo,"
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "e tu conhecerás que Nabucodonosor é o senhor de toda a terra; a espada dos meus soldados traspassará o teu corpo, e tu cairás atravessado entre os feridos de Israel; não respirarás mais, senão para ser exterminado com eles."
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "Se tu crês que a tua profecia é verdadeira não se abata o teu rosto; deixe-te a palidez de que está coberto o teu semblante; se imaginas que estas minhas palavras se não podem cumprir."
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "Para que saibas que tens de experimentar com eles esta infelicidade, serás desde já associado a este povo, a fim de que, quando receberem os justos castigos da minha espada, fiques tu também sujeito à vingança juntamente."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "Então Holofernes mandou aos seus servos que prendessem Aquior, que o levassem a Betúlia e o entregassem nas mãos dos filhos de Israel."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Tendo pegado em Aquior, os servos de Holofernes partiram pelas campinas; porém quando estavam perto dos montes, saíram contra eles os atiradores de funda,"
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "mas eles, desviando-se para um lado do monte, ataram Aquior de mãos e pés a uma árvore, e assim preso com cordas o deixaram ficar; depois voltaram para o seu senhor."
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "Os filhos de Israel, descendo de Betúlia, foram ter com ele e, desatando-o, levaram-no para Betúlia. Tendo-o posto no meio do povo, perguntaram-lhe por que motivo os Assírios o deixaram alado."
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "(Por este tempo, os governadores de Betúlia eram Ozias, filho de Mica, da tribo de Simeão, e Carmi, chamado também Gotoniel)."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Aquior, posto no meio dos anciãos e em presença do povo, contou tudo o que tinha dito quando foi interrogado por Holofernes, e como a gente de Holofernes o quisera matar por ter falado assim,"
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "e como o mesmo Holofernes, cheio de cólera, tinha mandado que o entregassem aos Israelitas por esta causa, a fim de que, após a vitória sobre os filhos de Israel, fizesse então morrer também o mesmo Aquior com diversos suplícios, por ele ter dito: O Deus do céu é o seu defensor."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Depois desta narração de Aquior, todo o povo se prostrou com o rosto por terra adorando o Senhor, e todos juntamente, com gemidos e prantos, lhe ofereceram as suas orações,"
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "dizendo; Senhor Deus do céu e da terra, lança os olhos para a soberba destes (homens) e considera o nosso abatimento; lança teus olhos para os que tu santificaste, mostra que não desamparas os que confiam em ti, mas que humilhas os que presumem de si mesmos e se gloriam do seu poder."
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "Acabado o choro, terminada a oração do povo, a qual durou todo o dia, consolaram Aquior,"
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "dizendo: O Deus de nossos pais, cujo poder tu publicaste, ele te dará por isso a recompensa de veres tu a ruína dele (em vez de eles verem a tua)."
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "Quando o Senhor nosso Deus tiver dado esta liberdade aos seus servos. Deus seja também contigo no meio de nós, para que, segundo for do teu agrado, vivas connosco, tu e todos os teus."
+        },
+        {
+          "number": 19,
+          "part": 1,
+          "text": "Então Ozías, despedida a assembleia, recebeu-o em sua casa e deu-lhe uma grande ceia."
+        },
+        {
+          "number": 20,
+          "part": 1,
+          "text": "Convidados todos os anciãos, depois de terminado o jejum, tomaram juntos a sua refeição."
+        },
+        {
+          "number": 21,
+          "part": 1,
+          "text": "Depois foi convocado todo o povo, e fizeram durante toda a noite oração no lugar onde estavam reunidos, pedindo socorro ao Deus de Israel."
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "No dia seguinte Holofernes mandou marchar as suas tropas contra Betúlia"
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "Os combatentes a pé eram cento e vinte mil, e os cavaleiros vinte e dois mil, sem contar os homens aptos para a guerra, que tinha aprisionado, e toda a juventude que tinha levado, à força, das províncias e das cidades."
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "Todos se prepararam, a um tempo, para combater contra os filhos de Israel, e avançaram pela encosta do monte até ao cume que olha para Dotain, desde o lugar chamado Belma até Quelmon, que está defronte de Estrelou."
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "Os filhos de Israel, quando viram aquela multidão, lançaram-se por terra, cobrindo as suas cabeças de cinza, pedindo unânimemente ao Deus de Israel que fizesse brilhar sobre o seu povo a sua misericórdia."
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "Depois, tomando as suas armas de guerra, postaram-se nos lugares que davam acesso a atalhos, entre os montes, e estavam-nos ali guarnecendo de dia e de noite."
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "Holofernes, ao percorrer os arredores, achou que a fonte que corria para dentro (da cidade), era conduzida por meio dum aqueduto que estava da parte do meio-dia, fora da cidade. Ordenou que lhes fosse cortado o aqueduto."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "Havia, contudo, fontes não longe dos muros, donde se via que os sitiados iam às furtadelas tirar (um pouco de) água, mais para aliviar um pouco a sede do que para beber."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Os Amonitas e os Moabitas foram ter com Holofernes e disseram-lhe: Os filhos de Israel não confiam nem nas lanças nem nas frechas, mas os montes defendem-nos, e os outeiros escarpados fortificam-nos."
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "Portanto, para que tu os possas vencer sem combate, põe guardas às fontes, para não tirarem delas água ; sem desembainhares a espada, os matarás, ou, pelo menos, fatigados de sede, entregarão a sua cidade, a qual, por estar colocada sobre montes, julgam ser inexpugnável."
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "Estas palavras agradaram a Holofernes e aos seus oficiais, e pôs cem homens de guarda ao redor de cada fonte."
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "Feita esta guarda durante vinte dias, esgotaram-se as cisternas e depósitos de água a todos os moradores de Betúlia, de maneira que não havia dentro da cidade com que matar a sede nem um só dia, porque todos os dias se repartia ao povo a água por medida."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Então todos os homens e mulheres, jovens e meninos, foram juntos ter com Ozias, e todos a uma voz"
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "lhe disseram: Deus seja juiz entre nós e ti, porque tu nos trouxestes estes males, não querendo tratar a paz com os Assírios; por isso nos entregou Deus nas suas mãos."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Por tal motivo não há quem nos socorra, quando aos seus olhos nos achamos abatidos pela sede e por grande miséria."
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "Agora, pois, manda ajuntar todos os que há na cidade, para que todos nós nos rendamos voluntariamente ao exército de Holofernes."
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "Com efeito, é melhor que, cativos, bendigamos ao Senhor, vivendo, do que morramos e sejamos o opróbrio de todos os homens, vendo morrer aos nossos olhos as nossas mulheres e os nossos filhos."
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "Tomando hoje por testemunhas o céu e a terra, assim como o Deus de nossos pais, o qual nos castiga segundo os nossos pecados, (pedimos-te) que entregues já a cidade nas mãos do exército de Holofernes, para que se abrevie o nosso fim, ao fio da espada, e não morramos lentamente pelo ardor da sede."
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "Tendo eles assim falado, levantou-se um grande pranto e alarido em todo o ajuntamento, e durante muitas horas clamaram, a uma voz, a Deus, dizendo:"
+        },
+        {
+          "number": 19,
+          "part": 1,
+          "text": "Pecamos nós e os nossos pais, procedemos injustamente, cometemos a iniquidade."
+        },
+        {
+          "number": 20,
+          "part": 1,
+          "text": "Tu, que és piedoso, compadece-te de nós, ou (ao menos) castiga tu mesmo as nossas iniquidades e não entregues os que te bendizem a um povo que te não conhece,"
+        },
+        {
+          "number": 21,
+          "part": 1,
+          "text": "para que não se diga entre as nações: Onde está o seu Deus?"
+        },
+        {
+          "number": 22,
+          "part": 1,
+          "text": "Quando, depois de cansados com estes clamores com estes prantos, ficaram em silêncio,"
+        },
+        {
+          "number": 23,
+          "part": 1,
+          "text": "levantando-se Ozias, banhado em lágrimas, disse; Tende bom ânimo, irmãos, e por estes cinco dias esperemos a misericórdia do Senhor."
+        },
+        {
+          "number": 24,
+          "part": 1,
+          "text": "Talvez se aplaque a sua ira e dê glória ao seu nome."
+        },
+        {
+          "number": 25,
+          "part": 1,
+          "text": "Mas se, passados estes cinco dias, nos não vier socorro, faremos o que vós dissestes."
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Ora aconteceu que estas palavras foram ouvidas por Judit, viúva, a qual era filha de Merari, filho de Idox, filho de José, filho de Ozias, filho de Elai, filho de Jamnor, filho de Gedeão, filho de Rafaim, filho de Aquitob, filho do Melquias, filho de Enan, filho de Natanias, filho de Salatiel, filho de Simeão, filho de Ruben."
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "Seu marido foi Manassés, que morreu no tempo da ceifa da cevada (isto é, pela Páscoa);"
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "enquanto ele vigiava os que atavam os feixes no campo, deu-lhe o ardor do sol na cabeça, e morreu em Betúlia, sua cidade, onde foi sepultado com seus pais."
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "No andar superior de sua casa tinha feito para si um quarto retirado, no qual se conservava recolhida com as suas criadas;"
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "trazendo um cílicío sobre os seus rins, jejuava todos os dias da sua vida, excepto nos sábados, nas neoménías e nas festas da casa de Israel."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "Era de belíssimo aspecto, e seu marido tinha-Ihe deixado muitas riquezas, uma família numerosa e fazendas cheias de manadas de bois e de rebanhos de ovelhas."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Era estimadíssima de todos, porque tinha muito temor de Deus; não havia ninguém que dissesse dela uma palavra em desfavor."
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "Tendo, pois, ela sabido que Ozias tinha prometido entregar a cidade, passados cinco dias, mandou chamar os anciãos Cabri e Carmi."
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "Eles foram ter com ela, que lhes disse: Que palavra é esta, com a qual concordou Ozias, de entregar a cidade aos Assírios, se dentro de cinco dias vos não viesse socorro?"
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "Quem sois vós, que assim provocais o Senhor?"
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Não é esta uma palavra que excite a sua misericórdia; antes provoca a sua ira, acende o seu furor."
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "Vós fixastes um prazo à misericórdia do Senhor, e ao vosso arbítrio lhe assinaste o dia."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Porém, porque o Senhor é paciente, arrependamo-nos disto mesmo, e, derramando lágrimas, imploremos a sua misericórdia,"
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "pois Deus não ameaça como os homens, nem se inflama em ira como os filhos dos homens."
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "Por isso humilhemos diante dele as nossas almas e, postos num espirito de humildade, como seus servos,"
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "digamos ao Senhor, com lágrimas, que use connosco da sua misericórdia segundo a sua vontade, para que, assim como se perturbou o nosso coração por causa da soberba dos nossos inimigos, assim também nós sejamos glorificados pela nossa humildade."
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "Nós não imitámos os pecados de nossos pais, que deixaram o seu Deus, para adorar deuses estranhos,"
+        },
+        {
+          "number": 19,
+          "part": 1,
+          "text": "e que, por este pecado, foram entregues à espada, ao roubo e à confusão entre os seus inimigos; nós não conhecemos outro Deus senão o nosso."
+        },
+        {
+          "number": 20,
+          "part": 1,
+          "text": "Esperemos com humildade as suas consolações, e ele vingará o nosso sangue das aflições que nos causam os nossos inimigos; humilhará todas as nações que se levantam contra nós e cobri-las-á de ignomínia o Senhor nosso Deus."
+        },
+        {
+          "number": 21,
+          "part": 1,
+          "text": "Agora, irmãos, como vós sois os anciãos do povo de Deus, e de vós depende a sua vida, com as vossas palavras animai os seus corações, para que se lembrem que nossos pais foram tentados a fim de que se visse se verdadeiramente serviam ao seu Deus."
+        },
+        {
+          "number": 22,
+          "part": 1,
+          "text": "Devem recordar-se como nosso pai Abraão foi tentado, e como, depois de provado por meio de muitas tribulações, chegou a ser o amigo de Deus."
+        },
+        {
+          "number": 23,
+          "part": 1,
+          "text": "Assim Isaac, assim Jacob, assim Moisés e todos os que agradaram a Deus, passaram por muitas tribulações, permanecendo fiéis."
+        },
+        {
+          "number": 24,
+          "part": 1,
+          "text": "Aqueles, porém, que não aceitaram as provas com o temor do Senhor, que mostraram a sua impaciência e irromperam em injuriosas murmurações contra o Senhor,"
+        },
+        {
+          "number": 25,
+          "part": 1,
+          "text": "foram feridos de morte pelo (Anjo) Exterminador e pereceram mordidos pelas serpentes."
+        },
+        {
+          "number": 26,
+          "part": 1,
+          "text": "Nós, pois, não nos impacientemos por causa do que sofremos,"
+        },
+        {
+          "number": 27,
+          "part": 1,
+          "text": "mas, considerando que estes mesmos castigos são menores do que os nossos pecados, creiamos que estes flagelos do Senhor, com que, como seus servos, somos castigados, nos vieram para nossa emenda, e não para nossa perdição."
+        },
+        {
+          "number": 28,
+          "part": 1,
+          "text": "Então Ozias e os anciãos responderam-lhe: Tudo o que nos tens dito é verdade, e nada há repreensível nas tuas palavras."
+        },
+        {
+          "number": 29,
+          "part": 1,
+          "text": "Agora, pois, ora por nós, porque tu és uma mulher santa e temente a Deus."
+        },
+        {
+          "number": 30,
+          "part": 1,
+          "text": "Judit disse-lhes: Assim como reconheceis que o que eu vos disse é de Deus,"
+        },
+        {
+          "number": 31,
+          "part": 1,
+          "text": "assim também sabereis por experiência que vem de Deus o que resolvi fazer; (entretanto) orai para que Deus torne eficaz a minha resolução."
+        },
+        {
+          "number": 32,
+          "part": 1,
+          "text": "Vós esta noite pôr-vos-eis à porta (da cidade), e eu sairei com a minha criada; fazei oração, para que, como vós dissestes, o Senhor, dentro de cinco dias, olhe para o seu povo de Israel."
+        },
+        {
+          "number": 33,
+          "part": 1,
+          "text": "Não quero, porém, que pretendais indagar o que tenciono fazer; enquanto eu mesmo não vos avisar, não se faça outra coisa, senão rogar por mim ao Senhor nosso Deus."
+        },
+        {
+          "number": 34,
+          "part": 1,
+          "text": "Ozias, príncipe de Judá, disse-lhe: Vai em paz, e o Senhor seja contigo, para tirar vingança dos nossos inimigos. E, tendo-a deixado, retiraram-se."
+        }
+      ]
+    },
+    {
+      "number": 9,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Depois que eles se retiraram, entrou Judit no seu oratório, pôs o seu cilício, lançou cinza sobre a sua cabeça e, prostrando-se diante do Senhor, fez esta oração:"
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "Senhor Deus de meu pai Simeão, que lhe deste a espada para se vingar dos estrangeiros que, arrastados pela paixão, violaram e ultrajaram com afronta o pudor de uma virgem,"
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "que abandonaste as mulheres deles à presa, as filhas ao cativeiro, e todos os seus despojos em partilha aos teus servos, que se abrasaram em teu zelo, socorre, te peço, ó Senhor meu Deus, esta viúva."
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "Tu operaste as maravilhas dos tempos antigos, determinaste que umas sucedessem a outras, e fez-se (sempre) o que quiseste."
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "Todos os teus caminhos estão preparados, e fundaste os teus juízos na tua providência."
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "Lança agora os olhos sobre o acampamento dos Assírios, como noutro tempo te dignaste lançá-lo sobre o acampamento dos Egípcios, quando, armados, corriam atrás dos teus servos, fiando-se nos seus carros, na sua cavalaria e na multidão dos soldados."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "Bastou um olhar teu sobre o seu acampamento, e as trevas lhes tiraram as forças."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "O abismo reteve os seus passos, e as águas os cobriram."
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "Assim pereçam também, Senhor, estes que confiam na sua multidão, que se gloriam dos seus carros, dardos, escudos, frechas e lanças,"
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "e que não sabem que tu és o nosso Deus, que desde os tempos antigos desbaratas os exércitos, e que o teu nome é o Senhor."
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "Levanta o teu braço, como outrora fizeste, e, com a tua força, quebra a sua fortaleza; diante da tua ira caia a força destes que prometeram a si próprios violar o teu Santuário, profanar o tabernáculo do teu nome e derrubar com a espada a majestade do teu altar."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Faz, Senhor, que a soberba deste homem seja cortada com a sua própria espada;"
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "seja ele preso ao laço dos seus olhos, fixos sobre mim; fere-o com as doces palavras dos meus lábios."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Dá firmeza ao meu coração para eu o desprezar, e fortaleza para o perder."
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "Ganhará o teu nome uma glória memorável, se a mão de uma mulher o derrubar."
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "O teu poder, Senhor, não está na multidão, nem tu te comprazes na força dos cavalos; nunca te agradaram os soberbos, mas sempre te agradou a súplica dos humildes e dos mansos."
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "Deus dos céus, Criador das águas e Senhor de todas as criaturas, ouve esta miserável, que te suplica e que espera tudo da tua misericórdia."
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "Lembra-te, Senhor, da tua aliança, põe tu as palavras na minha boca, fortifica a resolução do meu coração, para que a tua casa permaneça sempre santificada"
+        },
+        {
+          "number": 19,
+          "part": 1,
+          "text": "e para que todas as nações conheçam que tu és Deus e que não há outro senão tu."
+        }
+      ]
+    },
+    {
+      "number": 10,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Quando acabou de clamar ao Senhor, (Judit) levantou-se do lugar onde se tinha prostrado diante do Senhor."
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "Chamou a sua criada, desceu à sua habitação, tirou o cilício, despiu-se dos hábitos da sua viuvez,"
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "lavou o seu corpo, ungiu-se da mais fina mirra, arranjou o cabelo, pôs uma coifa sobre a cabeça, vestiu-se com os vestidos de gala, calçou as sandálias, pôs os braceletes, o colar, as arrecadas, os anéis, (numa palavra) ornou-se com todos os seus enfeites."
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "O Senhor aumentou-lhe ainda a gentileza porque todo este adorno procedia, não de algum mau desejo, mas de virtude; por isso o Senhor deu-lhe tal formosura, que apareceu aos olhos de todos com encanto incomparável."
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "Mandou à sua criada que levasse uma garrafa de vinho, uma almotolia de azeite, farinhas, passas, pão e queijo, e partiu."
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "Ao chegar à porta da cidade, encontraram Ozias e os anciãos da cidade, que a estavam esperando."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "Eles, ao vê-la, ficaram estupefactos e maravilhados da sua beleza."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Não lhe perguntando, contudo, coisa alguma, deixaram-na passar, dizendo: O Deus de nossos pais te dê graça, e corrobore com a sua fortaleza todas as resoluções do teu coração, para que Jerusalém se glorie em ti, e o teu nome seja colocado no número dos santos e justos."
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "Os que estavam ali disseram todos a uma voz: Assim seja, assim seja."
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "Judit, orando ao Senhor, passou as portas com a sua escrava."
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "Quando ela descia do monte, ao amanhecer do dia, saíram-lhe ao encontro as guardas avançadas dos Assírios e prenderam-na, dizendo: Donde vens tu? e para onde vais?"
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Ela respondeu: Eu sou uma das filhas dos Hebreus que fugi da presença deles porque previ que eles vos hão-de ser entregues a saque, visto que, desprezando-vos, não quiseram render-se a vós voluntariamente, para encontrarem misericórdia, a vossos olhos."
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "Por toda esta causa pensei comigo: Irei à presença do príncipe Holofernes, para lhe descobrir os seus segredos, para lhe mostrar por que entrada os possa tomar, sem que pereça um só homem do seu exército."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Tendo aqueles homens ouvido as suas palavras, contemplavam o seu rosto, e nos seus olhos estava o pasmo, porquanto admiravam-se muito da sua formosura."
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "Disseram-lhe: Tu salvaste a tua vida, porque tomaste tal resolução de vir ter com o nosso príncipe;"
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "podes estar certa de que, quando te apresentares diante dele, ele te há-de tratar bem, e tu lhe hás-de ganhar o coração. Levaram-na, pois, à tenda de Holofernes, declarando quem era."
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "Mal havia entrado ela à sua presença, logo Holofermes ficou cativo de seus olhos."
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "Os seus oficiais disseram-lhe: Quem poderá desprezar o povo dos Hebreus, que tem mulheres tão belas? Não temos nós razão suficiente de combater contra eles, (só) para as adquirir?"
+        },
+        {
+          "number": 19,
+          "part": 1,
+          "text": "Judit, vendo Holofernes assentado debaixo de um docel feito de púrpura, tecido de ouro, com esmeraldas, e pedras preciosas,"
+        },
+        {
+          "number": 20,
+          "part": 1,
+          "text": "depois de ter olhado para o seu rosto, fez-lhe uma profunda reverência, prostrando-se por terra. Os criados de Holofernes levantaram-na por ordem do seu senhor."
+        }
+      ]
+    },
+    {
+      "number": 11,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Então Holofernes disse-lhe: Tem ânimo, não te assustes em teu coração, porque eu nunca fiz mal a pessoa alguma que quisesse servir o rei Nabucodonosor."
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "Se o teu povo me não tivesse desprezado, não teria eu levantado contra ele a minha lança."
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "Mas dize-me, agora, por que motivo os deixaste e te resolveste a vir para nós?"
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "Judit respondeu-lhe: Ouve as palavras da tua serva, porque, se seguires as palavras de tua serva, o Senhor chegará aos seus fins por ti."
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "Viva Nabucododosor, rei da terra, e viva o seu poder, que está nas tuas mãos para castigo de todos os desencaminhados, porque não somente os homens por ti o servem, mas até os animais do campo lhe obedecem."
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "Com efeito, a sabedoria do teu espírito é celebrada em todas as nações; por todo o mundo se sabe que tu és o único bom e poderoso em todo o seu reino, e por todas as províncias é exaltada a tua perícia militar."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "Não se ignora o que disse Aquior nem o que tu ordenaste que lhe fosse feito."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "E manifesto que o nosso Deus está de tal sorte irritado pelos pecados, que mandou dizer ao povo por meio dos seus profetas, que o entregaria por causa das suas ofensas."
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "Porque os filhos de Israel ofenderam o seu Deus, o temor de ti está sobre eles."
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "Além disso, a fome aperta-os, e, pela falta de água estão já como mortos."
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "Até resolveram matar os seus animais para beber o seu sangue;"
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "as próprias coisas consagradas ao Senhor seu Deus, que Deus mandou que se não tocassem — pão, vinho e azeite — resolveram gastá-las, e querem consumir o que não deveriam nem tocar com as mãos; por isso, procedendo assim, é certo que serão abandonados (por Deus) à perdição."
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "Eu, tua serva, tendo sabido estas coisas, fugi deles, e o Senhor enviou-me a revelar-tas."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Com efeito, eu, tua serva, adoro a Deus, ainda mesmo agora estando diante de ti, e a tua serva sairá do campo para orar a Deus;"
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "ele me dirá quando os hás-de castigar pelo seu pecado, e eu to virei dizer. Levar-te-ei pelo meio de Jerusalém, e terás todo o povo de Israel, como ovelhas que não têm pastor, e nem um só cão ladrará contra ti."
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "Isto me foi revelado pela providência de Deus."
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "Porque Deus está irado contra eles, eu fui enviada para te anunciar estas mesmas coisas."
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "Estas palavras agradaram a Holofernes e aos seus servos. Admiravam a sua sabedoria e diziam uns para os outros:"
+        },
+        {
+          "number": 19,
+          "part": 1,
+          "text": "Não há sobre a terra mulher semelhante a esta, no aspecto, na formosura e no acerto das palavras."
+        },
+        {
+          "number": 20,
+          "part": 1,
+          "text": "Holofernes disse-lhe: Bem fez Deus, que te enviou adiante do teu povo, para o entregares nas nossas mãos;"
+        },
+        {
+          "number": 21,
+          "part": 1,
+          "text": "visto que a tua promessa é boa, se o teu Deus me fizer isto, será ele também o meu Deus, tu serás grande na casa de Nabucodonosor, e o teu nome será célebre em toda a terra."
+        }
+      ]
+    },
+    {
+      "number": 12,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Então mandou que ela entrasse onde estavam os seus tesouros, ordenando que ficasse ali, e estabeleceu o que Ihe havia de ser dado da sua mesa."
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "Judit respondeu-lhe: Eu não posso agora comer dessas coisas que mandaste dar-me, para não vir sobre mim a indignação (de Deus); comerei daquelas coisas que trouxe comigo."
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "Holofernes disse-lhe: E quando acabar o que trouxeste contigo, que havemos de fazer para ti?"
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "Judit disse-lhe: Juro pela tua vida, meu Senhor, que a tua serva não gastará todas estas coisas, sem que Deus faça pela minha mão o que tenho na mente. Então os criados de Holofernes conduziram-na à tenda que ele tinha indicado."
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "Ao entrar, Judit pediu que lhe fosse dada licença de sair fora à noite e antes de amanhecer, para fazer oração e invocar o Senhor."
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "Holofernes ordenou aos seus camareiros que a deixassem sair e entrar conforme lhe agradasse, para adorar o seu Deus, durante três dias."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "Ela saía de noite ao vale de Betúlia, e lavava-se numa fonte de água."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Ao voltar, orava ao Senhor Deus de Israel que a guiasse no seu caminho, a fim de conseguir a libertação do seu povo."
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "Depois, entrando, permanecia pura na sua tenda, até que tomava a sua refeição pela tarde."
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "Ao quarto dia, Holofernes deu uma ceia aos seus domésticos e disse a Vagao, seu eunuco: Vai e persuade a esta hebreia que consista espontâneamente em habitar comigo."
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "(E coisa vergonhosa entre os Assírios, que uma mulher zombe dum homem, procedendo de modo a retirar-se dele, sem se lhe entregar.)"
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Então Vagao foi ter com Judit e disse-lhe: Não tema a boa jovem entrar à presença de meu senhor para ser honrada diante dele, para comer com ele e beber vinho com alegria."
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "Judit respondeu-lhe: Quem sou eu para contradizer o meu senhor?"
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Eu farei tudo o que for bom e melhor diante dos seus olhos; tudo o que for do seu agrado, isso será também para mim o melhor em todos os dias da minha vida."
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "Ela levantou-se, adornou-se com os seus vestidos e apresentou-se diante dele."
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "O coração de Holofernes estremeceu, porque ardia de paixão por ela."
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "Holofernes disse-lhe: Bebe, pois, e senta-te a comer alegremente, porque achaste graça diante de mim."
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "Judit disse-lhe: Eu beberei, senhor, porque a minha alma recebeu hoje maior glória que em todos os meus dias."
+        },
+        {
+          "number": 19,
+          "part": 1,
+          "text": "E tomando daquilo que sua serva lhe tinha preparado, comeu e bebeu com ele."
+        },
+        {
+          "number": 20,
+          "part": 1,
+          "text": "Holofernes alegrou-se diante dela, e bebeu vinho em demasia, tanto quanto nunca tinha bebido em sua vida."
+        }
+      ]
+    },
+    {
+      "number": 13,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Quando se fez tarde, os criados de Holofernes retiraram-se apressados para os seus quartos, Vagao fechou as portas da câmara e foi-se embora."
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "Estavam todos tomados do vinho."
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "Judit ficou só na câmara."
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "Holofernes estava deitado no leito, profundamente adormecido por causa da extraordinária embriaguez."
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "Então Judit disse à sua criada que estivesse de fora, à porta da câmara, e vigiasse."
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "Judit, em pé diante do leito, orando com lágrimas, movendo os lábios em silêncio,"
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "disse: Senhor Deus de Israel, da-me força e favorece neste momento a empresa das minhas mãos, a fim de que, como prometeste, levantes a tua cidade de Jerusalém, e eu acabe o que julguei que se podia fazer com o teu auxílio."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Dito isto, encostou-se à coluna, que estava à cabeceira do leito de Holofernes, e desprendeu o seu alfange, que eslava pendurado e preso nela."
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "Tendo-o desembainhado, agarrou nos cabelos da cabeça de Holofernes, dizendo: Senhor Deus, dá-me força neste momento."
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "(Então) Descarregou-lhe dois golpes, sobre a nuca, e cortou-lhe a cabeça. Depois desprendeu das colunas o cortinado (para o levar como trofeu), e deitou por terra o seu corpo decapitado."
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "Pouco tempo depois, saiu e entregou à sua escrava a cabeça de Holofernes, mandando que a metesse no seu saco."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Em seguida, saíram ambas, conforme o seu costume, como se fossem para a oração; passaram além do campo, e, rodeando o vale, chegaram à porta da cidade."
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "Judit gritou de longe aos guardas dos muros: Abri as portas, porque Deus é connosco; ele fez uma coisa maravilhosa em Israel."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Tendo os homens ouvido a sua voz, chamaram os anciãos da cidade."
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "Todos correram a ela, desde o mais pequeno até ao maior, porque já não esperavam que ela voltasse."
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "Acendendo luminárias, juntaram-se todos ao redor dela. Judit, subindo a um lugar mais alto, ordenou que se fizesse silêncio. Quando todos se calaram,"
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "Judit disse: Louvai o Senhor nosso Deus, que não desamparou os que esperavam nele;"
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "cumpriu por meio de mim, sua serva, a misericórdia que tinha prometido à casa de Israel; matou esta noite pela minha mão o inimigo do seu povo."
+        },
+        {
+          "number": 19,
+          "part": 1,
+          "text": "Tirando, então, do saco a cabeça de Holofernes, mostrou-lha, dizendo: Eis aqui a cabeça de Holofernes, general do exército dos Assírios, eis aqui o seu cortinado, debaixo do qual ele estava deitado na sua embriaguez, onde o Senhor nosso Deus o degolou pela mão duma mulher."
+        },
+        {
+          "number": 20,
+          "part": 1,
+          "text": "Juro-vos, contudo, pelo mesmo Senhor, que o seu anjo me guardou, tanto ao sair desta cidade, como ao demorar-me lá, e como ao voltar para aqui, e o Senhor não permitiu que eu, sua serva, fosse manchada: fez-me voltar para vós sem nenhuma mácula de pecado, cheia de alegria por sua vitória, pela minha salvação e pela vossa libertação."
+        },
+        {
+          "number": 21,
+          "part": 1,
+          "text": "Louvai-o todos, porque é bom, porque a sua misericórdia é eterna."
+        },
+        {
+          "number": 22,
+          "part": 1,
+          "text": "Então todos, adorando o Senhor, disseram-lhe: O Senhor te abençoou com a sua fortaleza, porque ele por ti aniquilou os nossos inimigos."
+        },
+        {
+          "number": 23,
+          "part": 1,
+          "text": "Ozias, príncipe do povo de Israel, disse-lhe: Ó filha, tu és bendita do Senhor Deus Altíssimo, sobre todas as mulheres que há na terra."
+        },
+        {
+          "number": 24,
+          "part": 1,
+          "text": "Bendito seja o Senhor, que criou o céu e a terra, que te dirigiu para cortares a cabeça do nosso maior inimigo,"
+        },
+        {
+          "number": 25,
+          "part": 1,
+          "text": "Hoje engrandeceu o teu nome tanto, que nunca o teu louvor se apartará da boca dos que se lembrarem eternamente do poder do Senhor, por amor dos quais tu não poupaste a tua vida, ao ver as angústias e a tribulação do teu povo, mas impediste a sua ruína na presença do nosso Deus."
+        },
+        {
+          "number": 26,
+          "part": 1,
+          "text": "Todo o povo respondeu: Assim seja, assim seja."
+        },
+        {
+          "number": 27,
+          "part": 1,
+          "text": "Aquior sendo chamado, veio, e Judit disse-lhe: O Deus de Israel, de quem tu testemunhaste que tira vingança dos seus inimigos, esse mesmo cortou esta noite pela minha mão a cabeça (do chefe) de todos os infiéis."
+        },
+        {
+          "number": 28,
+          "part": 1,
+          "text": "Para que tu fiques persuadido de que é assim, eis a cabeça de Holofernes, que, na insolência da sua soberba, desprezou o Deus de Israel, e te ameaçou de morte, dizendo: Logo que o povo de Israel for feito cativo, mandarei passar-te ao fio da espada."
+        },
+        {
+          "number": 29,
+          "part": 1,
+          "text": "Aquior, vendo a cabeça de Holofernes, aterrado de pavor, caiu com o rosto por terra, sem sentidos."
+        },
+        {
+          "number": 30,
+          "part": 1,
+          "text": "Depois que, recobrados os sentidos, voltou a si, lançou-se aos seus pés e disse:"
+        },
+        {
+          "number": 31,
+          "part": 1,
+          "text": "Tu és bendita do teu Senhor em todas as tendas de Jacob, porque entre todos os povos que ouvirem o teu nome, o Deus de Israel será glorificado em ti."
+        }
+      ]
+    },
+    {
+      "number": 14,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Disse, pois, Judit a todo o povo: Ouvi-me, irmãos, pendurai esta cabeça no alto dos nossos muros ;"
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "quando tiver saído o sol, tome cada um as suas armas, e saí com ímpeto, não para descerdes até aos inimigos, mas como querendo acometê-los."
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "Então será necessário que as guardas avançadas corram a despertar o seu general para a batalha."
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "Quando os seus capitães tiverem corrido para a tenda de Holofernes, e quando o encontrarem decapitado, envolvido no seu próprio sangue, cairá sobre eles o temor."
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "Quando os virdes fugir, ide afoutos atrás deles, porque o Senhor os pisará debaixo dos vossos pés."
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "Então Aquior, vendo a maravilha que o Deus de Israel tinha feito, deixadas as superstições da gentilidade, creu em Deus, circuncidou-se e foi incorporado no povo de Israel, assim como toda a sua descendência até ao dia de hoje."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "Logo que apareceu o dia, penduraram sobre os muros a cabeça de Holofernes, cada um tomou as suas armas, e saíram com muito estrondo e alarido."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Vendo isto as sentinelas avançadas, correram à tenda de Holofernes."
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "Os que estavam na tenda, indo e fazendo ruído à entrada da câmara, a fim de o despertar, procuravam, com arte, que Holofernes acordasse com o ruído que faziam, sem ser despertado por ninguém."
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "Com efeito, nenhum ousava abrir ou bater à porta da câmara do general dos Assirios."
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "Mas, tendo vindo os seus capitães, tribunos e todos os oficiais maiores do exército do rei dos Assirios, disseram aos camareiros:"
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Entrai e acordai-o, porque saíram os ratos das suas cavernas e tiveram o atrevimento de nos desafiar para o combate."
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "Então Vagao, tendo entrado na câmara de Holofernes, pôs-se diante da cortina e bateu com as mãos, porque imaginava que ele dormia com Judit."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Porém, aplicando o ouvido e não percebendo nenhum movimento de quem dormia, aproximou-se mais da cortina e, levantando-a, viu o cadáver de Holofernes sem cabeça, que jazia estendido sobre a terra, banhado no seu próprio sangue. (Perante esse espectáculo) gritou em alta voz, com lágrimas, e rasgou as suas vestes."
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "Tendo entrado na tenda de Judit, não a encontrou. Correu fora, para o povo,"
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "e disse: Uma mulher hebreia pôs a confusão na casa do rei Nabucodonosor: ali jaz Holofernes estendido por terra, e a sua cabeça não está com o corpo."
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "Quando ouviram isto, os chefes do exército dos Assírios rasgaram todas as suas vestes, um receio e um pavor extremos os invadiram, e os seus ânimos ficaram completamente desconcertados."
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "E levantou-se um clamor espantoso no meio do seu acampamento."
+        }
+      ]
+    },
+    {
+      "number": 15,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Quando todo o exército soube que Holofernes tinha sido decapitado, perderam a razão e o conselho, e, agitados unicamente pelo temor e pelo pavor, buscaram a salvação na fuga."
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "Nenhum falava sequer ao seu companheiro, mas de cabeça baixa, tendo abandonado tudo, aflitos por se escaparem dos Hebreus, pois que os ouviam vir armados sobre eles, fugiam pelos caminhos dos campos e pelas veredas dos outeiros."
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "Os Israelitas, vendo-os fugir, perseguiram-nos. Desceram (o monte), tocando trombetas e gritando atrás deles."
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "E, como os Assírios, desordenados, iam fugindo precipitadamente, os filhos de Israel, que os perseguiam juntos em um só batalhão, destroçavam todos os que podiam encontrar."
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "Ozias mandou mensageiros a todas as cidades e províncias de Israel."
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "Assim cada província e cada cidade mandaram em seu alcance uma juventude escolhida e armada, e perseguiram-nos ao fio da espada até aos seus extremos confins."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "Os que tinham ficado em Betúlia, entraram no acampamento dos Assírios e levaram os despojos que os Assírios na sua fuga tinham deixado, voltando muito carregados."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Aqueles que tornaram vitoriosos para Betúlia, trouxeram consigo tudo o que era dos Assírios, de modo que eram inumeráveis os gados, os animais de tiro e todas as suas bagagens; desta forma todos, desde o mais pequeno até ao maior, ficaram ricos com os seus despojos."
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "O sumo pontífice Joaquim foi de Jerusalém a Betúlia com todos os seus anciãos, para ver Judit."
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "Tendo ela saído a recebê-los, abençoaram-na todos a uma voz, dizendo: Tu és a glória de Jerusalém, tu a alegria de Israel, tu a honra do nosso povo."
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "Procedeste varonilmente e o teu coração foi cheio de força. Porque amaste a castidade, porque depois do teu marido, não conheceste outro homem, por isso a mão do Senhor te fortaleceu, e serás bendita eternamente."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Todo o povo respondeu: Assim seja, assim seja."
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "Trinta dias mal bastaram para o povo de Israel recolher os despojos dos Assírios."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Tudo aquilo que se soube ter pertencido a Holofernes, deram-no a Judit: ouro, prata, vestes, pedras preciosas, objectos de diversa espécie, tudo lhe foi dado pelo povo."
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "Todo o povo rejubilou, com as mulheres, com as donzelas e com os jovens, ao som de harpas e cítaras."
+        }
+      ]
+    },
+    {
+      "number": 16,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Então cantou Judit ao Senhor este cântico:"
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "Louvai o Senhor ao som dos tambores, cantai o Senhor ao som de címbalos, entoai-lhe um cântico novo, exaltai e invocai o seu nome."
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "O Senhor é quem põe fim às guerras. O Senhor é seu nome."
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "Ele pôs o seu acampamento no meio do seu povo, para nos livrar da mão de todos os nossos inimigos."
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "O Assírio veio dos montes, da parte do aquilão, com a multidão dos seus guerreiros; sua multidão obstruiu as torrentes, e os seus cavalos cobriam os vales."
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "Ele jurou que havia de queimar o meu país, que havia de passar ao fio da espada os meus jovens, que havia de dar em presa as minhas crianças, que havia de levar cativas as minhas donzelas."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "Porém o Senhor todo poderoso o feriu e o entregou nas mãos duma mulher, que lhe tirou a vida."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "O seu herói não foi prostrado ás mãos de jovens (guerreiros), nem o feriram os filhos de Titan, nem se lhe opuseram corpulentos gigantes, Mas Judit, filha de Merari, o derrubou com a formosura do seu rosto."
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "Ela se despiu do traje de viúva, e se ataviou com os vestidos de alegria, para o triunfo dos filhos de Israel."
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "Ela ungiu o seu rosto com perfumes, entrançou os seus cabelos sob um turbante e revestiu-se dum vestido novo para o seduzir."
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "As suas sandálias arrebataram-lhe os olhos, a sua beleza cativou-lhe a alma, e ela cortou-lhe a cabeça com o alfange."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Os Persas tremeram diante da sua valentia, os Medos diante da sua ousadia."
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "O acampamento dos Assírios ressoou em alaridos, quando apareceram os meus pobres (concidadãos) abrasados de sede."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Os filhos das jovens esposas traspassaram-nos, mataram-nos (sem resistência) como a meninos que fogem: pereceram no combate diante da face do Senhor meu Deus."
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "Cantemos um hino ao Senhor, cantemos um novo hino ao nosso Deus."
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "Adonai, Senhor, tu és grande, magnífico no teu poder, e ninguém pode superar-te."
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "Todas as tuas criaturas te obedeçam, porque tu falaste, e foram feitas; enviaste o teu espírito, e foram criadas, e ninguém resiste à tua voz."
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "Os montes e as águas são abalados desde os fundamentos, as pedras, qual cera, se derretem diante da tua face,"
+        },
+        {
+          "number": 19,
+          "part": 1,
+          "text": "porém aqueles que vos temem, são grandes diante de ti em todas as coisas."
+        },
+        {
+          "number": 20,
+          "part": 1,
+          "text": "Ai da nação que se levantar contra o meu povo! porque o Senhor omnipotente se vingará dela, e a visitará no dia do juízo."
+        },
+        {
+          "number": 21,
+          "part": 1,
+          "text": "Ele enviará fogo e vermes sobre as suas carnes, para arderem e para sentirem (este suplício) eternamente."
+        },
+        {
+          "number": 22,
+          "part": 1,
+          "text": "Todo o povo, depois da vitória, foi a Jerusalém adorar o Senhor. Logo que se purificaram, todos ofereceram os seus holocaustos, cumprindo os seus votos e as suas promessas."
+        },
+        {
+          "number": 23,
+          "part": 1,
+          "text": "Judit ofereceu, em anátema de esquecimento, todos os instrumentos de guerra de Holofernes, que o povo lhe tinha dado, e o cortinado que ela mesma tinha tirado do leito dele."
+        },
+        {
+          "number": 24,
+          "part": 1,
+          "text": "O povo esteve em grande regozijo diante do santuário, e a alegria desta vitória foi celebrada com Judit por espaço de três meses."
+        },
+        {
+          "number": 25,
+          "part": 1,
+          "text": "Passados aqueles dias, cada um voltou para sua casa; Judit ficou sendo célebre em Betúlia, e com grande renome em toda a terra de Israel."
+        },
+        {
+          "number": 26,
+          "part": 1,
+          "text": "A coragem juntava a castidade, de tal sorte que nunca em todos os dias da sua vida conheceu outro homem, desde que morreu Manassés, seu marido."
+        },
+        {
+          "number": 27,
+          "part": 1,
+          "text": "Nos dias de festa aparecia em público com todos os seus Adornos."
+        },
+        {
+          "number": 28,
+          "part": 1,
+          "text": "Morou na casa de seu marido até à idade de cento e cinco anos, e deu a liberdade à sua escrava; morreu e foi sepultada em Betúlia com seu marido."
+        },
+        {
+          "number": 29,
+          "part": 1,
+          "text": "Todo o povo a chorou durante sete dias."
+        },
+        {
+          "number": 30,
+          "part": 1,
+          "text": "Em todo o tempo de sua vida, e muitos anos depois da sua morte, não houve quem perturbasse Israel."
+        },
+        {
+          "number": 31,
+          "part": 1,
+          "text": "O dia da festividade desta vitória foi posto pelo Hebreus na classe dos dias santos, e desde aquele tempo até hoje é festejado pelos judeus."
+        }
+      ]
+    }
+  ]
+}

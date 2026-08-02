@@ -1,0 +1,12 @@
+{
+  "name": "versum",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Git hooks and repository-wide quality checks for Versum.",
+  "scripts": {
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}
