@@ -1,0 +1,30 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Operating systems and editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# JavaScript clients
+web/node_modules/
+web/.next/
+web/out/
+mobile/node_modules/
+mobile/.expo/
+mobile/dist/
+
+# Go
+api/bin/
+api/tmp/
+api/coverage.out
+
+# Test reports
+coverage/
+
+# Personal Obsidian state
+Obsidian Vault/.obsidian/workspace.json
+Obsidian Vault/.obsidian/graph.json
