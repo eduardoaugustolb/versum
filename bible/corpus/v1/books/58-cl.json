@@ -1,0 +1,503 @@
+{
+  "id": "cl",
+  "order": 58,
+  "name": "Epístola aos Colossenses",
+  "testament": "new",
+  "chapters": [
+    {
+      "number": 1,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Paulo, Apóstolo de Jesus Cristo pela vontade de Deus, e Timóteo, seu irmão,"
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "aos santos e fiéis irmãos em Cristo, que estão em Colossos: graça a vós e paz, da parte de Deus, nosso Pai."
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "Damos graças a Deus, Pai de Nosso Senhor Jesus Cristo, orando sempre por vós,"
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "conhecedores da vossa fé em Jesus Cristo e da caridade que tendes para com todos os santos,"
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "levados pela esperança (da recompensa) que vos está reservada nos céus, da qual tivestes conhecimento pela palavra da verdade do Evangelho,"
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "o qual chegou até vós, como a todo o mundo, e frutifica e cresce incessantemente, desde o dia em que ouvistes e conhecestes a graça de Deus na verdade,"
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "conforme aprendestes de Epafras, nosso muito amado companheiro no serviço (de Deus), o qual é por vós fiel ministro de Cristo,"
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "o qual também nos informou da caridade que o Espírito vos inspira."
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "Por este motivo, nós também, desde o dia em que ouvimos isto, não cessamos de orar por vós e de pedir que sejais cheios de conhecimento da sua vontade, em toda a sabedoria e inteligência espiritual,"
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "a fim de que andeis de um modo digno do Senhor, agradando-lhe em tudo, frutificando em toda a boa obra e crescendo na ciência de Deus,"
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "confortados em tudo pelo seu poder glorioso, para suportar tudo com paciência, longanimidade e alegria,"
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "dando graças a Deus Pai, que nos fez dignos de participar da herança dos santos na luz (do céu),"
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "o qual nos livrou do poder das trevas e nos transferiu para o reino do Filho do seu amor,"
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "o qual, (pelo seu sangue) temos a redenção, a remissão dos pecados."
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "Ele é a imagem do Deus invisível, o primogênito de toda a criatura,"
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "porque nele foram criadas todas as coisas nos céus e na terra, as visíveis e as invisíveis, os tronos, as dominações, os principados, as potestades: tudo foi criado por ele e para ele,"
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "e ele é antes de todas as coisas, e todas as coisas subsistem por ele."
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "Ele é a cabeça do corpo da Igreja, é o princípio, o primogênito dentre os mortos, de maneira que tem a primazia em todas as coisas,"
+        },
+        {
+          "number": 19,
+          "part": 1,
+          "text": "porque foi do agrado do Pai que residisse nele toda a plenitude"
+        },
+        {
+          "number": 20,
+          "part": 1,
+          "text": "e que por ele fossem reconciliadas consigo todas as coisas, pacificando pelo sangue da sua cruz, tanto as coisas da terra como as do céu."
+        },
+        {
+          "number": 21,
+          "part": 1,
+          "text": "E, tendo sido vós noutro tempo estranhos e inimigos (de Deus), pelos maus pensamentos e pelas más obras,"
+        },
+        {
+          "number": 22,
+          "part": 1,
+          "text": "agora reconciliou-vos por meio da morte do seu corpo carnal, para vos apresentar santos, imaculados e irrepreensíveis diante dele,"
+        },
+        {
+          "number": 23,
+          "part": 1,
+          "text": "se perseverardes fundados e firmes na fé, e inabaláveis na esperança que vos dá o Evangelho que ouvistes e que foi pregado a todas as criaturas, que há debaixo do céu, e do qual eu, Paulo, fui constituído ministro."
+        },
+        {
+          "number": 24,
+          "part": 1,
+          "text": "Eu, agora, me alegro nos sofrimentos por vós e completo na minha carne o que falta aos sofrimentos de Cristo, pelo seu corpo (místico), que é a Igreja,"
+        },
+        {
+          "number": 25,
+          "part": 1,
+          "text": "da qual fui constituído ministro, segundo o encargo que Deus me deu junto de vós, que é de anunciar, na sua plenitude, a palavra de Deus,"
+        },
+        {
+          "number": 26,
+          "part": 1,
+          "text": "isto é, o mistério escondido aos séculos e às gerações (passadas), e que agora foi descoberto aos seus santos,"
+        },
+        {
+          "number": 27,
+          "part": 1,
+          "text": "aos quais Deus quis fazer conhecer as riquezas da glória deste mistério entre os gentios : Cristo, em vós, esperança da vossa glória."
+        },
+        {
+          "number": 28,
+          "part": 1,
+          "text": "E’ ele que nós anunciamos, admoestando todo o homem e instruindo todo o homem em toda a sabedoria, para que apresentemos todo o homem perfeito em Cristo."
+        },
+        {
+          "number": 29,
+          "part": 1,
+          "text": "E’ para isso que eu trabalho, combatendo segundo a força que ele me dá, a qual opera poderosamente em mim."
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Quero, pois, que saibais qual o combate que sustento por vós e por aqueles que estão em Laodiceia, pelas e por todos os que não viram a minha face na carne,"
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "a fim de que os seus corações sejam consolados, e eles estejam unidos na caridade e na abundância de uma perfeita inteligência, para conhecerem o mistério de Deus, que é Cristo,"
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "no qual estão encerrados todos os tesouros da sabedoria e da ciência."
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "Digo-vos isto, para que ninguém vos engane com discursos subtis,"
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "porque, posto que ausente quanto Cristo, ao corpo, estou todavia convosco em espírito, regozijando-me por ver a vossa boa ordem e a firmeza da vossa fé em Cristo."
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "Portanto, vivei em Cristo Jesus, o Senhor, como vos foi ensinado,"
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "arraigados e edificados nele, fortificados na fé, como já aprendestes, crescendo nele em ação de graças."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Vede que ninguém vos engane por meio da filosofia inútil e enganadora, segundo a tradição dos homens, segundo os elementos do mundo, e não segundo Cristo."
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "Porque nele habita, corporalmente, toda a plenitude da divindade,"
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "e vós estais cheios (de graça e de ciência) nele, que é a cabeça de todo o principado e potestade;"
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "também nele estais circuncidados com uma circuncisão não feita por mão de homem, mas que consiste no despojo do corpo da carne, (isto é) na circuncisão de Cristo."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Tendo sido sepultados (para o pecado) com ele no batismo, com ele também ressuscitastes (para a vida da graça) mediante a fé na ação de Deus, que o ressuscitou dos mortos."
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "A vós, que estáveis mortos pelos vossos pecados e pela incircuncisão (ou desordem) da vossa carne, vos deu vida juntamente com ele, perdoando-nos todos os nossos pecados."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Destruiu a acta redigida contra nós, cujas disposições nos condenavam, e fê-la desaparecer, encravando-a na cruz."
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "Despojou os principados e potestades (infernais), e fez deles um objecto de escárnio público, triunfando deles pela cruz."
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "Ninguém, pois, vos condene pelo comer ou pelo beber, ou por causa de um dia de festa, ou de uma lua nova, ou de um sábado,"
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "todas estas coisas são sombra das vindouras; a realidade é Cristo."
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "Ninguém vos seduza, afetando humildade e culto dos anjos, divagando por coisas que nunca viu, inchado em vão com seus pensamentos carnais,"
+        },
+        {
+          "number": 19,
+          "part": 1,
+          "text": "sem estar unido com a cabeça (que é Cristo), da qual todo o corpo, organizado e servido por ligamentos e junturas, cresce com aumento dado por Deus."
+        },
+        {
+          "number": 20,
+          "part": 1,
+          "text": "Portanto, se estais mortos com Cristo para os elementos deste mundo, por que é que, como se vivêsseis no mundo, vos submeteis a essas prescrições (da lei mosaica):"
+        },
+        {
+          "number": 21,
+          "part": 1,
+          "text": "\"Não tomeis, nem proveis, nem manuseeis!\""
+        },
+        {
+          "number": 22,
+          "part": 1,
+          "text": "Todas estas coisas perecem pelo próprio uso. São preceitos e doutrinas dos homens."
+        },
+        {
+          "number": 23,
+          "part": 1,
+          "text": "Tudo isso tem na verdade uma aparência de sabedoria no culto voluntário (e supersticioso dos anjos), na humildade (afetada) e no mau tratamento do corpo, mas tudo isto é sem honra e só para satisfação da carne."
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Portanto, se ressuscitastes com Cristo, buscai as coisas que são lá de cima, onde Cristo está sentado à dextra de Deus;"
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "afeiçoai-vos às coisas que são lá de cima, não às que estão sobre a terra."
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "Com efeito, (pelo batismo) estais mortos (para as coisas terrenas) e a nossa vida está escondida com Cristo em Deus."
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "Quando aparecer Cristo, que é a vossa vida, então também vós aparecereis com ele na glória."
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "Mortificai, pois, os vossos membros terrenos: a fornicação, a impureza, as paixões, os desejos maus e a avareza, que é uma idolatria,"
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "pelas quais coisas vem a ira de Deus sobre os filhos da incredulidade;"
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "entre as quais coisas vós também andastes outrora, quando vivíeis nelas."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Mas agora deixai, também vós, tudo isto: a ira, a indignação, a malícia, a maledicência, a palavra torpe da vossa boca."
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "Não mintais uns aos outros, visto que vos despojastes do homem velho com as suas obras"
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "e vos revestistes do homem novo, daquele que se renova (continuamente, avançando sempre na perfeição) para o conhecimento mais perfeito (de Deus) segundo a imagem daquele que o criou,"
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "onde não há (diferença de) Grego e Judeu, circuncidado e incircuncidado, bárbaro e Scita, servo e livre, não há senão Cristo que é tudo em todos."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Vós, pois, como escolhidos de Deus, santos e amados, revesti-vos de sentimentos de misericórdia, de benignidade, de humildade, de mansidão, de paciência,"
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "sofrendo-vos uns aos outros e perdoando-vos mutuamente, se algum tem razão de queixa contra o outro. Assim como o Senhor vos perdoou a vós, também vós perdoai (uns aos outros)."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Sobretudo, porém tende caridade, que é o vínculo da perfeição."
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "Triunfe em vossos corações a paz de Cristo, à qual fostes chamados, para (formar) um só corpo. Sede agradecidos."
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "A palavra de Cristo habite em vós com toda a sua riqueza. Ensinai-vos e admoestai-vos uns aos outros, com toda a sabedoria, cantai a Deus, em vossos corações, salmos, hinos e cânticos espirituais, sob a ação da graça."
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "Tudo o que fizerdes, em palavras ou por obras, fazei tudo em nome do Senhor Jesus, dando por ele graças a Deus Pai."
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "Mulheres, estai sujeitas a vossos maridos, como convém, no Senhor."
+        },
+        {
+          "number": 19,
+          "part": 1,
+          "text": "Maridos, amai vossas mulheres e não sejais ásperos para com elas."
+        },
+        {
+          "number": 20,
+          "part": 1,
+          "text": "Filhos, obedecei em tudo a vossos pais, porque isto é agradável ao Senhor."
+        },
+        {
+          "number": 21,
+          "part": 1,
+          "text": "Pais, não provoqueis à indignação os vossos filhos, para que se não tornem pusilânimes."
+        },
+        {
+          "number": 22,
+          "part": 1,
+          "text": "Servos, obedecei em tudo a vossos senhores temporais, não servindo só quando sob as (suas) vistas, como para agradar aos homens, mas com simplicidade de coração, temendo a Deus."
+        },
+        {
+          "number": 23,
+          "part": 1,
+          "text": "Tudo o que fizerdes, fazei-o de boa vontade, como (quem o faz) pelo Senhor e não pelos homens,"
+        },
+        {
+          "number": 24,
+          "part": 1,
+          "text": "sabendo que recebereis do Senhor a herança (do céu) como recompensa. Servi a Cristo Senhor,"
+        },
+        {
+          "number": 25,
+          "part": 1,
+          "text": "porque aquele que cometer injustiça, receberá segundo o que fez injustamente: não há acepção de pessoas (diante de Deus)."
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Vós, senhores, tratai os vossos servos com justiça e equidade, sabendo que também tendes um Senhor no céu."
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "Perseverai na oração, velando nela com ação de graças."
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "Orai também por nós, para que Deus nos abra a porta à palavra, para anunciar o mistério de Cristo, pelo qual estou preso,"
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "para que eu o manifeste, como me cumpre manifestar."
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "Procedei com sabedoria com aqueles que estão fora (da Igreja), aproveitando as circunstâncias favoráveis."
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "A vossa conversação seja sempre amável, condimentada com sal (de sabedoria), para que saibais responder a cada um, como é preciso."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "Sobre o estado de todas as minhas coisas, vos informará Tíquico, muito amado irmão, fiel ministro e companheiro no serviço do Senhor,"
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "o qual vos enviei expressamente, para vos contar o estado das nossas coisas e consolar os vossos corações,"
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "juntamente com Onésimo, irmão caríssimo e fiel, que é dos vossos. Eles vos informarão de tudo o que aqui se passa."
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "Saúda-vos Aristarco, meu companheiro na prisão. Igualmente Marcos, primo de Barnabé, sobre o qual recebestes recomendações; se ele for ter convosco, recebei-o."
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "Também Jesus, que se chama Justo, vos saúda. De todos os da circuncisão, são estes os meus únicos cooperadores (que tenho tido aqui em Roma, a trabalhar) pelo reino de Deus; foram para mim uma consolação."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Saúda-vos Epafras, que é dos vossos, servo de Jesus Cristo, o qual combate por vós nas suas orações, para que permaneçais firmes e na plena observância de toda a vontade de Deus."
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "Sim, eu dou testemunho de que ele trabalha muito por vós, pelos de Laodiceia e pelos de Hierápolis."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Saúda-vos o muito amado Lucas, médico, e Demas."
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "Saudai os irmãos que estão em Laodiceia, assim como (saudai) Ninfas e a igreja que reúne em sua casa."
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "Lida que for esta carta entre vós, fazei que seja lida também na Igreja de Laodiceia, e vós lede, por vossa parte, a de Laodiceia."
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "Dizei a Arquipo: \"Considera o ministério que recebeste do Senhor, para bem o cumprires.\""
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "Esta saudação escrevo-a eu, Paulo, por meu próprio punho. Lembrai-vos das minhas cadeias. A graça seja convosco."
+        }
+      ]
+    }
+  ]
+}

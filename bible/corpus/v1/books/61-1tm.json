@@ -1,0 +1,603 @@
+{
+  "id": "1tm",
+  "order": 61,
+  "name": "Primeira Epístola a Timóteo",
+  "testament": "new",
+  "chapters": [
+    {
+      "number": 1,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Paulo, Apóstolo de Jesus Cristo, por mandado de Deus, nosso Salvador, e de Jesus Cristo, nossa esperança,"
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "a Timóteo, amado filho na fé: graça, misericórdia e paz, da parte de Deus Pai e de Jesus Cristo Nosso Senhor,"
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "Recomendei-te que ficasses em Éfeso, quando parti para a Macedónia, para que admoestasses alguns, que não ensinassem doutrina diversa (da que tem sido ensinada por nós),"
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "nem se ocupassem em fábulas e genealogias intermináveis, as quais servem mais para questões do que para favorecer o plano de Deus, que se funda na fé."
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "O fim deste preceito é a caridade nascida de um coração puro, de uma boa consciência e de uma fé não fingida."
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "Apartando-se alguns destas coisas, entregaram-se a discursos vãos,"
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "querendo ser doutores da lei, não sabendo nem o que dizem nem o que afirmam."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Nós sabemos (também como eles) que a lei é boa, contanto que se use dela legitimamente,"
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "não ignorando que a lei não foi feita para o justo, mas para os injustos e desobedientes, para os ímpios e pecadores, para os sacrílegos e profanadores, para os parricidas e matricidas, para os homicidas,"
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "para os fornicadores, sodomitas, traficantes de homens, para os mentirosos e perjuros, e para tudo o que vai contra a sã doutrina."
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "Assim ensina o Evangelho da glória de Deus bem-aventurado, o qual me foi confiado."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Dou graças aquele que me confortou, a Jesus Cristo Nosso Senhor, porque me julgou fiel, pondo-me no ministério,"
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "a mim que fui antes blasfemo, perseguidor e injuriador; alcancei, porém, a misericórdia de Deus, porque o fiz por ignorância, sendo ainda incrédulo."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "A graça de Nosso Senhor superabundou com a fé e com a caridade, que há em Jesus Cristo."
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "Palavra segura e digna de toda aceitação é esta: Jesus Cristo veio a este mundo salvar os pecadores, dos quais sou o primeiro."
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "Mas alcancei misericórdia, para que em mim, sendo o primeiro, mostrasse Jesus Cristo toda a sua longanimidade, para exemplo dos que hão-de crer nele para (alcançar) a vida eterna."
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "Ao rei dos séculos imortal, invisível, ao Deus único, honra e glória pelos séculos dos séculos. Amém."
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "Tal é a recomendação que te faço, meu filho Timóteo, segundo as profecias feitas precedentemente a teu respeito, a fim de que, segundo elas, combatas o bom combate,"
+        },
+        {
+          "number": 19,
+          "part": 1,
+          "text": "conservando a fé e a boa consciência. Por se terem afastado dela, alguns naufragaram na fé;"
+        },
+        {
+          "number": 20,
+          "part": 1,
+          "text": "desse número são Himeneu e Alexandre, os quais entreguei a Satanás, para que aprendam a não blasfemar."
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Recomendo-te, pois, antes de tudo, que se façam súplicas, orações, petições, acções de graças por todos os homens,"
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "pelos reis e por todos os que estão constituídos em autoridade, para que levemos uma vida sossegada e tranquila, em toda a piedade e dignidade."
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "Em verdade, isto é bom e agradável diante de Deus nosso Salvador,"
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "o qual quer que todos os homens se salvem e cheguem ao conhecimento da verdade."
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "Com efeito, há um só Deus e um só mediador entre Deus e os homens, que é Jesus Cristo homem,"
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "o qual se deu a si mesmo para redenção de todos: tal é o testemunho dado (por Deus) no tempo devido,"
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "para o qual fui constituído pregador e apóstolo (digo a verdade, não minto), doutor das gentes na fé e na verdade."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Quero, pois, que os homens orem em todo o lugar, levantando as mãos puras, sem ira e sem contenda."
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "Do mesmo modo orem também as mulheres em traje honesto, ataviando-se com modéstia e sobriedade, e não com cabelos frisados, nem com ouro, pérolas ou vestidos custosos,"
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "mas sim com boas obras, como convém a mulheres que fazem profissão de piedade."
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "A mulher aprenda, em silêncio, com toda a sujeição."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Não permito à mulher que ensine (em público), nem que tenha domínio sobre o homem (exercendo na Igreja uma autoridade sobre ele), mas esteja em silêncio,"
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "porque Adão foi formado primeiro, e depois Eva."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "E Adão não foi seduzido, mas a mulher (é que, sendo) seduzida, prevaricou."
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "Contudo, salvar-se-a pela (legitima) procriação dos filhos, se permanecer na fé, na caridade e na santidade, unidas à modéstia."
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Esta palavra é certa: se alguém deseja o episcopado, deseja um nobre cargo."
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "É necessário pois que o bispo seja irrepreensível, casado uma só vez, sóbrio, prudente, de bom trato, hospitaleiro, capaz de ensinar,"
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "não dado ao vinho, nem desordeiro, mas moderado, não litigioso, desapegado do dinheiro,"
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "que saiba governar bem a sua casa, que mantenha seus filhos na submissão, com toda a honestidade"
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "— de facto, se algum não sabe governar a sua casa, como terá cuidado da Igreja de Deus? —"
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "que não seja neófito, a fim de que, inchado de soberba, não venha a cair na (mesma) condenação do demónio (quando caiu do céu)."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "Importa também que tenha boa reputação entre aqueles que estão fora (da Igreja), para que não caia no opróbrio e no laço do demónio."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Igualmente os diáconos sejam modestos, não de duas línguas, nem dados a muito vinho, nem ávidos de sórdidos lucros"
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "e conservem o mistério de fé com uma consciência pura."
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "Que estes sejam também provados antes, e, se forem achados irrepreensíveis, sejam admitidos ao ministério do diaconado."
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "Do mesmo modo as mulheres sejam honestas, não maldizentes, sóbrias, fiéis em tudo."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Os diáconos sejam casados uma só vez e governem bem os seus filhos e as suas casas,"
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "porque, os que tiverem exercido bem o seu ministério, ganharão um alto grau de honra e muita confiança na fé que há em Jesus Cristo."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Escrevo-te estas coisas, esperando que em breve irei ter contigo;"
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "porém, se tardar, para que saibas como deves portar-te na casa de Deus, que é a Igreja do Deus vivo, coluna e firmamento da verdade."
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "E evidentemente é grande o mistério da piedade: Foi manifestado na carne, justificado no Espírito, visto pelos anjos, pregado aos gentios, crido no mundo, exaltado na glória."
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Ora o Espírito diz formalmente que nos últimos tempos alguns apostatarão na fé, dando ouvido a espíritos enganadores e a doutrinas de demónios,"
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "seduzidos por mentirosos hipócritas, cuja consciência está marcada com ferro em brasa,"
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "que proíbem o matrimônio e o uso de alimentos, que Deus criou, para que, com ação de graças, participem deles os fiéis e aqueles que conhecem a verdade."
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "Efetivamente, tudo o que Deus criou é bom, e não é para desprezar nada do que se toma com ação de graças,"
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "porquanto é santificado pela palavra de Deus e pela oração."
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "Propondo estes ensinamentos aos irmãos, serás um bom ministro de Jesus Cristo, nutrido com as palavras da fé e da boa doutrina a que firmemente te ligaste."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "Rejeita as fábulas profanas, esses contos de velhas, e exercita-te na piedade."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "O exercício corporal para pouco serve, mas a piedade para tudo é útil, porque tem a promessa da vida presente e da futura."
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "Palavra segura é esta, e digna de toda a aceitação."
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "Se padecemos trabalhos e combatemos, é porque esperamos no Deus vivo, que é o Salvador de todos os homens, principalmente dos fiéis."
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "Manda estas coisas e ensina-as."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Ninguém despreze a tua mocidade; sê, porém, modelo dos fiéis na palavra, no modo de tratar com o próximo, na caridade, na fé, na castidade."
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "Enquanto eu não vou, aplica-te à leitura, à exortação e ao ensino."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Não desprezes o dom espiritual que há em ti, o qual te foi dado (apesar dos teus poucos anos) em virtude de uma profecia (particular), pela imposição das mãos da assembleia dos presbíteros."
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "Medita estas coisas, ocupa-te nelas, a fim de que o teu aproveitamento seja manifesto a todos."
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "Vela por ti e pelo teu ensino; persevera nestas coisas, porque, fazendo isto te salvarás a ti mesmo e aqueles que te ouvem."
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Não repreendas com aspereza o velho, mas exorta-o como a um pai; (adverte) os jovens, como a irmãos;"
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "as velhas, como a mães; as jovens, como a irmãs, com toda a castidade."
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "Honra as viúvas, que são verdadeiramente viúvas."
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "Se uma viúva tem filhos ou netos, aprendam estes, antes de tudo, a exercer a piedade para com sua própria família e a retribuir a seus pais os cuidados que deles receberam porque isto é agradável a Deus."
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "Aquela que é verdadeiramente viúva e desamparada, confie em Deus e persevere em suplicar e orar, de noite e de dia,"
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "porque, a que vive em deleites, vivendo, está morta (diante de Deus)."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "Manda, pois, isto, para que sejam irrepreensíveis."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Se, porventura, alguém não tem cuidado dos seus, e principalmente dos da sua casa, negou a fé e é pior que um infiel."
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "Somente seja inscrita no grupo das viúvas (para o serviço da Igreja) uma mulher com sessenta anos, casada uma só vez,"
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "que tenha reputação de boas obras, que tenha educado bem os filhos, praticado a hospitalidade, lavado os pés dos santos, acudido aos atribulados, realizado toda a obra boa."
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "Não admitas viúvas jovens, porque, quando os seus desejos as afastam de Cristo (seu esposo), querem voltar a casar-se."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "e tornam-se culpadas faltando ao seu primeiro compromisso."
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "Além disto, vivendo na ociosidade, acostumam-se a andar de casa em casa; não somente são ociosas, mas também chocarreiras e curiosas, falando sobre o que não convém."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "(Antes) quero pois que as jovens viúvas (que não têm virtude para viver na continência) se casem, criem filhos, sejam (boas) mães de família, não dêem ocasião ao adversário de dizer mal."
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "Realmente já algumas se perverteram para seguir Satanás."
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "Se algum fiel tem viúvas (na sua família), socorra-as, e não seja sobrecarregada a Igreja, a fim de que tenha o bastante para as que são verdadeiramente viúvas (necessitadas)."
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "Os presbíteros que exercem bem a presidência, sejam considerados dignos de estipêndio dobrado, principalmente os que trabalham em pregar e ensinar."
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "Com efeito diz a Escritura: Não ligarás a boca ao boi que debulha (Dt. 25, 4); e ainda: o operário é digno da sua paga (Lc. 10, 7)."
+        },
+        {
+          "number": 19,
+          "part": 1,
+          "text": "Não recebas acusação contra um presbítero, senão com duas ou três testemunhas."
+        },
+        {
+          "number": 20,
+          "part": 1,
+          "text": "Aos que pecarem, repreende-os diante de todos, para que também os outros tenham medo."
+        },
+        {
+          "number": 21,
+          "part": 1,
+          "text": "Eu te conjuro diante de Deus, de Jesus Cristo e dos anjos escolhidos, que guardes estas coisas sem prevenção, não fazendo nada por inclinação particular."
+        },
+        {
+          "number": 22,
+          "part": 1,
+          "text": "Não te apresses a impor as mãos a ninguém, e não te faças participante dos pecados dos outros. Conserva-te a ti mesmo puro."
+        },
+        {
+          "number": 23,
+          "part": 1,
+          "text": "Não continues a beber água só, mas usa de um pouco de vinho, por causa do teu estômago e das tuas frequentes enfermidades."
+        },
+        {
+          "number": 24,
+          "part": 1,
+          "text": "Os pecados de alguns homens são manifestos, mesmo antes de se examinarem em juízo, mas os de outros manifestam-se somente depois."
+        },
+        {
+          "number": 25,
+          "part": 1,
+          "text": "Igualmente as boas obras são manifestas; e as que o não são ainda, não podem permanecer ocultas."
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Todos os escravos, que estão sob o jugo, considerem os seus senhores dignos de toda a honra, para que o nome do Senhor e a sua doutrina não sejam blasfemados."
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "Os que têm senhores fiéis, não os desprezem, porque são irmãos, antes os sirvam melhor, pelo facto de serem fiéis e amados (de Deus) aqueles que recebem os seus serviços. Isto ensina e exorta."
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "Se alguém ensina de modo diferente, e não abraça as sãs palavras de Nosso Senhor Jesus Cristo e aquela doutrina que é conforme a piedade,"
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "é um soberbo, que nada sabe, um espírito doente, que se ocupa de questões e contendas de palavras, donde se originam invejas, contendas, maledicências, más suspeitas,"
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "altercações de homens com o espírito pervertido, que estão privados da verdade e pensam que a piedade é uma fonte de lucro."
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "Verdadeiramente a piedade é uma grande fonte de lucro, tornando-nos contentes com o que basta (para viver)."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "Como nada trouxemos para este mundo, também, sem dúvida, não podemos levar nada dele."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Tendo, pois, os alimentos (necessários) e com que nos cobrir, contentemo-nos com isto,"
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "porque os que querem enriquecer, caem na tentação e no laço (do demônio) e em muitos desejos insensatos e perniciosos, que submergem os homens na ruína e na perdição."
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "Com efeito, a raiz de todos os males é o amor ao dinheiro, por causa do qual alguns se desencaminharam da fé e se enredaram em muitas aflições."
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "Mas tu, ó homem de Deus, foge destas coisas e segue a justiça, a piedade, a fé, a caridade, a paciência, a mansidão."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Combate o bom combate da fé, conquista a vida eterna, para a qual foste chamado e fizeste uma bela confissão (da divindade de Jesus) diante de muitas testemunhas."
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "Eu te ordeno, diante de Deus, que dá vida a todas as coisas, e diante de Jesus Cristo, que perante Pôncio Pilatos fez uma tão bela confissão (da sua divindade),"
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "que observes este mandamento, (conservando-te) sem mácula, irrepreensível, até à vinda de Nosso Senhor Jesus Cristo,"
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "que mostrará, a seu tempo, o bem-aventurado e o único poderoso, o Rei dos reis e Senhor dos senhores,"
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "o único que possui a imortalidade, que habita numa luz inacessível, que não foi nem pode ser visto por nenhum homem. A ele, honra e império sempiterno ! Amém."
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "Manda aos ricos deste mundo que não sejam altivos, nem confiem na incerteza das riquezas, mas em Deus, o qual nos dá abundantemente todas as coisas para nosso uso."
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "que façam bem, que se tornem ricos em boas obras, que sejam generosos, que repartam,"
+        },
+        {
+          "number": 19,
+          "part": 1,
+          "text": "que juntem (assim) para si um sólido tesouro para o futuro, a fim de alcançarem a verdadeira vida."
+        },
+        {
+          "number": 20,
+          "part": 1,
+          "text": "Ó Timóteo, guarda o depósito (da fé), evitando as disputas vãs e ímpias e as contradições de uma ciência de falso nome,"
+        },
+        {
+          "number": 21,
+          "part": 1,
+          "text": "professando a qual alguns se desviaram da fé. A graça seja convosco!"
+        }
+      ]
+    }
+  ]
+}

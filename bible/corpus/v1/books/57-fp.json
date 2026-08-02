@@ -1,0 +1,543 @@
+{
+  "id": "fp",
+  "order": 57,
+  "name": "Epístola aos Filipenses",
+  "testament": "new",
+  "chapters": [
+    {
+      "number": 1,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Paulo e Timóteo, servos de Jesus Cristo, a todos os santos em Jesus Cristo, que estão em Filipos, e aos bispos e diáconos:"
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "graça a vós e paz da parte de Deus nosso Pai e do Senhor Jesus Cristo."
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "Dou graças ao meu Deus, todas as vezes que me lembro de vós,"
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "fazendo sempre com alegria súplicas por todos vós em todas as minhas orações,"
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "por causa da parte que tomastes no desenvolvimento do Evangelho de Cristo, desde o primeiro dia até agora,"
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "tendo confiança de que aquele, que começou em vós a boa obra, a completará até ao dia (da vinda) de Jesus Cristo."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "É justo que eu pense assim de todos vós, porque vos tenho no coração, vós todos que, quer nas minhas cadeias quer na defesa e confirmação do Evangelho, sois participantes da minha alegria."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Deus me é testemunha de que modo vos amo a todos com a ternura de Jesus Cristo."
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "E o que lhe peço é que a vossa caridade cresça mais e mais em compreensão e plena inteligência,"
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "para que possais distinguir o melhor, para que sejais sinceros e irrepreensíveis para o dia de Cristo,"
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "cheios de frutos de justiça por Jesus Cristo, para glória e louvor de Deus."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Ora eu quero, irmãos, que saibais que todas as coisas passadas comigo têm contribuído mais para proveito do Evangelho."
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "As minhas cadeias por amor de Cristo tornaram-se conhecidas em todo o Pretório e, aliás, em toda a parte,"
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "e a maioria dos irmãos, animados no Senhor pelas minhas cadeias, têm tido maior ousadia em anunciar sem temor a palavra de Deus."
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "É verdade que alguns pregam a Cristo por inveja e por discórdia, mas outros fazem-no com boa intenção."
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "Estes operam por caridade, sabendo que fui constituído para defesa do Evangelho."
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "Outros anunciam Cristo por espírito de partido, não sinceramente, com o pensamento de acrescentar aflição às minhas cadeias."
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "Mas, que importa? Contanto que Cristo, de qualquer modo, seja anunciado, ou por algum falso pretexto ou com sinceridade, não só nisto me alegro, mas me alegrarei."
+        },
+        {
+          "number": 19,
+          "part": 1,
+          "text": "De facto, sei que isto me resultará em salvação, pela vossa oração e pelo socorro do Espírito de Jesus Cristo,"
+        },
+        {
+          "number": 20,
+          "part": 1,
+          "text": "segundo a expectação e esperança que tenho, de que em nenhuma coisa serei confundido, mas que, com toda a confiança como sempre, também agora será Cristo glorificado no meu corpo, quer na vida, quer na morte."
+        },
+        {
+          "number": 21,
+          "part": 1,
+          "text": "Com efeito, para mim o viver é Cristo, e morrer é um lucro (porque ficarei mais intimamente unido com ele)."
+        },
+        {
+          "number": 22,
+          "part": 1,
+          "text": "Mas, se o viver (mais tempo) na carne me é útil por causa do trabalho (do meu apostolado, que redunda em glória de Deus, então) não sei o que escolher."
+        },
+        {
+          "number": 23,
+          "part": 1,
+          "text": "Estou em aperto por duas partes: tenho o desejo de partir para estar com Cristo, o que é incomparavelmente melhor,"
+        },
+        {
+          "number": 24,
+          "part": 1,
+          "text": "mas o permanecer na carne é preferível por amor de vós."
+        },
+        {
+          "number": 25,
+          "part": 1,
+          "text": "E, persuadido disto, sei que ficarei e que permanecerei com todos vós, para vosso proveito e gozo da vossa fé,"
+        },
+        {
+          "number": 26,
+          "part": 1,
+          "text": "a fim de que, pela minha volta e presença entre vós, vos dê motivo para vos glorificardes mais em Cristo Jesus."
+        },
+        {
+          "number": 27,
+          "part": 1,
+          "text": "Cumpre somente que vos porteis de um modo digno do Evangelho de Cristo, a fim de que, quer eu vá ver-vos, quer esteja ausente, ouça dizer de vós que permaneceis constantes num mesmo espírito, lutando unânimes pela fé do Evangelho,"
+        },
+        {
+          "number": 28,
+          "part": 1,
+          "text": "sem terdes medo dos adversários. Isto para eles, é sinal de perdição, como, para vós, de salvação. Tal é a vontade de Deus (que vos dá coragem)."
+        },
+        {
+          "number": 29,
+          "part": 1,
+          "text": "Porque a vós vos é dada a graça, em relação a Cristo, não só de crer nele, mas também de sofrer por ele,"
+        },
+        {
+          "number": 30,
+          "part": 1,
+          "text": "sustentando o mesmo combate que vistes em mim e que ainda agora ouvistes de mim."
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Portanto, se há alguma consolação em Cristo, se algum conforto de caridade, se alguma união de espírito, se alguma ternura e compaixão,"
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "tornai completo o meu gozo, tendo todos o mesmo pensar, a mesma caridade, uma só alma, um mesmo sentimento;"
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "nada façais por espírito de partido ou por vanglória, mas cada um, por humildade, considere os outros superiores a si,"
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "não atendendo (só) aos seus próprios interesses, mas também aos dos outros."
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "Tende entre vós os mesmos sentimentos que se deve ter em Jesus Cristo,"
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "o qual, existindo na forma (ou natureza) de Deus, não julgou que fosse uma usurpação o seu ser igual a Deus,"
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "mas aniquilou-se a si mesmo, tomando a forma de servo, tornando-se semelhante aos homens e sendo reconhecido, por condição, como homem."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Humilhou-se a si mesmo, fazendo-se obediente até à morte, e morte da cruz."
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "Por isso também Deus o exaltou e lhe deu um nome que está acima de todo o nome,"
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "de modo que, ao nome de Jesus, se dobre todo o joelho no céu, na terra e no inferno,"
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "e toda a língua confesse que Jesus Cristo é Senhor, na glória de Deus Pai."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Portanto, meus caríssimos, como sempre tendes sido obedientes, trabalhai na vossa salvação com temor e tremor, não só na minha presença, mas muito mais agora na minha ausência."
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "Porque Deus é o que opera em vós o querer e o executar, segundo o seu beneplácito."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Fazei, pois, todas as coisas sem murmuração nem contestações,"
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "a fim de serdes irrepreensíveis e sinceros filhos de Deus, sem culpa, no meio de uma nação depravada e corrompida, onde brilhais como astros do mundo,"
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "conservando a palavra de vida (que vos preguei), para eu ter a glória, no dia (da segunda vinda) de Cristo, de não haver corrido nem trabalhado em vão."
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "Mas, ainda que o meu sangue deva servir de libação sobre o sacrifício e a oferenda da vossa fé, alegro-me e congratulo-me com todos vós."
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "E vós também alegrai-vos e congratulai-vos comigo."
+        },
+        {
+          "number": 19,
+          "part": 1,
+          "text": "Espero, no Senhor Jesus enviar-vos brevemente Timóteo, para que eu também fique animado, recebendo noticias de vós,"
+        },
+        {
+          "number": 20,
+          "part": 1,
+          "text": "porque não tenho ninguém como ele, unido comigo em sentimentos, que se interesse por vós sinceramente:"
+        },
+        {
+          "number": 21,
+          "part": 1,
+          "text": "Com efeito, todos buscam os seus próprios interesses, e não os que são de Jesus Cristo."
+        },
+        {
+          "number": 22,
+          "part": 1,
+          "text": "Sabeis que ele é de uma virtude provada e que, como um filho com o pai, serviu comigo o Evangelho."
+        },
+        {
+          "number": 23,
+          "part": 1,
+          "text": "Espero, pois, mandar-vo-lo, logo que tiver visto o estado das minhas coisas."
+        },
+        {
+          "number": 24,
+          "part": 1,
+          "text": "E confio no Senhor que também eu próprio brevemente irei ter convosco."
+        },
+        {
+          "number": 25,
+          "part": 1,
+          "text": "Entretanto, julguei necessário mandar-vos Epafrodito, meu irmão, coadjutor e companheiro de luta, e vosso enviado para me socorrer nas minhas necessidades,"
+        },
+        {
+          "number": 26,
+          "part": 1,
+          "text": "pois que ele desejava, por certo, ver-vos de novo a todos e tinha pena de que tivésseis notícia da sua doença."
+        },
+        {
+          "number": 27,
+          "part": 1,
+          "text": "Com efeito, esteve mortalmente enfermo, mas Deus compadeceu-se dele, e não somente dele, mas também de mim, para que eu não tivesse tristeza sobre tristeza."
+        },
+        {
+          "number": 28,
+          "part": 1,
+          "text": "Por isso o enviei mais depressa para que, vendo-o, de novo vos alegreis e eu fique com menor tristeza (sabendo que estais alegres)."
+        },
+        {
+          "number": 30,
+          "part": 1,
+          "text": "Efectivamente , pelo serviço de Cristo, chegou às portas da morte, arriscando a própria vida para vos suprir no serviço que vós me não podíeis prestar."
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Quanto ao mais, meus irmãos, alegrai-vos no Senhor. A mim não me é penoso, e a vós é salutar, que eu vos escreva as mesmas coisas."
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "Guardai-vos desses cães, guardai-vos desses maus operários, guardai-vos desses mutilados."
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "Em realidade, nós é que somos os verdadeiros circuncidados, nós que servimos a Deus em espírito, nos gloriamos em Jesus Cristo e não confiamos na carne,"
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "se bem que também eu poderia ter confiança na carne. Se algum outro, pode confiar na carne, muito mais (o posso) eu,"
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "(que fui) circuncidado no oitavo dia; (que sou) da geração de Israel, da tribo de Benjamim, (nascido) hebreu de pais hebreus; (que fui), segundo a lei, fariseu;"
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "quanto ao zelo, perseguidor da Igreja; quanto à justiça da lei, irrepreensível no meu proceder."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "Porém, aquelas coisas que (antes) eu considerara como lucro, considerei-as (depois da minha conversão) como perdas por amor de Cristo."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Sim, na verdade tudo isso tenho por perda, perante o eminente conhecimento de Jesus Cristo, meu Senhor, pelo qual renunciei a todas as coisas e as considero como esterco, para ganhar a Cristo"
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "e ser encontrado nele, não tendo (já) a minha justiça que vem da (observância da) lei, mas aquela que nasce da fé em Jesus Cristo, a justiça que vem de Deus pela fé,"
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "a fim de o conhecer a ele e a virtude da sua ressurreição e a participação dos seus sofrimentos, assemelhando-me à sua morte,"
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "para ver se de algum modo posso chegar à ressurreição dos mortos."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Não que eu tenha já alcançado o prêmio ou seja já perfeito, mas prossigo para ver se de algum modo o poderei apreender, porque eu (que andava fugido e o perseguia) também fui apreendido por Jesus Cristo."
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "Irmãos, não julgo ter já alcançado a meta (da perfeição cristã). Mas somente faço uma coisa: esquecendo-me do que fica para trás e avançando para as coisas que estão adiante,"
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "prossigo para a meta, para o prêmio da celeste vocação de Deus em Jesus Cristo."
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "Todos nós, pois, que somos adultos (na vida cristã), tenhamos estes sentimentos; e, se em algum ponto tendes pensamentos diferentes. Deus também vos esclarecerá sobre isso."
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "Quanto, porém, aquilo a que temos já chegado, continuemos na mesma regra."
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "Sede meus imitadores, irmãos, e ponde os olhos naqueles que andam conforme o modelo que tendes em nós."
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "Porque muitos, de quem muitas vezes vos falei e também agora falo com lágrimas, procedem (com a sua vida sensual) como inimigos da cruz de Cristo :"
+        },
+        {
+          "number": 19,
+          "part": 1,
+          "text": "o fim deles é a perdição, o deus deles é o ventre, e fazem consistir a sua glória naquilo que é a sua vergonha, gostando somente das coisas terrenas."
+        },
+        {
+          "number": 20,
+          "part": 1,
+          "text": "Nós, porém, somos cidadãos dos céus, donde também esperamos o Salvador, o Senhor Jesus Cristo,"
+        },
+        {
+          "number": 21,
+          "part": 1,
+          "text": "o qual transformará o nosso corpo de miséria, fazendo-o semelhante ao seu corpo glorioso, com aquele poder com que pode também sujeitar a si todas as coisas."
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "verses": [
+        {
+          "number": 1,
+          "part": 1,
+          "text": "Portanto, meus muito amados e desejados irmãos, minha alegria e minha coroa, permanecei assim firmes no Senhor, caríssimos."
+        },
+        {
+          "number": 2,
+          "part": 1,
+          "text": "Rogo a Evódia, e suplico a Síntique, que tenham os mesmos sentimentos no Senhor."
+        },
+        {
+          "number": 3,
+          "part": 1,
+          "text": "Também te rogo a ti, meu fiel companheiro, que as ajudes a elas que combateram comigo peio Evangelho com Clemente e com os outros meus colaboradores, cujos nomes estão no livro da vida."
+        },
+        {
+          "number": 4,
+          "part": 1,
+          "text": "Alegrai-vos incessantemente no Senhor; outra vez digo, alegrai-vos."
+        },
+        {
+          "number": 5,
+          "part": 1,
+          "text": "A vossa afabilidade seja conhecida de todos os homens; o Senhor está perto (e contempla-vos)."
+        },
+        {
+          "number": 6,
+          "part": 1,
+          "text": "Não vos inquieteis com nada, mas em todas as circunstâncias manifestai a Deus as vossas necessidades por meio de orações e súplicas unidas à ação de graças."
+        },
+        {
+          "number": 7,
+          "part": 1,
+          "text": "E a paz de Deus, que está acima de todo o entendimento, guarde os vossos corações e os vossos espíritos em Jesus Cristo."
+        },
+        {
+          "number": 8,
+          "part": 1,
+          "text": "Quanto ao mais, irmãos, tudo o que é verdadeiro, tudo o que é digno, tudo o que é justo, tudo o que é santo, tudo o que é amável, tudo o que é de bom nome, qualquer virtude, qualquer coisa digna de louvor, seja isto o objeto dos vossos pensamentos."
+        },
+        {
+          "number": 9,
+          "part": 1,
+          "text": "O que aprendestes, recebestes, ouvistes e vistes em mim, isso praticai; e o Deus da paz será convosco."
+        },
+        {
+          "number": 10,
+          "part": 1,
+          "text": "Muito me alegrei no Senhor, porque enfim vi reflorescer os vossos sentimentos a meu respeito; é certo que os tínheis, porém só vos faltava a oportunidade (de os manifestar)."
+        },
+        {
+          "number": 11,
+          "part": 1,
+          "text": "Não digo isto, levado pela minha necessidade, porque aprendi a contentar-me com o que tenho."
+        },
+        {
+          "number": 12,
+          "part": 1,
+          "text": "Sei viver nas privações, sei também viver na abundância; a tudo fui habituado : a ter fartura e a passar fome, a estar na abundância e a padecer necessidade."
+        },
+        {
+          "number": 13,
+          "part": 1,
+          "text": "Tudo posso naquele que me conforta."
+        },
+        {
+          "number": 14,
+          "part": 1,
+          "text": "Contudo, fizestes bem em me assistir na minha tribulação (socorrendo-me)."
+        },
+        {
+          "number": 15,
+          "part": 1,
+          "text": "Também sabeis, ó Filipenses, que, no princípio da evangelização, quando partida Macedônia, nenhuma igreja me ajudou, abrindo-me uma conta de deve e haver, senão vós somente."
+        },
+        {
+          "number": 16,
+          "part": 1,
+          "text": "Porque até a Tessalonica me mandastes, duas vezes, o que me era necessário."
+        },
+        {
+          "number": 17,
+          "part": 1,
+          "text": "Não é que eu busque dádivas, mas busco o fruto que vá aumentando à vossa conta (diante de Deus)."
+        },
+        {
+          "number": 18,
+          "part": 1,
+          "text": "Agora tenho tudo e estou na abundância; estou cheio, depois que recebi de Epafrodito o que me mandastes, como perfume de suavidade, como sacrifício aceite e agradável a Deus."
+        },
+        {
+          "number": 19,
+          "part": 1,
+          "text": "O meu Deus, pois, cumpra todos os vossos desejos, conforme as suas riquezas, com glória, em Cristo Jesus."
+        },
+        {
+          "number": 20,
+          "part": 1,
+          "text": "Seja dada glória a Deus e Pai nosso, por todos os séculos dos séculos. Assim seja."
+        },
+        {
+          "number": 21,
+          "part": 1,
+          "text": "Saudai todos os santos em Cristo Jesus."
+        },
+        {
+          "number": 22,
+          "part": 1,
+          "text": "Os irmãos que estão comigo vos saúdam. Todos os santos vos saúdam, principalmente aqueles que são da casa de César."
+        },
+        {
+          "number": 23,
+          "part": 1,
+          "text": "A graça de Nosso Senhor Jesus Cristo seja com o vosso espírito."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,522 @@
+{
+  "schemaVersion": 1,
+  "bookCount": 73,
+  "chapterCount": 1334,
+  "verseCount": 35624,
+  "numberingGapCount": 223,
+  "repeatedVerseNumberCount": 22,
+  "bibleSha256": "2cea675b030238e25d6861a3c5a8aead7757596862329accb2d0cc3660a2c02b",
+  "books": [
+    {
+      "id": "gn",
+      "order": 1,
+      "chapters": 50,
+      "verses": 1530,
+      "sha256": "5844cc30592b560dfbc8c6008b1c40bb41b2b292035f202f2d6dd4311b90bce4"
+    },
+    {
+      "id": "ex",
+      "order": 2,
+      "chapters": 40,
+      "verses": 1211,
+      "sha256": "a8aaa816806ec8a07b2cb7c0ba084f4cee15b2ea43fb54bf2ca0dd10042dfdd9"
+    },
+    {
+      "id": "lv",
+      "order": 3,
+      "chapters": 27,
+      "verses": 858,
+      "sha256": "98c889af3fe00ed4b36c0464831766fa5991c214631ffb6b7acaf5195d02343c"
+    },
+    {
+      "id": "nm",
+      "order": 4,
+      "chapters": 36,
+      "verses": 1288,
+      "sha256": "4721ba882a313b7528e2555bbb6902f66f8b520bc94fab5818cf5ede10dedaf3"
+    },
+    {
+      "id": "dt",
+      "order": 5,
+      "chapters": 34,
+      "verses": 958,
+      "sha256": "d36106e24cd104d8282d3505ef366143ecbea52d3f4227509c87d18bb83c9f9a"
+    },
+    {
+      "id": "js",
+      "order": 6,
+      "chapters": 24,
+      "verses": 654,
+      "sha256": "225dd6415ce89544561388f8d2ca686bbe147442208b07c2f0a8dbfa7174763c"
+    },
+    {
+      "id": "ju",
+      "order": 7,
+      "chapters": 21,
+      "verses": 619,
+      "sha256": "58c9c234ead828dd4e73f0cf682f98191215a04c5efae7bc42f5019fc44c3c9a"
+    },
+    {
+      "id": "rt",
+      "order": 8,
+      "chapters": 4,
+      "verses": 84,
+      "sha256": "adf90761fb731ed06a4937254952eb46df4cf0ba53d28b366b5c7e0c05fa3e93"
+    },
+    {
+      "id": "1sm",
+      "order": 9,
+      "chapters": 31,
+      "verses": 810,
+      "sha256": "192ee7ac6a682bd17d34f92e5106f29bef4883ff97d232f67a311ce7f62c1b6a"
+    },
+    {
+      "id": "2sm",
+      "order": 10,
+      "chapters": 24,
+      "verses": 696,
+      "sha256": "6f23ba94372293628a0ef8987e5ff1e86b58beebb498f525ce82a7568c27a199"
+    },
+    {
+      "id": "1rs",
+      "order": 11,
+      "chapters": 22,
+      "verses": 817,
+      "sha256": "6dbb987dd7d8319b7b3f920619513c01e6249c8818d86ba432a67eab422f4fce"
+    },
+    {
+      "id": "2rs",
+      "order": 12,
+      "chapters": 25,
+      "verses": 718,
+      "sha256": "60122cca6a4719f63adbecb9ca50ff25990fda2b8585392acd9d35d7d69c634c"
+    },
+    {
+      "id": "1pa",
+      "order": 13,
+      "chapters": 29,
+      "verses": 938,
+      "sha256": "f497f6dd62cd2a0c2912f0b308ac522d5e50a1ef1fc7c2b32dbe2663fea60d1d"
+    },
+    {
+      "id": "2pa",
+      "order": 14,
+      "chapters": 36,
+      "verses": 822,
+      "sha256": "1d65b5e7a7c5af4f3d0014b3b73855a291bd2d20a35ecbd9013c593af15ec245"
+    },
+    {
+      "id": "esd",
+      "order": 15,
+      "chapters": 10,
+      "verses": 291,
+      "sha256": "795a84837c99636ed1216e0cd6ad77e700ae3c7d3385cfc8cc5200ab33d4d7fe"
+    },
+    {
+      "id": "ne",
+      "order": 16,
+      "chapters": 13,
+      "verses": 404,
+      "sha256": "11219b93e1834e005ec6a7b2f5ebd5db1f72e1698949f19a300754feb3909ca0"
+    },
+    {
+      "id": "tob",
+      "order": 17,
+      "chapters": 14,
+      "verses": 298,
+      "sha256": "7338d29df8afc5ffba9c5a327a4f342caec779fe7275195e19265e574d85872c"
+    },
+    {
+      "id": "jdi",
+      "order": 18,
+      "chapters": 16,
+      "verses": 345,
+      "sha256": "9bf5a8d7ae153f9342801149d34369c3d99e4be056096216ecfd246613ae84dd"
+    },
+    {
+      "id": "est",
+      "order": 19,
+      "chapters": 16,
+      "verses": 275,
+      "sha256": "7372fedf0340b09f8e0b56aa8492f55fb4917cdcdf6cd32df7bc887d4285b712"
+    },
+    {
+      "id": "job",
+      "order": 20,
+      "chapters": 42,
+      "verses": 1061,
+      "sha256": "2312016fee745e907939725917926b25a666daa751eb791c5a5850df8afe1308"
+    },
+    {
+      "id": "ps",
+      "order": 21,
+      "chapters": 150,
+      "verses": 2528,
+      "sha256": "a6454fb9bfca8a751f749f5f1487edd6a61c4c00a923e0309375a9ef23b2cb84"
+    },
+    {
+      "id": "pv",
+      "order": 22,
+      "chapters": 31,
+      "verses": 829,
+      "sha256": "3003bb6914ea89d9738db077fc83c87b11b61567b67ec34491f423b2d2412582"
+    },
+    {
+      "id": "ees",
+      "order": 23,
+      "chapters": 12,
+      "verses": 222,
+      "sha256": "119325ef1a0c3e37ed9e80b8101120b2b41f112391533289d8057cd1e083b364"
+    },
+    {
+      "id": "cc",
+      "order": 24,
+      "chapters": 8,
+      "verses": 108,
+      "sha256": "c151c6e1e1ffb55a490d9e471b6a1b7696cbc964da0c824ac78829afbeb1aa33"
+    },
+    {
+      "id": "sa",
+      "order": 25,
+      "chapters": 19,
+      "verses": 437,
+      "sha256": "1b74a8a67c7302b7147105c662e7d0f483e4b8c6a2d8ea1c48b371494867ba7a"
+    },
+    {
+      "id": "eus",
+      "order": 26,
+      "chapters": 51,
+      "verses": 1521,
+      "sha256": "28b06b03c9b7fbbf5fcf89fa3fefcc2c5ddab76b23cf2bb6321452391ceb8ad8"
+    },
+    {
+      "id": "is",
+      "order": 27,
+      "chapters": 66,
+      "verses": 1285,
+      "sha256": "7319f1d953e1be7deddc58612bfaf06ef4eeb53c9dd6830d6646489653604031"
+    },
+    {
+      "id": "je",
+      "order": 28,
+      "chapters": 52,
+      "verses": 1358,
+      "sha256": "fd6ce95a1c110e0122ff0794bf38b0953244bef3fb74099d8989078405fd1206"
+    },
+    {
+      "id": "lm",
+      "order": 29,
+      "chapters": 5,
+      "verses": 154,
+      "sha256": "feb56896dd4ec6523af74b5dee4139a48370c2fc92bc8606383f5bdd81d126c2"
+    },
+    {
+      "id": "ba",
+      "order": 30,
+      "chapters": 6,
+      "verses": 213,
+      "sha256": "c0d197c9ed6b7e641bcb1a2a53cf8645cf9acfe1477957810247e5b64a11c47c"
+    },
+    {
+      "id": "ez",
+      "order": 31,
+      "chapters": 48,
+      "verses": 1269,
+      "sha256": "545bf7ac1dbb7eec7ae105945d7fdd4811791a66730e4bd0410a89508daabdc9"
+    },
+    {
+      "id": "dn",
+      "order": 32,
+      "chapters": 14,
+      "verses": 533,
+      "sha256": "bf9392fbfec4e691045abd8aca85a2b637abca57e251f680759b9aea39a102b4"
+    },
+    {
+      "id": "os",
+      "order": 33,
+      "chapters": 14,
+      "verses": 199,
+      "sha256": "dcd00200470693814106d02aa53694b86d6af6bc0b087e70d1d11cedac9e7be0"
+    },
+    {
+      "id": "jl",
+      "order": 34,
+      "chapters": 3,
+      "verses": 73,
+      "sha256": "76e4990c564fcdbaa7c8446b88a51653395dd9c05a3b0b0283bf14a1b0a1da80"
+    },
+    {
+      "id": "am",
+      "order": 35,
+      "chapters": 9,
+      "verses": 147,
+      "sha256": "71ef2579a08554b4b4cb654a2f842a996565b5a1c01b89b743376ce1bf586516"
+    },
+    {
+      "id": "ab",
+      "order": 36,
+      "chapters": 1,
+      "verses": 21,
+      "sha256": "592e9ae4b8ea03b14bb21b235050f14d44fe1bc5c8cd07c1548833209fa78c77"
+    },
+    {
+      "id": "jn",
+      "order": 37,
+      "chapters": 4,
+      "verses": 48,
+      "sha256": "b983a09b6d790858e55a79d5f8ed3cfffeaf0ca84f8feaf5a5ad46f34211cb15"
+    },
+    {
+      "id": "mic",
+      "order": 38,
+      "chapters": 7,
+      "verses": 104,
+      "sha256": "91aed34a535ae002caa0c148bfd7173e43a0adb7163e1c8851b928689d48d124"
+    },
+    {
+      "id": "na",
+      "order": 39,
+      "chapters": 3,
+      "verses": 47,
+      "sha256": "248557eb1158409616fa6b1771f47ee72b854882c9c6581637e7be48fdacb909"
+    },
+    {
+      "id": "hc",
+      "order": 40,
+      "chapters": 3,
+      "verses": 56,
+      "sha256": "7d8fff931c070b42bfdc118864f70566e32539d30cc17c4ddd3d3616eb24ceeb"
+    },
+    {
+      "id": "so",
+      "order": 41,
+      "chapters": 3,
+      "verses": 53,
+      "sha256": "ae98927557035409ebd8e41b1dba8e3e3fbbfc80202b41428a6cb7e9e2421a67"
+    },
+    {
+      "id": "ag",
+      "order": 42,
+      "chapters": 2,
+      "verses": 38,
+      "sha256": "95dfad3791d6fc6b5710cb2c9de4e37c258a5455efb14c7ad8c55537b2b54dd4"
+    },
+    {
+      "id": "zc",
+      "order": 43,
+      "chapters": 14,
+      "verses": 210,
+      "sha256": "2fe50eb29041755f6d0bbbeb0083e170b04021128f36c62c80db0d588ba924eb"
+    },
+    {
+      "id": "ml",
+      "order": 44,
+      "chapters": 4,
+      "verses": 55,
+      "sha256": "f124761e41b62cd09b41fb51b25ab8a5140a84494919d2ce120aee3d6496f5f1"
+    },
+    {
+      "id": "1ma",
+      "order": 45,
+      "chapters": 16,
+      "verses": 929,
+      "sha256": "abbec653b1ce62f0f988e4420e5895963152229e617e61495d26a1672b40255a"
+    },
+    {
+      "id": "2ma",
+      "order": 46,
+      "chapters": 15,
+      "verses": 558,
+      "sha256": "838d6893afb4ce7890e940dd8aa356da9d6f9536e501c746d1b674f5495fce61"
+    },
+    {
+      "id": "mt",
+      "order": 47,
+      "chapters": 28,
+      "verses": 1070,
+      "sha256": "e276314cda0c14ef794ec09e43527067858526732b339c6d053c6c68b888327a"
+    },
+    {
+      "id": "mc",
+      "order": 48,
+      "chapters": 16,
+      "verses": 677,
+      "sha256": "df573043cbd103b62e8c727bd4c47c27ba57b44f13bf294727a322f0db90b64d"
+    },
+    {
+      "id": "lc",
+      "order": 49,
+      "chapters": 24,
+      "verses": 1153,
+      "sha256": "6fd0dff5874acda5daa76f426ad63e0b7ef0cbcf8db79919d86732dfcc486d39"
+    },
+    {
+      "id": "jo",
+      "order": 50,
+      "chapters": 21,
+      "verses": 878,
+      "sha256": "131902dce27d769989d8f839b6a15fb2dce1e9fe54a63de0b5fd02950a965de9"
+    },
+    {
+      "id": "act",
+      "order": 51,
+      "chapters": 28,
+      "verses": 1005,
+      "sha256": "f6ce26c0db6dede1ff898842b8e63684371e7798bebd34d1a8b985a36d266b2a"
+    },
+    {
+      "id": "rm",
+      "order": 52,
+      "chapters": 16,
+      "verses": 434,
+      "sha256": "a4317670bc4455c825904e79ca7e7fde6788703bcd871ceb2a6703ffc8544630"
+    },
+    {
+      "id": "1co",
+      "order": 53,
+      "chapters": 16,
+      "verses": 437,
+      "sha256": "90e5bd80a9b260795bacdc1bbc1a1aac7c74c4ca1b91721b224d6dabb114f054"
+    },
+    {
+      "id": "2co",
+      "order": 54,
+      "chapters": 13,
+      "verses": 255,
+      "sha256": "a8f309c22743fab1e2fb62d979e79868375662a94d07458d90fe0ee33726c0b0"
+    },
+    {
+      "id": "gl",
+      "order": 55,
+      "chapters": 6,
+      "verses": 149,
+      "sha256": "ded23298462d3c2767b1c9f6dbd6042f3dac5272ba613818f7b752b3a43ee143"
+    },
+    {
+      "id": "ef",
+      "order": 56,
+      "chapters": 6,
+      "verses": 155,
+      "sha256": "697c62a237293173c3a45116bd4b13e48418c745b354fd225b62c8f2550d2fc8"
+    },
+    {
+      "id": "fp",
+      "order": 57,
+      "chapters": 4,
+      "verses": 103,
+      "sha256": "6c0721c4174de353a706b78674758f467035350f61ac84a7f477d29c104b3824"
+    },
+    {
+      "id": "cl",
+      "order": 58,
+      "chapters": 4,
+      "verses": 95,
+      "sha256": "0b6759b69d6315e497c76cbc54ad08dbd6438f61e4b02d5a8cc48e12eda5dc3a"
+    },
+    {
+      "id": "1ts",
+      "order": 59,
+      "chapters": 5,
+      "verses": 89,
+      "sha256": "e869e054dced505102cfb18593abf1290cf6f18db9e366115dab34a4b0d34358"
+    },
+    {
+      "id": "2ts",
+      "order": 60,
+      "chapters": 3,
+      "verses": 47,
+      "sha256": "8e75b4ca4d90f3c055cab0632a44d08beee080facd815985664760376de29373"
+    },
+    {
+      "id": "1tm",
+      "order": 61,
+      "chapters": 6,
+      "verses": 113,
+      "sha256": "3c1e732e8a97f0f2fbdf0553515a3520d81caf207e33bc40771ec0661898db29"
+    },
+    {
+      "id": "2tm",
+      "order": 62,
+      "chapters": 4,
+      "verses": 83,
+      "sha256": "b79a653ea4078b4a10972c7de5a40229e952410355b85ca263aa356e1b52bb0a"
+    },
+    {
+      "id": "tt",
+      "order": 63,
+      "chapters": 3,
+      "verses": 46,
+      "sha256": "dd1e5db8439ff5550bb711af387bb31d726fe435d447e0aca869cdcdb09fa9c3"
+    },
+    {
+      "id": "fm",
+      "order": 64,
+      "chapters": 1,
+      "verses": 25,
+      "sha256": "fc5bb8a0d6059e224f5de092167ab5eecc2938f03ec2d1e9820338e8f3c4724d"
+    },
+    {
+      "id": "hb",
+      "order": 65,
+      "chapters": 13,
+      "verses": 303,
+      "sha256": "405e06eb1f7ed825c6fa96da4b29e4cc3a35938c7f99c9f0238dd708e54cb060"
+    },
+    {
+      "id": "tg",
+      "order": 66,
+      "chapters": 5,
+      "verses": 108,
+      "sha256": "4687b68cd629af2901bb0bc5478bbf9be13fcfe059167489684c984945e4152b"
+    },
+    {
+      "id": "1pe",
+      "order": 67,
+      "chapters": 5,
+      "verses": 105,
+      "sha256": "9457d3a52bba35bcd93b1c3583719554df5dd8fa7e18c7bc6f9f2c23cd5d02d8"
+    },
+    {
+      "id": "2pe",
+      "order": 68,
+      "chapters": 3,
+      "verses": 61,
+      "sha256": "389f827c0842a3b8cfba694cf8dc7e86f7f3ac32e9f9eb687bc6656633821fe9"
+    },
+    {
+      "id": "1jo",
+      "order": 69,
+      "chapters": 5,
+      "verses": 105,
+      "sha256": "1d005fd527c297ce87f5ecb6f71672f52e679f220a396b29f8ecdb3f29df7bfc"
+    },
+    {
+      "id": "2jo",
+      "order": 70,
+      "chapters": 1,
+      "verses": 13,
+      "sha256": "0e4b572f11393174681a79f0c8eca2a3f7a4b36947616666a0447281321da784"
+    },
+    {
+      "id": "3jo",
+      "order": 71,
+      "chapters": 1,
+      "verses": 13,
+      "sha256": "349995b5ecb3aebc640cb7c6f9e44cdfbec7a23fb0a6e2ca32f84ef8709e624c"
+    },
+    {
+      "id": "jda",
+      "order": 72,
+      "chapters": 1,
+      "verses": 25,
+      "sha256": "7dc9e36654abc2fbba587ba29925811e15d22eac59b232a902bd320a4854c6e4"
+    },
+    {
+      "id": "ap",
+      "order": 73,
+      "chapters": 22,
+      "verses": 405,
+      "sha256": "58615f6a9b2292d03d68ee3fe7dee9c7a1d108ba515c91e195ede55a7d64013e"
+    }
+  ]
+}
