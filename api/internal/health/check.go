@@ -6,6 +6,10 @@ type Status struct {
 
 type CheckHealth struct{}
 
+func NewCheckHealth() CheckHealth {
+	return CheckHealth{}
+}
+
 func (CheckHealth) Execute() Status {
 	return Status{State: "ok"}
 }
