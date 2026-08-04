@@ -14,6 +14,7 @@ next: null
 
 | Plano | Resultado |
 | :-- | :-- |
+| [[Plans/Archive/01 - Fundação da API Go]] | API Go mínima rodando com `/health` |
 | [[Plans/Archive/02 - Corpus Bíblico Canônico]] | Corpus v1 gerado e validado |
 
 ---

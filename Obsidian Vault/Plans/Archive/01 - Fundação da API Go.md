@@ -1,14 +1,14 @@
 ---
 title: "01 - Fundação da API Go"
 section: Plans
-subsection: Active
+subsection: Archive
 type: implementation-plan
-status: approved
+status: completed
 date: 2026-08-02
 tags: [versum, plans, api, go]
-up: "[[Plans/Active/_Index|Planos Ativos]]"
-prev: "[[Plans/Active/_Index|Planos Ativos]]"
-next: "[[Plans/Archive/_Index|Arquivo]]"
+up: "[[Plans/Archive/_Index|Arquivo de Planos]]"
+prev: "[[Plans/Archive/_Index|Arquivo de Planos]]"
+next: "[[Plans/Archive/02 - Corpus Bíblico Canônico]]"
 related: ["[[Docs/Architecture/Visão Geral]]", "[[Rules/01 - Princípios de Engenharia]]"]
 ---
 
@@ -144,4 +144,4 @@ Essas partes dependem de decisões e contratos que merecem entregas próprias.
 
 ---
 
-◀ [[Plans/Active/_Index|Planos Ativos]] · próxima: [[Plans/Archive/_Index|Arquivo]] ▶
+◀ [[Plans/Archive/_Index|Arquivo de Planos]] · próxima: [[Plans/Archive/02 - Corpus Bíblico Canônico|Corpus Bíblico Canônico]] ▶
