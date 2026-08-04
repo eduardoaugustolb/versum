@@ -14,7 +14,9 @@ next: "[[Plans/Archive/_Index]]"
 
 | Plano | Objetivo | Status |
 | :-- | :-- | :-- |
-| [[Plans/Active/01 - Fundação da API Go]] | API Go mínima, configurável e testada | Aprovado |
+
+> [!note]
+> Nenhum plano ativo no momento.
 
 ---
 

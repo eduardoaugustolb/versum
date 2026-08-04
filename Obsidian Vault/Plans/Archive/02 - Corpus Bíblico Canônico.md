@@ -1,13 +1,13 @@
 ---
 title: "02 - Corpus Bíblico Canônico"
 section: Plans
-subsection: Active
+subsection: Archive
 type: implementation-plan
 status: completed
 date: 2026-08-02
 tags: [versum, plans, bible, go, data]
 up: "[[Plans/Archive/_Index|Arquivo de Planos]]"
-prev: "[[Plans/Archive/_Index|Arquivo de Planos]]"
+prev: "[[Plans/Archive/01 - Fundação da API Go]]"
 next: "[[Plans/Archive/_Index|Arquivo]]"
 related: ["[[PRD]]", "[[Rules/01 - Princípios de Engenharia]]"]
 ---
@@ -65,4 +65,4 @@ removido, reproduzindo a regra usada pelo seed anterior.
 
 ---
 
-◀ [[Plans/Archive/_Index|Arquivo de Planos]] · anterior: [[Plans/Active/01 - Fundação da API Go]] ▶
+◀ [[Plans/Archive/01 - Fundação da API Go|Fundação da API Go]] · [[Plans/Archive/_Index|Arquivo]] ▶
