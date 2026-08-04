@@ -50,8 +50,8 @@ api/
   cmd/api/main.go
   internal/config/config.go
   internal/config/config_test.go
-  internal/health/service.go
-  internal/health/service_test.go
+  internal/health/check.go
+  internal/health/check_test.go
   internal/transport/httpapi/router.go
   internal/transport/httpapi/router_test.go
 ```
@@ -80,19 +80,19 @@ api/
 
 ### 2. Caso de uso de saúde
 
-- Escrever `service_test.go` antes de `service.go` para exigir:
+- Escrever `check_test.go` antes de `check.go` para exigir:
 
   ```go
   type Status struct {
       State string
   }
 
-  type Service struct{}
+  type CheckHealth struct{}
 
-  func (Service) Check() Status
+  func (CheckHealth) Execute() Status
   ```
 
-- Verificar que `Check()` devolve `Status{State: "ok"}`.
+- Verificar que `Execute()` devolve `Status{State: "ok"}`.
 - Implementar a struct e o método sem dependências externas.
 - Executar `go test ./internal/health`.
 - Commit sugerido: `feat(api): add health use case`.
@@ -100,7 +100,7 @@ api/
 ### 3. Adapter HTTP e router
 
 - Escrever `router_test.go` antes de criar os handlers. O teste chama
-  `NewRouter(health.Service{})` com `httptest.NewRecorder()` e exige:
+  `NewRouter(health.CheckHealth{})` com `httptest.NewRecorder()` e exige:
 
   ```text
   GET /health
@@ -109,7 +109,7 @@ api/
   body: {"status":"ok"}
   ```
 
-- Implementar `NewRouter(service health.Service) http.Handler` em
+- Implementar `NewRouter(useCase health.CheckHealth) http.Handler` em
   `internal/transport/httpapi/router.go` usando `chi.NewRouter()`.
 - Codificar a resposta apenas no adapter:
 
@@ -127,7 +127,7 @@ api/
 - Criar `cmd/api/main.go` depois de os testes anteriores estarem verdes.
 - Carregar `config.Load(os.Getenv)`, registrar falha de configuração com `slog`
   e encerrar com código 1.
-- Montar `http.Server{Addr: cfg.Address, Handler: httpapi.NewRouter(health.Service{})}`.
+- Montar `http.Server{Addr: cfg.Address, Handler: httpapi.NewRouter(health.CheckHealth{})}`.
 - Tratar `http.ErrServerClosed` como encerramento esperado e registrar o endereço
   de escuta no início.
 - Executar `go run ./cmd/api` e verificar `curl -i http://localhost:8080/health`.

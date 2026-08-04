@@ -15,6 +15,9 @@ next: "[[Rules/02 - Segurança]]"
 
 - Organizar código por funcionalidade, não por camada global.
 - Definir portas no caso de uso que delas depende.
+- Cada caso de uso resolve uma única operação de negócio: um método público
+  (`Execute`, ou nome equivalente) por struct, sem acumular ações não
+  relacionadas.
 - Manter adapters externos fora do domínio.
 - Tratar PostgreSQL como fonte de verdade e cache como dado descartável.
 - Criar testes unitários para regras e integração para banco, contrato e
