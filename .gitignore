@@ -3,6 +3,9 @@
 .env.*
 !.env.example
 
+# Agent-local instructions
+AGENTS.md
+
 # Operating systems and editors
 .DS_Store
 Thumbs.db
