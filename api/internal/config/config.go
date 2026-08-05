@@ -23,7 +23,7 @@ func Load(lookup func(string) string) (Config, error) {
 
 	databaseURL := lookup(DefaultDatabaseURLKey)
 	if databaseURL == "" {
-		databaseURL = DefaultDatabaseURL
+		return Config{}, ErrDatabaseURLNotSet
 	}
 	cfg.DatabaseURL = databaseURL
 
