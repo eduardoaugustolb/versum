@@ -18,4 +18,15 @@ const (
 		JOIN books b ON b.id = v.book_id
 		WHERE v.book_id = $1 AND v.chapter = $2
 		ORDER BY v.number, v.part`
+
+	DeleteBookVersesQuery = `DELETE FROM verses WHERE book_id = $1`
+
+	UpsertBookQuery = `
+		INSERT INTO books (id, "order", name, testament, chapter_count)
+		VALUES ($1, $2, $3, $4, $5)
+		ON CONFLICT (id) DO UPDATE SET
+			"order" = EXCLUDED."order",
+			name = EXCLUDED.name,
+			testament = EXCLUDED.testament,
+			chapter_count = EXCLUDED.chapter_count`
 )

@@ -21,4 +21,10 @@ type Executor interface {
 	QueryRow(ctx context.Context, sql string, args ...any) Row
 	Query(ctx context.Context, sql string, args ...any) (Rows, error)
 	Exec(ctx context.Context, sql string, args ...any) error
+
+	// CopyFrom bulk-loads rows into table using a native streaming
+	// mechanism (e.g. Postgres COPY) instead of one statement per row.
+	// table and columns are plain identifiers — no driver type leaks into
+	// the signature, same as the rest of this port.
+	CopyFrom(ctx context.Context, table string, columns []string, rows [][]any) (int64, error)
 }

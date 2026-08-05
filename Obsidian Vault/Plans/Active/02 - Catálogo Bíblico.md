@@ -158,10 +158,10 @@ HTTP.
 
 ```text
 api/
-  cmd/seed-catalog/main.go
+  cmd/seed/catalog/main.go                      # ainda sem transação por livro nem catalog_version — ver etapa 8.3
   internal/config/config.go                    # + DatabaseURL
   internal/ports/dbexec/
-    executor.go                                 # porta Executor/Row/Rows, sem tipo de pgx
+    executor.go                                 # porta Executor/Row/Rows/CopyFrom, sem tipo de pgx
   internal/ports/httprouter/
     router.go                                   # porta Router, sem tipo de chi
   internal/adapters/postgres/
@@ -489,28 +489,25 @@ DROP TABLE IF EXISTS catalog_version;
 
 #### 8.2. Escrita no repositório
 
+> [!note] Implementado com uma diferença do desenho original
+> `BookInput`/`VerseInput` nunca foram criados — `CatalogWriter` e
+> `Repository.ReplaceBook` reaproveitam `Book`/`Verse` (os mesmos tipos de
+> leitura), já que os campos batiam 1:1 e não havia motivo pra duplicar. E
+> o loop de `Exec` por versículo foi trocado por `dbexec.Executor.CopyFrom`
+> (streaming via `COPY` do Postgres) antes mesmo de existir carga real pra
+> medir — motivo real: rodar o seed contra um banco externo com N
+> milhares de `Exec` (um por versículo) paga N round-trips de rede; `COPY`
+> paga um. Ver [[Rules/01 - Princípios de Engenharia]] pra `CopyFrom` como
+> parte da porta `dbexec.Executor`.
+
 `internal/catalog/repository.go` ganha um método de escrita, e um caso de
-uso novo define a porta que ele implementa — mesmo padrão de sempre:
+uso novo (`internal/catalog/publish_book.go`) define a porta que ele
+implementa — mesmo padrão de sempre:
 
 ```go
 // internal/catalog/publish_book.go
-type BookInput struct {
-    ID           string
-    Order        int
-    Name         string
-    Testament    BookTestament
-    ChapterCount int
-}
-
-type VerseInput struct {
-    Chapter int
-    Number  int
-    Part    int
-    Text    string
-}
-
 type CatalogWriter interface {
-    ReplaceBook(ctx context.Context, book BookInput, verses []VerseInput) error
+    ReplaceBook(ctx context.Context, book Book, verses []Verse) error
 }
 
 type PublishBook struct {
@@ -521,34 +518,51 @@ func NewPublishBook(writer CatalogWriter) PublishBook {
     return PublishBook{writer: writer}
 }
 
-func (uc PublishBook) Execute(ctx context.Context, book BookInput, verses []VerseInput) error {
+func (uc PublishBook) Execute(ctx context.Context, book Book, verses []Verse) error {
     return uc.writer.ReplaceBook(ctx, book, verses)
 }
 ```
 
-`Repository.ReplaceBook` (em `repository.go`, mesma struct de sempre, novo
-método) roda três `Exec` na ordem certa — apaga versículos antes de
-mexer no livro (evita problema de FK), upsert do livro, reinsere os
-versículos:
+`Repository.ReplaceBook` apaga os versículos do livro antes de mexer nele
+(evita problema de FK), faz upsert do livro, e carrega os versículos novos
+via `CopyFrom` — sem loop, sem `Exec` por linha:
 
 ```go
-func (r *Repository) ReplaceBook(ctx context.Context, book BookInput, verses []VerseInput) error {
+func (r *Repository) ReplaceBook(ctx context.Context, book Book, verses []Verse) error {
     if err := r.db.Exec(ctx, DeleteBookVersesQuery, book.ID); err != nil {
         return err
     }
     if err := r.db.Exec(ctx, UpsertBookQuery, book.ID, book.Order, book.Name, book.Testament, book.ChapterCount); err != nil {
         return err
     }
-    for _, v := range verses {
-        if err := r.db.Exec(ctx, InsertVerseQuery, book.ID, v.Chapter, v.Number, v.Text, v.Part); err != nil {
-            return err
-        }
+
+    rows := make([][]any, len(verses))
+    for i, verse := range verses {
+        rows[i] = []any{book.ID, verse.Chapter, verse.Number, verse.Text, verse.Part}
     }
-    return nil
+
+    _, err := r.db.CopyFrom(ctx, "verses", verseColumns, rows)
+    return err
 }
 ```
 
-Novas queries em `query.go`:
+Isso exigiu estender a porta `dbexec.Executor` com um quarto método, sem
+vazar tipo de `pgx` na assinatura (`table string`, `columns []string`,
+`rows [][]any` — só tipos nossos):
+
+```go
+type Executor interface {
+    QueryRow(ctx context.Context, sql string, args ...any) Row
+    Query(ctx context.Context, sql string, args ...any) (Rows, error)
+    Exec(ctx context.Context, sql string, args ...any) error
+    CopyFrom(ctx context.Context, table string, columns []string, rows [][]any) (int64, error)
+}
+```
+
+`PgxExecutor.CopyFrom` traduz pra `pgx.CopyFrom(ctx, pgx.Identifier{table}, columns, pgx.CopyFromRows(rows))`.
+
+Queries em `query.go` (`InsertVerseQuery` não existe mais — substituída pelo
+`CopyFrom`):
 
 ```sql
 -- DeleteBookVersesQuery
@@ -562,54 +576,52 @@ ON CONFLICT (id) DO UPDATE SET
     name = EXCLUDED.name,
     testament = EXCLUDED.testament,
     chapter_count = EXCLUDED.chapter_count
-
--- InsertVerseQuery
-INSERT INTO verses (book_id, chapter, number, text, part)
-VALUES ($1, $2, $3, $4, $5)
 ```
 
-Um `Exec` por versículo é aceitável aqui — é um comando batch rodado uma vez
-por publicação do corpus, não um caminho de leitura sob carga. Se isso
-algum dia for um gargalo mensurado, dá pra trocar por `pgx.Batch`.
+Medido de verdade: corpus inteiro (73 livros, 35.624 versículos) publicado
+em ~1,1s contra Postgres local, idempotente (rodar duas vezes seguidas
+mantém as mesmas contagens).
 
-#### 8.3. `cmd/seed-catalog/main.go`
+#### 8.3. `cmd/seed/catalog/main.go`
 
-- Lê `bible/corpus/v1/manifest.json` e `bible/corpus/v1/books/*.json`
-  (caminho via flag `-corpus` ou `BIBLE_CORPUS_PATH`, default
-  `bible/corpus/v1`). Decodifica com structs locais que espelham o shape do
-  JSON (`id`, `order`, `name`, `testament`, `chapters[].number`,
-  `chapters[].verses[].number/part/text`) — não depende de `bible/tools`
-  (módulo Go separado), o corpus v1 já está validado e normalizado.
-- Para cada livro do manifesto, em sequência: abre uma `pgx.Tx`, monta
-  `catalog.NewPublishBook(catalog.NewRepository(postgres.NewPgxExecutor(tx)))`,
-  chama `Execute`, comita a transação. Um livro falhar não deve derrubar os
-  demais silenciosamente — logar via `slog` com o `id` do livro e continuar,
-  acumulando quais livros falharam pra reportar no fim; sair com código 1 se
-  algum falhou.
-- Só depois de **todos** os livros publicados com sucesso, grava
-  `catalog_version` numa última transação:
+> [!warning] Implementado parcialmente — diverge do desenho original
+> O comando existe em `cmd/seed/catalog/` (não `cmd/seed-catalog/` como
+> este plano previa) e já lê `bible/corpus/v1/bible.json` (o arquivo
+> consolidado, não os arquivos por livro em `books/*.json`) e chama
+> `PublishBook.Execute` por livro — mas ainda **não** faz três coisas que
+> o design original pedia:
+>
+> 1. **Não abre uma transação por livro.** Hoje `ReplaceBook` roda direto
+>    sobre o pool (`postgres.NewPgxExecutor(pool)`, não `pgx.Tx`) — se o
+>    processo cair entre o `DELETE` e o `CopyFrom`, o livro fica com
+>    versículos parcialmente publicados, sem rollback.
+> 2. **Não grava `catalog_version`** — a tabela existe (migration
+>    `000002`), mas nada escreve nela ainda.
+> 3. **Não acumula falha por livro nem sai com código de erro** — hoje só
+>    imprime o erro (`fmt.Printf`) e segue pro próximo livro; um `go run
+>    ./cmd/seed/catalog` com livro faltando termina com código `0` mesmo
+>    tendo falhado.
+>
+> Falta implementar: abrir `pool.Begin(ctx)` por livro, montar
+> `catalog.NewRepository(postgres.NewPgxExecutor(tx))` com essa transação,
+> `tx.Commit`/`tx.Rollback` conforme o resultado, acumular livros que
+> falharam, sair com `os.Exit(1)` se algum falhou, e só então gravar
+> `catalog_version` (`bibleSha256` do `manifest.json`) numa transação final
+> separada.
 
-  ```sql
-  INSERT INTO catalog_version (id, corpus_sha256)
-  VALUES (1, $1)
-  ON CONFLICT (id) DO UPDATE SET
-      corpus_sha256 = EXCLUDED.corpus_sha256,
-      published_at = now()
-  ```
-
-  Se o processo for interrompido no meio, `catalog_version` não é
-  atualizada — `SELECT corpus_sha256 FROM catalog_version` divergente do
-  `bibleSha256` atual do `manifest.json` é o sinal operacional de "seed
-  incompleto, rodar de novo".
-- Idempotente por natureza: rodar duas vezes seguidas com o mesmo corpus
-  produz o mesmo estado, porque cada livro é substituído por inteiro, não
-  acumulado.
-- Rodar duas vezes seguidas contra o Postgres local e confirmar que
-  `SELECT count(*) FROM books` continua em 73, `SELECT count(*) FROM
-  verses` bate com a soma de `verses` no `manifest.json`, e
-  `SELECT corpus_sha256 FROM catalog_version` bate com `bibleSha256`.
-- Commits sugeridos: `feat(api): add catalog_version migration`,
-  `feat(api): add publish book use case`, `feat(api): add catalog seed command`.
+- Não depende de `bible/tools` (módulo Go separado) — decodifica o JSON já
+  validado do corpus v1 diretamente, sem reimportar as regras de
+  normalização.
+- Idempotente por natureza pro que já está implementado: rodar duas vezes
+  seguidas com o mesmo corpus produz o mesmo estado, porque cada livro é
+  substituído por inteiro, não acumulado — confirmado rodando duas vezes
+  contra o Postgres local (`SELECT count(*) FROM books` = 73, `SELECT
+  count(*) FROM verses` = 35624 nas duas vezes).
+- Falta confirmar `SELECT corpus_sha256 FROM catalog_version` batendo com
+  `bibleSha256` do manifesto, depois que a etapa acima for implementada.
+- Commits sugeridos: `feat(api): write catalog_version after successful seed`,
+  `fix(api): wrap ReplaceBook per book in a transaction`,
+  `fix(api): accumulate seed failures and exit non-zero`.
 
 ### 9. Composition root
 
