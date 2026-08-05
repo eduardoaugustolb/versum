@@ -45,8 +45,9 @@ func TestLoadPort(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			lookup := func(key string) string {
 				return map[string]string{
-					"ENVIRONMENT": string(config.DefaultEnvironment),
-					"PORT":        tc.port,
+					"ENVIRONMENT":                string(config.DefaultEnvironment),
+					"PORT":                       tc.port,
+					config.DefaultDatabaseURLKey: config.DefaultDatabaseURL,
 				}[key]
 			}
 
@@ -100,8 +101,9 @@ func TestLoadEnvironment(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			lookup := func(key string) string {
 				return map[string]string{
-					"ENVIRONMENT": tc.environment,
-					"PORT":        config.DefaultPort,
+					"ENVIRONMENT":                tc.environment,
+					"PORT":                       config.DefaultPort,
+					config.DefaultDatabaseURLKey: config.DefaultDatabaseURL,
 				}[key]
 			}
 
@@ -117,6 +119,52 @@ func TestLoadEnvironment(t *testing.T) {
 			}
 			if cfg.Environment != tc.wantEnvironment {
 				t.Errorf("expected environment %q, got %q", tc.wantEnvironment, cfg.Environment)
+			}
+		})
+	}
+}
+
+func TestLoadDatabaseURL(t *testing.T) {
+	tests := []struct {
+		name    string
+		url     string
+		want    string
+		wantErr error
+	}{
+		{
+			name:    "database URL unset uses default",
+			url:     "",
+			wantErr: config.ErrDatabaseURLNotSet,
+		},
+		{
+			name: "database URL set",
+			url:  config.DefaultDatabaseURL,
+			want: config.DefaultDatabaseURL,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			lookup := func(key string) string {
+				return map[string]string{
+					"ENVIRONMENT":                string(config.DefaultEnvironment),
+					"PORT":                       config.DefaultPort,
+					config.DefaultDatabaseURLKey: tc.url,
+				}[key]
+			}
+
+			cfg, err := config.Load(lookup)
+			if tc.wantErr != nil {
+				if !errors.Is(err, tc.wantErr) {
+					t.Fatalf("expected error %v, got %v", tc.wantErr, err)
+				}
+				return
+			}
+			if err != nil {
+				t.Fatalf("expected no error, got %v", err)
+			}
+			if cfg.DatabaseURL != tc.want {
+				t.Errorf("expected database URL %q, got %q", tc.want, cfg.DatabaseURL)
 			}
 		})
 	}
