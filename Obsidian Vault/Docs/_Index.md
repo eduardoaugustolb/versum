@@ -19,9 +19,9 @@ fica em [[Docs/Decisions/_Index|Decisões]], e o trabalho temporário fica em
 
 | Seção | Conteúdo |
 | :-- | :-- |
-| 📐 [[Docs/Architecture/_Index|Arquitetura]] | Limites, dados e fluxos do sistema |
-| 📱 [[Docs/Apps/_Index|Aplicações]] | Responsabilidade de API, web e mobile |
-| 🎯 [[Docs/Decisions/_Index|Decisões]] | ADRs que explicam escolhas duradouras |
+| 📐 [[Docs/Architecture/_Index\|Arquitetura]] | Limites, dados e fluxos do sistema |
+| 📱 [[Docs/Apps/_Index\|Aplicações]] | Responsabilidade de API, web e mobile |
+| 🎯 [[Docs/Decisions/_Index\|Decisões]] | ADRs que explicam escolhas duradouras |
 
 ---
 

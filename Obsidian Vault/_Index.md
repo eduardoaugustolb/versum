@@ -18,10 +18,10 @@ next: "[[PRD]]"
 
 | Seção | Conteúdo |
 | :-- | :-- |
-| 📄 [[PRD|Produto]] | Problema, público, MVP e métricas |
-| 📚 [[Docs/_Index|Documentação]] | Arquitetura, apps e decisões |
-| 📐 [[Rules/_Index|Regras]] | Princípios de engenharia e padrões |
-| 🗺️ [[Plans/_Index|Planos]] | Trabalho ativo e histórico concluído |
+| 📄 [[PRD\|Produto]] | Problema, público, MVP e métricas |
+| 📚 [[Docs/_Index\|Documentação]] | Arquitetura, apps e decisões |
+| 📐 [[Rules/_Index\|Regras]] | Princípios de engenharia e padrões |
+| 🗺️ [[Plans/_Index\|Planos]] | Trabalho ativo e histórico concluído |
 
 ## Trilha recomendada
 

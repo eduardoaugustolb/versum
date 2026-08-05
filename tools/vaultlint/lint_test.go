@@ -190,6 +190,46 @@ See [[Missing Note]].
 	}
 }
 
+func TestLintTableEscapedAlias(t *testing.T) {
+	root := t.TempDir()
+	writeNote(t, root, "_Index.md", `---
+title: "Home"
+section: Home
+type: index
+status: active
+tags: [versum]
+up: null
+prev: null
+next: null
+---
+
+| Seção | Conteúdo |
+| :-- | :-- |
+| [[Guide\|Guia]] | Um guia |
+`)
+	writeNote(t, root, "Guide.md", `---
+title: "Guide"
+section: Docs
+type: guide
+status: active
+tags: [versum]
+up: "[[_Index]]"
+prev: null
+next: null
+---
+
+# Guide
+`)
+
+	issues, err := Lint(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(issues) != 0 {
+		t.Fatalf("expected no issues, got %v", issues)
+	}
+}
+
 func TestLintSkipsObsidianDir(t *testing.T) {
 	root := t.TempDir()
 	writeNote(t, root, "_Index.md", `---

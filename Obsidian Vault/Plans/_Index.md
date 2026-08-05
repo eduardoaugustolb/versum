@@ -19,8 +19,8 @@ ativo.
 
 | Área | Conteúdo |
 | :-- | :-- |
-| 🚧 [[Plans/Active/_Index|Ativos]] | Entregas que ainda podem mudar |
-| 🗄️ [[Plans/Archive/_Index|Arquivo]] | Entregas concluídas ou substituídas |
+| 🚧 [[Plans/Active/_Index\|Ativos]] | Entregas que ainda podem mudar |
+| 🗄️ [[Plans/Archive/_Index\|Arquivo]] | Entregas concluídas ou substituídas |
 
 ---
 

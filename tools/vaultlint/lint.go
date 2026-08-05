@@ -24,7 +24,9 @@ var trailKeys = []string{"prev", "next"}
 
 var (
 	frontmatterKeyPattern = regexp.MustCompile(`^([A-Za-z]+):\s*(.*)$`)
-	wikilinkPattern       = regexp.MustCompile(`\[\[([^\]|]+)(\|[^\]]*)?\]\]`)
+	// The alias separator may be escaped as \| when the link sits inside a
+	// Markdown table cell, where an unescaped | would split the column.
+	wikilinkPattern = regexp.MustCompile(`\[\[([^\]|\\]+)(\\?\|[^\]]*)?\]\]`)
 )
 
 // rootIndexPath is the only note allowed to have up: null, since it is the
