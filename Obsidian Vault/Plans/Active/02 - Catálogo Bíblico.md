@@ -168,6 +168,8 @@ api/
     migrations/
       000001_create-catalog.up.sql
       000001_create-catalog.down.sql
+      000002_catalog-version.up.sql
+      000002_catalog-version.down.sql
     pgx_executor.go                              # PgxExecutor implementa dbexec.Executor usando pgx
   internal/catalog/
     book.go                                     # tipo Book
@@ -176,8 +178,10 @@ api/
     list_books_test.go
     get_chapter.go                              # caso de uso + porta ChapterRepository
     get_chapter_test.go
-    query.go                                    # texto das queries SQL
-    repository.go                               # Repository — depende de dbexec.Executor
+    publish_book.go                             # caso de uso + porta CatalogWriter (seed)
+    publish_book_test.go
+    query.go                                    # texto das queries SQL, incluindo as de escrita
+    repository.go                               # Repository — depende de dbexec.Executor, leitura + ReplaceBook
     repository_test.go                          # integração, pula sem DATABASE_URL
   internal/transport/httpapi/
     router.go                                   # NewRouter(deps Dependencies) monta chi.NewRouter() + registradores; único arquivo que importa chi
@@ -451,27 +455,161 @@ domínio novo soma um campo em `Dependencies` e uma chamada a mais em
 
 ### 8. Seed do corpus
 
-- `cmd/seed-catalog/main.go`: lê `bible/corpus/v1/books/*.json` (caminho via
-  flag ou `BIBLE_CORPUS_PATH`, default `bible/corpus/v1`), decodifica cada
-  livro e faz upsert (`INSERT ... ON CONFLICT DO UPDATE`) em `books` e
-  `verses` dentro de uma transação por livro — abre a `pgx.Tx` e monta
-  `catalog.NewRepository(postgres.NewPgxExecutor(tx))` por livro,
-  reaproveitando o mesmo repositório da leitura (`pgxConn` aceita tanto
-  pool quanto transação).
-- Upsert por livro não é suficiente pra publicar uma projeção fiel: se um
-  versículo for removido ou renumerado numa revisão do corpus, o upsert não
-  o remove do banco — ele fica órfão. Antes de publicar, o seed deve
-  truncar `verses`/`books` do livro dentro da mesma transação e reinserir
-  do zero, em vez de só fazer upsert. Registrar `bibleSha256` do
-  `manifest.json` numa tabela `catalog_version` (nova migration) pra
-  auditoria de qual versão do corpus está publicada.
-- Não depende de `bible/tools` (módulo Go separado) — decodifica o JSON já
-  validado do corpus v1 diretamente, sem reimportar as regras de
-  normalização.
+O seed não é upsert por linha — é **substituir o livro inteiro dentro de uma
+transação**. Upsert por si só não publica uma projeção fiel: se uma revisão
+do corpus remover ou renumerar um versículo, o upsert não apaga a linha
+antiga, ela fica órfã no banco pra sempre. Substituir o livro inteiro
+(apagar tudo daquele `book_id` e reinserir do zero, na mesma transação)
+garante que o banco sempre reflete exatamente o corpus publicado, livro por
+livro.
+
+#### 8.1. Migration da versão publicada
+
+Nova migration (`migrate create ... -seq catalog_version`), registrando qual
+hash do `manifest.json` está publicado — sem isso não dá pra auditar se o
+banco está desatualizado em relação ao corpus:
+
+```sql
+-- 000002_catalog-version.up.sql
+CREATE TABLE catalog_version (
+    id            SMALLINT PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+    corpus_sha256 TEXT NOT NULL CHECK (length(trim(corpus_sha256)) > 0),
+    published_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+```
+
+`CHECK (id = 1)` força linha única — a tabela guarda só a versão *atual*,
+não histórico. `corpus_sha256` vem de `bibleSha256` em
+`bible/corpus/v1/manifest.json`.
+
+```sql
+-- 000002_catalog-version.down.sql
+DROP TABLE IF EXISTS catalog_version;
+```
+
+#### 8.2. Escrita no repositório
+
+`internal/catalog/repository.go` ganha um método de escrita, e um caso de
+uso novo define a porta que ele implementa — mesmo padrão de sempre:
+
+```go
+// internal/catalog/publish_book.go
+type BookInput struct {
+    ID           string
+    Order        int
+    Name         string
+    Testament    BookTestament
+    ChapterCount int
+}
+
+type VerseInput struct {
+    Chapter int
+    Number  int
+    Part    int
+    Text    string
+}
+
+type CatalogWriter interface {
+    ReplaceBook(ctx context.Context, book BookInput, verses []VerseInput) error
+}
+
+type PublishBook struct {
+    writer CatalogWriter
+}
+
+func NewPublishBook(writer CatalogWriter) PublishBook {
+    return PublishBook{writer: writer}
+}
+
+func (uc PublishBook) Execute(ctx context.Context, book BookInput, verses []VerseInput) error {
+    return uc.writer.ReplaceBook(ctx, book, verses)
+}
+```
+
+`Repository.ReplaceBook` (em `repository.go`, mesma struct de sempre, novo
+método) roda três `Exec` na ordem certa — apaga versículos antes de
+mexer no livro (evita problema de FK), upsert do livro, reinsere os
+versículos:
+
+```go
+func (r *Repository) ReplaceBook(ctx context.Context, book BookInput, verses []VerseInput) error {
+    if err := r.db.Exec(ctx, DeleteBookVersesQuery, book.ID); err != nil {
+        return err
+    }
+    if err := r.db.Exec(ctx, UpsertBookQuery, book.ID, book.Order, book.Name, book.Testament, book.ChapterCount); err != nil {
+        return err
+    }
+    for _, v := range verses {
+        if err := r.db.Exec(ctx, InsertVerseQuery, book.ID, v.Chapter, v.Number, v.Text, v.Part); err != nil {
+            return err
+        }
+    }
+    return nil
+}
+```
+
+Novas queries em `query.go`:
+
+```sql
+-- DeleteBookVersesQuery
+DELETE FROM verses WHERE book_id = $1
+
+-- UpsertBookQuery
+INSERT INTO books (id, "order", name, testament, chapter_count)
+VALUES ($1, $2, $3, $4, $5)
+ON CONFLICT (id) DO UPDATE SET
+    "order" = EXCLUDED."order",
+    name = EXCLUDED.name,
+    testament = EXCLUDED.testament,
+    chapter_count = EXCLUDED.chapter_count
+
+-- InsertVerseQuery
+INSERT INTO verses (book_id, chapter, number, text, part)
+VALUES ($1, $2, $3, $4, $5)
+```
+
+Um `Exec` por versículo é aceitável aqui — é um comando batch rodado uma vez
+por publicação do corpus, não um caminho de leitura sob carga. Se isso
+algum dia for um gargalo mensurado, dá pra trocar por `pgx.Batch`.
+
+#### 8.3. `cmd/seed-catalog/main.go`
+
+- Lê `bible/corpus/v1/manifest.json` e `bible/corpus/v1/books/*.json`
+  (caminho via flag `-corpus` ou `BIBLE_CORPUS_PATH`, default
+  `bible/corpus/v1`). Decodifica com structs locais que espelham o shape do
+  JSON (`id`, `order`, `name`, `testament`, `chapters[].number`,
+  `chapters[].verses[].number/part/text`) — não depende de `bible/tools`
+  (módulo Go separado), o corpus v1 já está validado e normalizado.
+- Para cada livro do manifesto, em sequência: abre uma `pgx.Tx`, monta
+  `catalog.NewPublishBook(catalog.NewRepository(postgres.NewPgxExecutor(tx)))`,
+  chama `Execute`, comita a transação. Um livro falhar não deve derrubar os
+  demais silenciosamente — logar via `slog` com o `id` do livro e continuar,
+  acumulando quais livros falharam pra reportar no fim; sair com código 1 se
+  algum falhou.
+- Só depois de **todos** os livros publicados com sucesso, grava
+  `catalog_version` numa última transação:
+
+  ```sql
+  INSERT INTO catalog_version (id, corpus_sha256)
+  VALUES (1, $1)
+  ON CONFLICT (id) DO UPDATE SET
+      corpus_sha256 = EXCLUDED.corpus_sha256,
+      published_at = now()
+  ```
+
+  Se o processo for interrompido no meio, `catalog_version` não é
+  atualizada — `SELECT corpus_sha256 FROM catalog_version` divergente do
+  `bibleSha256` atual do `manifest.json` é o sinal operacional de "seed
+  incompleto, rodar de novo".
+- Idempotente por natureza: rodar duas vezes seguidas com o mesmo corpus
+  produz o mesmo estado, porque cada livro é substituído por inteiro, não
+  acumulado.
 - Rodar duas vezes seguidas contra o Postgres local e confirmar que
-  `SELECT count(*) FROM books` continua em 73 e `SELECT count(*) FROM
-  verses` bate com `manifest.json`.
-- Commit sugerido: `feat(api): add catalog seed command`.
+  `SELECT count(*) FROM books` continua em 73, `SELECT count(*) FROM
+  verses` bate com a soma de `verses` no `manifest.json`, e
+  `SELECT corpus_sha256 FROM catalog_version` bate com `bibleSha256`.
+- Commits sugeridos: `feat(api): add catalog_version migration`,
+  `feat(api): add publish book use case`, `feat(api): add catalog seed command`.
 
 ### 9. Composition root
 
