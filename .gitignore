@@ -35,5 +35,6 @@ coverage/
 .worktrees/
 
 # Personal Obsidian state
+Obsidian Vault/.obsidian/
 Obsidian Vault/.obsidian/workspace.json
 Obsidian Vault/.obsidian/graph.json
