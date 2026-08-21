@@ -1,6 +1,10 @@
 package main
 
-type Corpus struct {
+type CorpusManifest struct {
+	BibleSha256 string `json:"bibleSha256"`
+}
+
+type CorpusBible struct {
 	SchemaVersion int    `json:"schemaVersion"`
 	Books         []Book `json:"books"`
 }

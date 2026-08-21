@@ -29,4 +29,12 @@ const (
 			name = EXCLUDED.name,
 			testament = EXCLUDED.testament,
 			chapter_count = EXCLUDED.chapter_count`
+
+	UpsertCatalogVersionQuery = `
+		INSERT INTO catalog_version (id, corpus_sha256, published_at)
+		VALUES (1, $1, now())
+		ON CONFLICT (id) DO UPDATE SET
+			corpus_sha256 = EXCLUDED.corpus_sha256,
+			published_at = EXCLUDED.published_at
+	`
 )
