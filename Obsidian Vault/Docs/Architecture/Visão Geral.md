@@ -55,10 +55,13 @@ locks curtos. S3 guarda imagens de compartilhamento.
 api/
   cmd/api/                    composition root da API HTTP
   cmd/worker/                 composition root do worker assíncrono
-  internal/<domínio>/         casos de uso, portas e o repositório SQL do domínio
-    <ação>.go                 um caso de uso por arquivo (ex.: check.go)
-    <ação>_test.go
-    repository.go             repositório SQL — depende de dbexec.Executor, não de pgx
+  internal/<domínio>/         módulo vertical do domínio
+    domain/                    entidades e invariantes, sem HTTP, SQL ou context.Context
+    application/               casos de uso e portas definidas pelos consumidores
+      commands/                operações que alteram estado
+      queries/                 operações de leitura
+      ports/                   interfaces da aplicação
+    postgres/                  repositórios e queries específicos do PostgreSQL
   internal/ports/dbexec/         porta de execução SQL, neutra entre drivers (sem tipo de pgx)
   internal/ports/httprouter/     porta de registro de rota, neutra entre roteadores (sem tipo de chi)
   internal/adapters/<tecnologia>/   driver concreto que implementa a porta (postgres, redis, s3, email, fcm, discord)
@@ -68,12 +71,20 @@ api/
 Todo driver ou framework de terceiro que o código realmente aciona — banco,
 roteador HTTP, fila, o que for — fica atrás de uma porta pequena e neutra:
 sem nenhum tipo do driver na própria assinatura da porta, só no adapter que
-a implementa. `catalog.Repository` depende de `dbexec.Executor`
-(implementado por `postgres.PgxExecutor`, que conhece `pgx`);
+a implementa. `catalog/postgres.Repository` depende de `dbexec.Executor`
+(implementado por `postgres.PgxExecutor`, que conhece `pgx`). Os repositórios
+retornam entidades de `catalog/domain`; a tradução para respostas HTTP fica em
+`transport/httpapi`. Para operações de escrita, `PublishBook` usa uma porta
+de transação que fornece um writer vinculado à transação;
 `catalog_routes.go`/`health_routes.go` dependem de `httprouter.Router`
 (satisfeita diretamente por `chi.Router`, sem adapter — só `router.go`
 conhece `chi`). Casos de uso não conhecem SQL nem `pgx`; o handler HTTP não
 conhece regra de negócio nem `chi`.
+
+No catálogo, leituras e escritas também são separadas em
+`application/queries` e `application/commands`. Isso é uma aplicação
+pragmática de CQRS: queries não alteram estado; commands validam e alteram
+estado. Não implica dois bancos nem dois serviços.
 
 O critério não é "vamos trocar essa tecnologia algum dia" — normalmente a
 resposta é não, e o texto das queries continua específico de Postgres de

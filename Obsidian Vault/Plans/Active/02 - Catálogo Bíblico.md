@@ -25,10 +25,23 @@ de consulta e o corpus versionado como fonte de carga.
 
 ## Arquitetura
 
-O domínio `catalog` expõe dois casos de uso pequenos: `ListBooks` e
-`GetChapter`. Cada um define sua própria porta de repositório. Um único
-`Repository`, dentro do próprio pacote `catalog`, implementa as duas portas,
-consultando tabelas `books` e `verses`.
+O módulo `catalog` expõe duas queries (`ListBooks` e `GetChapter`) e um
+command (`PublishBook`). As entidades vivem em `catalog/domain`, as portas
+definidas pela aplicação em `catalog/application/ports`, os casos de uso em
+`application/queries` e `application/commands`, e o adapter SQL em
+`catalog/postgres`.
+
+Os repositórios retornam entidades de domínio, não DTOs HTTP. A camada de
+transporte converte essas entidades para respostas JSON. `PublishBook` recebe
+um input externo, constrói e valida `Book` e `Verse`, e executa a escrita por
+uma porta transacional que fornece um writer vinculado à transação.
+
+### Estado atual
+
+As etapas de estrutura, API HTTP, repositório PostgreSQL e transação por livro
+já estão implementadas. Permanecem fora desta reorganização a gravação de
+`catalog_version`, a acumulação de falhas do seed e a cobertura de CI descritas
+nas etapas abaixo.
 
 > [!note] Histórico da decisão
 > Essa camada foi implementada, removida e reimplementada nesta mesma
@@ -37,7 +50,7 @@ consultando tabelas `books` e `verses`.
 > avaliação arquitetural externa (`AVALIACAO_ARQUITETURAL.md`, 5 de agosto
 > de 2026) apontou que essa portabilidade era ilusória — o texto das
 > queries (`$1`, `ON CONFLICT`, `"order"`) já é específico de Postgres — e
-> a camada foi removida, com `catalog.Repository` passando a depender de
+> a camada foi removida, com o repositório do catálogo passando a depender de
 > `pgx` diretamente via uma interface privada (`dbtx`, com tipos do `pgx`
 > na própria assinatura). Isso reabriu a discussão: o motivo certo pra
 > isolar o driver nunca foi portabilidade de banco, é a segunda cláusula do
@@ -85,7 +98,7 @@ func NewPgxExecutor(conn pgxConn) PgxExecutor { return PgxExecutor{conn: conn} }
 ```
 
 ```go
-// internal/catalog/repository.go
+// internal/catalog/postgres/repository.go
 type Repository struct {
     db dbexec.Executor
 }
@@ -158,7 +171,7 @@ HTTP.
 
 ```text
 api/
-  cmd/seed/catalog/main.go                      # ainda sem transação por livro nem catalog_version — ver etapa 8.3
+  cmd/seed/catalog/main.go                      # seed; usa PublishBook com transação por livro
   internal/config/config.go                    # + DatabaseURL
   internal/ports/dbexec/
     executor.go                                 # porta Executor/Row/Rows/CopyFrom, sem tipo de pgx
@@ -172,17 +185,17 @@ api/
       000002_catalog-version.down.sql
     pgx_executor.go                              # PgxExecutor implementa dbexec.Executor usando pgx
   internal/catalog/
-    book.go                                     # tipo Book
-    chapter.go                                  # tipos Chapter, Verse
-    list_books.go                               # caso de uso + porta BookRepository
-    list_books_test.go
-    get_chapter.go                              # caso de uso + porta ChapterRepository
-    get_chapter_test.go
-    publish_book.go                             # caso de uso + porta CatalogWriter (seed)
-    publish_book_test.go
-    query.go                                    # texto das queries SQL, incluindo as de escrita
-    repository.go                               # Repository — depende de dbexec.Executor, leitura + ReplaceBook
-    repository_test.go                          # integração, pula sem DATABASE_URL
+    domain/                                     # Book, Chapter, Verse e invariantes
+    application/
+      commands/publish_book.go                  # command + validação e transação
+      queries/list_books.go                     # query de leitura
+      queries/get_chapter.go                    # query de leitura
+      ports/readers.go                          # portas de leitura, escrita e transação
+    postgres/
+      queries.go                                # SQL específico do PostgreSQL
+      repository.go                             # repositório que retorna entidades de domínio
+      transaction.go                            # transaction manager do seed
+  integration/catalog/repository_test.go        # integração, pula sem DATABASE_URL
   internal/transport/httpapi/
     router.go                                   # NewRouter(deps Dependencies) monta chi.NewRouter() + registradores; único arquivo que importa chi
     dependencies.go                             # Dependencies, CatalogDependencies — agrupadas por domínio
@@ -351,7 +364,7 @@ infra/
   `dbexec.Executor`; `pgxConn` (privada) é satisfeita tanto por
   `*pgxpool.Pool` quanto por `pgx.Tx`, então o mesmo `PgxExecutor` serve pro
   pool (leitura) e pra transação (seed, etapa 8).
-- `internal/catalog/query.go`: texto das duas queries.
+- `internal/catalog/postgres/queries.go`: texto das queries SQL.
 
   ```sql
   -- ListBooksQuery
@@ -366,9 +379,10 @@ infra/
   ORDER BY v.number, v.part
   ```
 
-- `internal/catalog/repository.go`: `Repository` depende só de
-  `dbexec.Executor` (não de `pgx`) e implementa `BookRepository` e
-  `ChapterRepository` — uma struct, dois métodos. Cada método:
+- `internal/catalog/postgres/repository.go`: `Repository` depende só de
+  `dbexec.Executor` (não de `pgx`) e implementa as portas de
+  `application/ports` — uma struct, três responsabilidades de persistência.
+  Os métodos retornam entidades de `catalog/domain`. Cada método:
   - faz `defer rows.Close()` logo após um `Query` bem-sucedido — não
     depender só do fechamento automático do `pgx` ao esgotar `Next()`,
     porque um retorno antecipado por erro de `Scan` deixaria a conexão
@@ -377,11 +391,11 @@ infra/
   - checa `rows.Err()` **depois** do loop `for rows.Next()`, nunca antes —
     checar antes do loop não verifica nada de útil, porque nenhuma linha
     foi lida ainda nesse ponto.
-- `internal/catalog/repository_test.go`: teste de integração contra o
+- `api/integration/catalog/repository_test.go`: teste de integração contra o
   Postgres local (`t.Skip` se `DATABASE_URL` não estiver setado), cobrindo
   `ListBooks`, `FindChapter` (incluindo `BookName` preenchido, ordem de
   partes repetidas e capítulo inexistente). Constrói o repositório com
-  `catalog.NewRepository(postgres.NewPgxExecutor(pool))` — é o teste que
+  `catalogpostgres.NewRepository(postgres.NewPgxExecutor(pool))` — é o teste que
   teria pego o bug de `BookName` se existisse desde o início; testes com
   stub não pegam, porque o stub já devolve o campo certo por construção.
 - Commit sugerido: `feat(api): add catalog repository`.
@@ -490,9 +504,9 @@ DROP TABLE IF EXISTS catalog_version;
 #### 8.2. Escrita no repositório
 
 > [!note] Implementado com uma diferença do desenho original
-> `BookInput`/`VerseInput` nunca foram criados — `CatalogWriter` e
-> `Repository.ReplaceBook` reaproveitam `Book`/`Verse` (os mesmos tipos de
-> leitura), já que os campos batiam 1:1 e não havia motivo pra duplicar. E
+> `BookInput` e `VerseInput` existem no command como contrato de entrada; o
+> repositório e a porta continuam recebendo `domain.Book`/`domain.Verse`, não
+> DTOs HTTP. E
 > o loop de `Exec` por versículo foi trocado por `dbexec.Executor.CopyFrom`
 > (streaming via `COPY` do Postgres) antes mesmo de existir carga real pra
 > medir — motivo real: rodar o seed contra um banco externo com N
@@ -500,26 +514,22 @@ DROP TABLE IF EXISTS catalog_version;
 > paga um. Ver [[Rules/01 - Princípios de Engenharia]] pra `CopyFrom` como
 > parte da porta `dbexec.Executor`.
 
-`internal/catalog/repository.go` ganha um método de escrita, e um caso de
-uso novo (`internal/catalog/publish_book.go`) define a porta que ele
+`internal/catalog/postgres/repository.go` ganha um método de escrita, e o
+command (`internal/catalog/application/commands/publish_book.go`) define as
+portas que ele
 implementa — mesmo padrão de sempre:
 
 ```go
-// internal/catalog/publish_book.go
-type CatalogWriter interface {
-    ReplaceBook(ctx context.Context, book Book, verses []Verse) error
-}
+// internal/catalog/application/commands/publish_book.go
+type PublishBook struct { transactions ports.TransactionManager }
 
-type PublishBook struct {
-    writer CatalogWriter
-}
-
-func NewPublishBook(writer CatalogWriter) PublishBook {
-    return PublishBook{writer: writer}
-}
-
-func (uc PublishBook) Execute(ctx context.Context, book Book, verses []Verse) error {
-    return uc.writer.ReplaceBook(ctx, book, verses)
+func (uc PublishBook) Execute(ctx context.Context, input PublishBookInput) error {
+    book, err := domain.NewBook(/* dados do input */)
+    if err != nil { return err }
+    // Constrói os Verse, valida e chama ReplaceBook dentro da transação.
+    return uc.transactions.WithinTransaction(ctx, func(ctx context.Context, writer ports.CatalogWriter) error {
+        return writer.ReplaceBook(ctx, book, verses)
+    })
 }
 ```
 
@@ -584,30 +594,16 @@ mantém as mesmas contagens).
 
 #### 8.3. `cmd/seed/catalog/main.go`
 
-> [!warning] Implementado parcialmente — diverge do desenho original
-> O comando existe em `cmd/seed/catalog/` (não `cmd/seed-catalog/` como
-> este plano previa) e já lê `bible/corpus/v1/bible.json` (o arquivo
-> consolidado, não os arquivos por livro em `books/*.json`) e chama
-> `PublishBook.Execute` por livro — mas ainda **não** faz três coisas que
-> o design original pedia:
+> [!note] Estado após a reorganização
+> O comando lê `bible/corpus/v1/bible.json` e chama `PublishBook.Execute` por
+> livro. O command cria e valida o domínio, e o
+> `catalog/postgres.TransactionManager` abre, confirma ou reverte uma
+> transação por livro. A escrita usa `CopyFrom`, portanto um livro não fica
+> parcialmente publicado se a operação falhar.
 >
-> 1. **Não abre uma transação por livro.** Hoje `ReplaceBook` roda direto
->    sobre o pool (`postgres.NewPgxExecutor(pool)`, não `pgx.Tx`) — se o
->    processo cair entre o `DELETE` e o `CopyFrom`, o livro fica com
->    versículos parcialmente publicados, sem rollback.
-> 2. **Não grava `catalog_version`** — a tabela existe (migration
->    `000002`), mas nada escreve nela ainda.
-> 3. **Não acumula falha por livro nem sai com código de erro** — hoje só
->    imprime o erro (`fmt.Printf`) e segue pro próximo livro; um `go run
->    ./cmd/seed/catalog` com livro faltando termina com código `0` mesmo
->    tendo falhado.
->
-> Falta implementar: abrir `pool.Begin(ctx)` por livro, montar
-> `catalog.NewRepository(postgres.NewPgxExecutor(tx))` com essa transação,
-> `tx.Commit`/`tx.Rollback` conforme o resultado, acumular livros que
-> falharam, sair com `os.Exit(1)` se algum falhou, e só então gravar
-> `catalog_version` (`bibleSha256` do `manifest.json`) numa transação final
-> separada.
+> Ainda faltam duas melhorias previstas neste plano: gravar
+> `catalog_version` ao final de um seed completo e acumular falhas por livro
+> para terminar com código diferente de zero.
 
 - Não depende de `bible/tools` (módulo Go separado) — decodifica o JSON já
   validado do corpus v1 diretamente, sem reimportar as regras de
@@ -630,8 +626,8 @@ mantém as mesmas contagens).
   - chamar `pool.Ping(ctx)` com timeout antes de aceitar tráfego — falha de
     conexão vira `slog.Error` + `os.Exit(1)`, não erro silencioso na
     primeira requisição;
-  - montar `catalog.NewRepository(postgres.NewPgxExecutor(pool))`,
-    `catalog.NewListBooks(repo)`, `catalog.NewGetChapter(repo)` e
+  - montar `catalog/postgres.Repository` com `postgres.NewPgxExecutor(pool)`,
+    `queries.NewListBooks(repo)`, `queries.NewGetChapter(repo)` e
     `httpapi.NewRouter(httpapi.Dependencies{...})`;
   - `cmd/api` não aplica migration — assume que o schema já foi migrado via
     CLI (etapa 3);

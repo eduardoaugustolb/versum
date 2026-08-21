@@ -27,7 +27,7 @@ next: "[[Rules/02 - Segurança]]"
   neutra — sem nenhum tipo dele na própria assinatura da porta, não só um
   wrapper fino. Isso vale para banco (`dbexec.Executor`, sem tipo de `pgx`)
   e para o roteador HTTP (`httprouter.Router`, sem tipo de `chi`) do mesmo
-  jeito: quem usa a porta (`catalog.Repository`, `catalog_routes.go`) nunca
+  jeito: quem usa a porta (`catalog/application`, `catalog_routes.go`) nunca
   importa o pacote do driver; só o adapter concreto
   (`postgres.PgxExecutor`, `router.go`) importa. Trocar de tecnologia vira
   mudar o que é injetado na composição, não reescrever quem usa a porta —
@@ -135,9 +135,14 @@ constrói o `chi.NewRouter()` concreto e é o único lugar que importa `chi` —
 só `net/http` puro (`r.PathValue(...)` em vez de `chi.URLParam`, disponível
 desde Go 1.22 e populado pelo `chi` automaticamente).
 
+No catálogo, leituras e escritas também são separadas em `application/queries`
+e `application/commands`. Isso é uma aplicação pragmática de CQRS: queries não
+alteram estado; commands validam e alteram estado. Não implica dois bancos nem
+dois serviços.
+
 Nos dois casos, a pergunta que decide se vale a porta não é "vamos trocar
 essa tecnologia algum dia" — normalmente a resposta é não. É "esse código
-(`catalog.Repository`, `catalog_routes.go`) deveria conhecer só a regra que
+(`catalog/application`, `catalog_routes.go`) deveria conhecer só a regra que
 resolve, ou também os detalhes de uma biblioteca de terceiro que não tem
 nada a ver com o que ele decide?". Quando a porta cabe em poucos métodos e o
 adapter é fino, o isolamento se paga mesmo sem uma segunda implementação
