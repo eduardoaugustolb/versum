@@ -14,7 +14,7 @@ next: "[[Plans/Archive/_Index]]"
 
 | Plano | Objetivo | Status |
 | :-- | :-- | :-- |
-| [[Plans/Active/02 - Catálogo Bíblico]] | Expor o corpus bíblico pela API, sem exigir conta | Aprovado |
+| [[Plans/Active/02 - Catálogo Bíblico]] | Expor o corpus bíblico pela API, sem exigir conta | Concluído |
 
 ---
 

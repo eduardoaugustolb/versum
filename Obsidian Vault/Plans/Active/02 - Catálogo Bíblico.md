@@ -3,7 +3,7 @@ title: "02 - Catálogo Bíblico"
 section: Plans
 subsection: Active
 type: implementation-plan
-status: approved
+status: completed
 date: 2026-08-04
 tags: [versum, plans, api, go, catalog, postgres]
 up: "[[Plans/Active/_Index|Planos Ativos]]"
@@ -38,10 +38,9 @@ uma porta transacional que fornece um writer vinculado à transação.
 
 ### Estado atual
 
-As etapas de estrutura, API HTTP, repositório PostgreSQL e transação por livro
-já estão implementadas. Permanecem fora desta reorganização a gravação de
-`catalog_version`, a acumulação de falhas do seed e a cobertura de CI descritas
-nas etapas abaixo.
+As etapas de estrutura, API HTTP, repositório PostgreSQL, transação por livro,
+gravação de `catalog_version`, tratamento de falhas do seed e cobertura de CI
+estão implementadas.
 
 > [!note] Histórico da decisão
 > Essa camada foi implementada, removida e reimplementada nesta mesma
@@ -594,16 +593,16 @@ mantém as mesmas contagens).
 
 #### 8.3. `cmd/seed/catalog/main.go`
 
-> [!note] Estado após a reorganização
+> [!note] Estado implementado
 > O comando lê `bible/corpus/v1/bible.json` e chama `PublishBook.Execute` por
 > livro. O command cria e valida o domínio, e o
 > `catalog/postgres.TransactionManager` abre, confirma ou reverte uma
 > transação por livro. A escrita usa `CopyFrom`, portanto um livro não fica
 > parcialmente publicado se a operação falhar.
 >
-> Ainda faltam duas melhorias previstas neste plano: gravar
-> `catalog_version` ao final de um seed completo e acumular falhas por livro
-> para terminar com código diferente de zero.
+> O seed grava `catalog_version` somente depois que todos os livros são
+> publicados. Qualquer falha interrompe o processo e produz status de saída
+> diferente de zero; a versão não é registrada nesse caso.
 
 - Não depende de `bible/tools` (módulo Go separado) — decodifica o JSON já
   validado do corpus v1 diretamente, sem reimportar as regras de
@@ -613,11 +612,9 @@ mantém as mesmas contagens).
   substituído por inteiro, não acumulado — confirmado rodando duas vezes
   contra o Postgres local (`SELECT count(*) FROM books` = 73, `SELECT
   count(*) FROM verses` = 35624 nas duas vezes).
-- Falta confirmar `SELECT corpus_sha256 FROM catalog_version` batendo com
-  `bibleSha256` do manifesto, depois que a etapa acima for implementada.
-- Commits sugeridos: `feat(api): write catalog_version after successful seed`,
-  `fix(api): wrap ReplaceBook per book in a transaction`,
-  `fix(api): accumulate seed failures and exit non-zero`.
+- `SELECT corpus_sha256 FROM catalog_version` recebe o `bibleSha256` do
+  manifesto após um seed completo; a operação usa upsert para suportar novas
+  versões do corpus.
 
 ### 9. Composition root
 
@@ -650,10 +647,8 @@ mantém as mesmas contagens).
   `postgres:16` como serviço do GitHub Actions, aplica as migrations via
   CLI `migrate` e roda `go test ./...` de novo com `DATABASE_URL` setado —
   cobrindo `repository_test.go`, que só roda com banco disponível.
-- Sem isso, uma incompatibilidade como a do `cmd/api`/`httpapi.Dependencies`
-  fica invisível até alguém rodar localmente — hooks de pre-commit locais
-  não substituem CI remoto num PR.
-- Commit sugerido: `ci(api): add build, vet, test and integration workflow`.
+- O workflow cobre build, vet, testes unitários, race detector e integração
+  contra PostgreSQL.
 
 ## Fora deste plano
 
