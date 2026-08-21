@@ -35,13 +35,21 @@ implementar.
 
 ## Commits e pull requests
 
-Use mensagens no formato Conventional Commits:
+Use mensagens no formato Conventional Commits, escritas em português (pt-BR).
+O tipo do commit segue a convenção em inglês (`feat`, `fix`, `docs`, `chore`,
+`refactor`, `test`, `perf`, `style`, `build`, `ci`); a descrição e o corpo da
+mensagem ficam em português:
 
 ```text
-feat(api): add reading event sync
-fix(mobile): retry pending outbox events
-docs: clarify magic link flow
+feat(api): adiciona sincronização de eventos de leitura
+fix(mobile): corrige retry de eventos pendentes na outbox
+docs: esclarece o fluxo de magic link
 ```
+
+Nunca coloque um agente de IA como co-author ou author de um commit, pull
+request, issue ou qualquer outro artefato do repositório — mesmo quando um
+agente escreveu o código ou o texto, a autoria é sempre de quem solicitou a
+mudança.
 
 Pull requests devem explicar decisões fora do óbvio. Se houver uma alteração de
 produto ou arquitetura duradoura, inclua o link para a nota correspondente no

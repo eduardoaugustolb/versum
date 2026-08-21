@@ -15,8 +15,7 @@ related: ["[[Docs/Decisions/002 - Progresso por Eventos]]", "[[Rules/01 - Princ�
 
 🏠 [[_Index|Home]] › 📚 [[Docs/_Index|Documentação]] › 📐 [[Docs/Architecture/_Index|Arquitetura]] › **Sincronização offline**
 
-O Android usa SQLite para conteúdo baixado, estado de leitura e uma outbox de
-eventos pendentes. Cada evento contém ID único, dispositivo, sequência local,
+O Android usa SQLite para conteúdo baixado, estado de leitura e uma outbox de eventos pendentes. Cada evento contém ID único, dispositivo, sequência local,
 referência de leitura e instante de criação.
 
 Ao sincronizar, a API processa os eventos numa transação. Uma restrição de

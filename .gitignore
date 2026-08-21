@@ -3,6 +3,9 @@
 .env.*
 !.env.example
 
+# Agent-local instructions
+AGENTS.md
+
 # Operating systems and editors
 .DS_Store
 Thumbs.db
@@ -32,5 +35,6 @@ coverage/
 .worktrees/
 
 # Personal Obsidian state
+Obsidian Vault/.obsidian/
 Obsidian Vault/.obsidian/workspace.json
 Obsidian Vault/.obsidian/graph.json

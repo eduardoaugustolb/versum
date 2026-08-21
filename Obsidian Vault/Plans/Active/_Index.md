@@ -14,9 +14,7 @@ next: "[[Plans/Archive/_Index]]"
 
 | Plano | Objetivo | Status |
 | :-- | :-- | :-- |
-
-> [!note]
-> Nenhum plano ativo no momento.
+| [[Plans/Active/02 - Catálogo Bíblico]] | Expor o corpus bíblico pela API, sem exigir conta | Concluído |
 
 ---
 

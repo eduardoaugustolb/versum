@@ -3,6 +3,7 @@ package config
 type Config struct {
 	Address     string
 	Environment Environment
+	DatabaseURL string
 }
 
 func Load(lookup func(string) string) (Config, error) {
@@ -19,6 +20,12 @@ func Load(lookup func(string) string) (Config, error) {
 		return Config{}, err
 	}
 	cfg.Environment = environment
+
+	databaseURL := lookup(DefaultDatabaseURLKey)
+	if databaseURL == "" {
+		return Config{}, ErrDatabaseURLNotSet
+	}
+	cfg.DatabaseURL = databaseURL
 
 	return cfg, nil
 }
