@@ -13,7 +13,8 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/eduardoaugustolb/versum/api/internal/adapters/postgres"
-	"github.com/eduardoaugustolb/versum/api/internal/catalog"
+	"github.com/eduardoaugustolb/versum/api/internal/catalog/application/queries"
+	catalogpostgres "github.com/eduardoaugustolb/versum/api/internal/catalog/postgres"
 	"github.com/eduardoaugustolb/versum/api/internal/config"
 	"github.com/eduardoaugustolb/versum/api/internal/health"
 	"github.com/eduardoaugustolb/versum/api/internal/transport/httpapi"
@@ -33,13 +34,13 @@ func main() {
 	}
 	defer pool.Close()
 
-	repo := catalog.NewRepository(postgres.NewPgxExecutor(pool))
+	repo := catalogpostgres.NewRepository(postgres.NewPgxExecutor(pool))
 
 	router := httpapi.NewRouter(httpapi.Dependencies{
 		Health: health.NewCheckHealth(),
 		Catalog: httpapi.CatalogDependencies{
-			ListBooks:  catalog.NewListBooks(repo),
-			GetChapter: catalog.NewGetChapter(repo),
+			ListBooks:  queries.NewListBooks(repo),
+			GetChapter: queries.NewGetChapter(repo),
 		},
 	})
 

@@ -8,8 +8,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/eduardoaugustolb/versum/api/internal/adapters/postgres"
-	"github.com/eduardoaugustolb/versum/api/internal/catalog"
+	"github.com/eduardoaugustolb/versum/api/internal/catalog/application/commands"
+	"github.com/eduardoaugustolb/versum/api/internal/catalog/domain"
+	catalogpostgres "github.com/eduardoaugustolb/versum/api/internal/catalog/postgres"
 	"github.com/eduardoaugustolb/versum/api/internal/config"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
@@ -75,31 +76,22 @@ func main() {
 	}
 	defer pool.Close()
 
-	catalogRepo := catalog.NewRepository(postgres.NewPgxExecutor(pool))
-	publishBook := catalog.NewPublishBook(catalogRepo)
+	publishBook := commands.NewPublishBook(catalogpostgres.NewTransactionManager(pool))
 
 	processBooks(ctx, bibleCorpus.Books, publishBook)
 }
 
-func processBooks(ctx context.Context, books []Book, publishBook catalog.PublishBook) {
+func processBooks(ctx context.Context, books []Book, publishBook commands.PublishBook) {
 	for _, b := range books {
 		fmt.Println("Book:", b.Name)
 		fmt.Println("Order:", b.Order)
 		fmt.Println("Testament:", b.Testament)
 		fmt.Println("Chapters:", len(b.Chapters))
 
-		book := catalog.Book{
-			ID:           b.Id,
-			Order:        b.Order,
-			Name:         b.Name,
-			Testament:    catalog.BookTestament(b.Testament),
-			ChapterCount: len(b.Chapters),
-		}
-
-		verses := make([]catalog.Verse, 0, len(b.Chapters)*10)
+		verses := make([]commands.VerseInput, 0, len(b.Chapters)*10)
 		for _, c := range b.Chapters {
 			for _, v := range c.Verses {
-				verses = append(verses, catalog.Verse{
+				verses = append(verses, commands.VerseInput{
 					Number:  v.Number,
 					Text:    v.Text,
 					Part:    v.Part,
@@ -109,7 +101,10 @@ func processBooks(ctx context.Context, books []Book, publishBook catalog.Publish
 			}
 		}
 
-		if err := publishBook.Execute(ctx, book, verses); err != nil {
+		if err := publishBook.Execute(ctx, commands.PublishBookInput{
+			ID: b.Id, Order: b.Order, Name: b.Name, Testament: domain.Testament(b.Testament),
+			ChapterCount: len(b.Chapters), Verses: verses,
+		}); err != nil {
 			fmt.Printf("Publicando livro: Error: %v\n", err)
 		}
 

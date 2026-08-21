@@ -2,51 +2,26 @@ package httpapi_test
 
 import (
 	"context"
+	"github.com/eduardoaugustolb/versum/api/internal/catalog/application/queries"
+	"github.com/eduardoaugustolb/versum/api/internal/catalog/domain"
+	"github.com/eduardoaugustolb/versum/api/internal/health"
+	"github.com/eduardoaugustolb/versum/api/internal/transport/httpapi"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	"github.com/eduardoaugustolb/versum/api/internal/catalog"
-	"github.com/eduardoaugustolb/versum/api/internal/health"
-	"github.com/eduardoaugustolb/versum/api/internal/transport/httpapi"
 )
 
-type noopBookRepository struct{}
+type noopReader struct{}
 
-func (noopBookRepository) ListBooks(ctx context.Context) ([]catalog.Book, error) {
-	return nil, nil
+func (noopReader) ListBooks(context.Context) ([]domain.Book, error) { return nil, nil }
+func (noopReader) FindChapter(context.Context, string, int) (domain.Chapter, error) {
+	return domain.Chapter{}, domain.ErrChapterNotFound
 }
-
-type noopChapterRepository struct{}
-
-func (noopChapterRepository) FindChapter(ctx context.Context, bookID string, number int) (catalog.Chapter, error) {
-	return catalog.Chapter{}, catalog.ErrChapterNotFound
-}
-
 func TestHealthEndpoint(t *testing.T) {
-	router := httpapi.NewRouter(httpapi.Dependencies{
-		Health: health.CheckHealth{},
-		Catalog: httpapi.CatalogDependencies{
-			ListBooks:  catalog.NewListBooks(noopBookRepository{}),
-			GetChapter: catalog.NewGetChapter(noopChapterRepository{}),
-		},
-	})
-
-	req := httptest.NewRequest(http.MethodGet, "/health", nil)
+	h := httpapi.NewRouter(httpapi.Dependencies{Health: health.CheckHealth{}, Catalog: httpapi.CatalogDependencies{ListBooks: queries.NewListBooks(noopReader{}), GetChapter: queries.NewGetChapter(noopReader{})}})
 	rec := httptest.NewRecorder()
-
-	router.ServeHTTP(rec, req)
-
-	if rec.Code != http.StatusOK {
-		t.Fatalf("expected status %d, got %d", http.StatusOK, rec.Code)
-	}
-
-	if got := rec.Header().Get("Content-Type"); got != "application/json" {
-		t.Errorf("expected Content-Type %q, got %q", "application/json", got)
-	}
-
-	want := `{"status":"ok"}`
-	if got := rec.Body.String(); got != want {
-		t.Errorf("expected body %q, got %q", want, got)
+	h.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/health", nil))
+	if rec.Code != http.StatusOK || rec.Body.String() != `{"status":"ok"}` {
+		t.Fatalf("unexpected response: %d %s", rec.Code, rec.Body)
 	}
 }

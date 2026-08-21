@@ -1,4 +1,4 @@
-package catalog
+package postgres
 
 /*
  * book_id TEXT NOT NULL REFERENCES books(id) ON DELETE CASCADE,

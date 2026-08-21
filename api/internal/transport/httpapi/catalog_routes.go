@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/eduardoaugustolb/versum/api/internal/catalog"
+	"github.com/eduardoaugustolb/versum/api/internal/catalog/domain"
 	"github.com/eduardoaugustolb/versum/api/internal/ports/httprouter"
 )
 
@@ -18,7 +18,11 @@ func registerCatalogRoutes(router httprouter.Router, deps CatalogDependencies) {
 			return
 		}
 
-		writeJSON(w, http.StatusOK, books)
+		response := make([]bookResponse, 0, len(books))
+		for _, book := range books {
+			response = append(response, newBookResponse(book))
+		}
+		writeJSON(w, http.StatusOK, response)
 	})
 
 	router.Get("/books/{bookId}/chapters/{number}", func(w http.ResponseWriter, r *http.Request) {
@@ -32,7 +36,7 @@ func registerCatalogRoutes(router httprouter.Router, deps CatalogDependencies) {
 
 		chapter, err := deps.GetChapter.Execute(r.Context(), bookID, number)
 		if err != nil {
-			if errors.Is(err, catalog.ErrChapterNotFound) {
+			if errors.Is(err, domain.ErrChapterNotFound) {
 				w.WriteHeader(http.StatusNotFound)
 				return
 			}
@@ -40,7 +44,7 @@ func registerCatalogRoutes(router httprouter.Router, deps CatalogDependencies) {
 			return
 		}
 
-		writeJSON(w, http.StatusOK, chapter)
+		writeJSON(w, http.StatusOK, newChapterResponse(chapter))
 	})
 }
 
