@@ -77,7 +77,7 @@ jobs:
           go-version-file: api/go.mod
 
       - name: Install migrate CLI
-        run: go install github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+        run: go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 
       - name: Apply migrations
         working-directory: api
