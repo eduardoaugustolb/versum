@@ -1,14 +1,5 @@
 package postgres
 
-/*
- * book_id TEXT NOT NULL REFERENCES books(id) ON DELETE CASCADE,
- chapter SMALLINT NOT NULL,
- number SMALLINT NOT NULL,
- text TEXT NOT NULL,
- part SMALLINT NOT NULL,
- PRIMARY KEY (book_id, chapter, number, part)
-*/
-
 const (
 	ListBooksQuery = `SELECT id, "order", name, testament, chapter_count FROM books ORDER BY "order"`
 
