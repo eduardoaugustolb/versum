@@ -14,12 +14,17 @@ next: "[[Rules/03 - Padrão do Vault]]"
 ## Regra
 
 - Armazenar tokens de uso único e sessões somente como hashes quando possível.
+- Cifrar dados pessoais em repouso, inclusive réplicas e backups; manter as
+  chaves fora do banco, com rotação e acesso mínimo.
+- Usar índice cego (HMAC versionado) quando for necessário localizar um dado
+  pessoal cifrado, sem guardar uma cópia em texto puro para busca.
 - Limitar tentativas de login, sync e geração de imagens.
 - Validar autorização no servidor em toda operação pessoal.
 - Nunca registrar segredos, tokens, e-mail, URLs assinadas ou progresso em logs.
 - Usar transações e restrições do banco para invariantes críticos.
 - Degradar cache de forma segura; não permitir que Redis se torne a única fonte
   de autorização ou estado.
+- Definir coleta mínima, retenção, exportação e exclusão para cada dado pessoal.
 
 ## Por quê
 

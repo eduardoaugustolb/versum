@@ -14,6 +14,7 @@ next: "[[Plans/Archive/_Index]]"
 
 | Plano | Objetivo | Status |
 | :-- | :-- | :-- |
+| [[Plans/Active/03 - Autenticação e Sessões]] | Magic link e sessões revogáveis por dispositivo | Planejado |
 
 ---
 
