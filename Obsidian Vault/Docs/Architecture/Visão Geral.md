@@ -91,7 +91,7 @@ resposta é não, e o texto das queries continua específico de Postgres de
 qualquer forma. É se o código que resolve a regra de negócio ou traduz
 HTTP deveria também conhecer os detalhes de uma biblioteca de terceiro que
 não tem nada a ver com o que ele decide. Ver
-[[Plans/Active/02 - Catálogo Bíblico]] pro histórico dessa decisão (foi
+[[Plans/Archive/02 - Catálogo Bíblico]] pro histórico dessa decisão (foi
 revertida e revisada duas vezes antes de chegar nesse formato).
 
 `internal/adapters/<tecnologia>/` guarda o que exige infraestrutura própria
