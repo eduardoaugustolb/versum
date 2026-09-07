@@ -1,13 +1,13 @@
 ---
 title: "02 - Catálogo Bíblico"
 section: Plans
-subsection: Active
+subsection: Archive
 type: implementation-plan
 status: completed
 date: 2026-08-04
 tags: [versum, plans, api, go, catalog, postgres]
-up: "[[Plans/Active/_Index|Planos Ativos]]"
-prev: "[[Plans/Active/_Index|Planos Ativos]]"
+up: "[[Plans/Archive/_Index|Arquivo de Planos]]"
+prev: "[[Plans/Archive/02 - Corpus Bíblico Canônico]]"
 next: "[[Plans/Archive/_Index|Arquivo]]"
 related: ["[[Docs/Architecture/Visão Geral]]", "[[Rules/01 - Princípios de Engenharia]]", "[[Plans/Archive/02 - Corpus Bíblico Canônico]]", "[[Plans/Archive/01 - Fundação da API Go]]"]
 ---
@@ -668,4 +668,4 @@ Essas partes dependem de decisões e contratos que merecem entregas próprias.
 
 ---
 
-◀ [[Plans/Active/_Index|Planos Ativos]] · próxima: [[Plans/Archive/_Index|Arquivo]] ▶
+◀ [[Plans/Archive/02 - Corpus Bíblico Canônico|Corpus Bíblico Canônico]] · próxima: [[Plans/Archive/_Index|Arquivo]] ▶

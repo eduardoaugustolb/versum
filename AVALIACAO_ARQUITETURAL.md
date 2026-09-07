@@ -111,7 +111,7 @@ Consequências:
 
 Evidências:
 
-- `Obsidian Vault/Plans/Active/02 - Catálogo Bíblico.md:33-53`
+- `Obsidian Vault/Plans/Archive/02 - Catálogo Bíblico.md:33-53`
 - `Obsidian Vault/Docs/Architecture/Visão Geral.md:74-81`
 - `api/internal/adapters/sql/executor.go:5-20`
 - `api/internal/catalog/query.go:13-14`
@@ -262,9 +262,9 @@ Problemas:
 
 Evidências:
 
-- `Obsidian Vault/Plans/Active/02 - Catálogo Bíblico.md:59-65`
-- `Obsidian Vault/Plans/Active/02 - Catálogo Bíblico.md:92-93`
-- `Obsidian Vault/Plans/Active/02 - Catálogo Bíblico.md:462-474`
+- `Obsidian Vault/Plans/Archive/02 - Catálogo Bíblico.md:59-65`
+- `Obsidian Vault/Plans/Archive/02 - Catálogo Bíblico.md:92-93`
+- `Obsidian Vault/Plans/Archive/02 - Catálogo Bíblico.md:462-474`
 - `api/internal/adapters/postgres/migrations/000001_create-catalog.up.sql:1-18`
 
 **Recomendação:** carregar dados em staging, validar contagens e hashes e publicar a versão atomicamente. Registrar versão e hash do manifesto no banco. Como alternativa, servir o catálogo imutável como artefato estático com cache/CDN e manter PostgreSQL apenas para estado pessoal e busca, se necessária.
@@ -655,7 +655,7 @@ Essa abordagem preserva as vantagens dos eventos sem adotar event sourcing como 
 - `Obsidian Vault/Docs/Architecture/Autenticação e Sessões.md`
 - `Obsidian Vault/Docs/Architecture/Sincronização Offline.md`
 - `Obsidian Vault/Docs/Decisions/002 - Progresso por Eventos.md`
-- `Obsidian Vault/Plans/Active/02 - Catálogo Bíblico.md`
+- `Obsidian Vault/Plans/Archive/02 - Catálogo Bíblico.md`
 - `api/cmd/api/main.go`
 - `api/internal/catalog/`
 - `api/internal/adapters/sql/`
