@@ -10,13 +10,17 @@ var (
 	ErrInvalidSessionState      = errors.New("invalid session state")
 	ErrInvalidSessionRevokedAt  = errors.New("invalid session revoked at")
 	ErrInvalidSessionUsedAt     = errors.New("invalid session used at")
+)
 
+var (
 	ErrInvalidUserID                    = errors.New("invalid user id")
 	ErrInvalidEmailCiphertext           = errors.New("invalid email ciphertext")
 	ErrInvalidEmailLookupHMAC           = errors.New("invalid email lookup hmac")
 	ErrInvalidEmailEncryptionKeyVersion = errors.New("invalid email encryption key version")
 	ErrInvalidEmailLookupKeyVersion     = errors.New("invalid email lookup key version")
+)
 
+var (
 	ErrInvalidLoginTokenID         = errors.New("invalid login token id")
 	ErrInvalidLoginTokenHash       = errors.New("invalid login token hash")
 	ErrInvalidLoginTokenUserID     = errors.New("invalid login token user id")
@@ -24,4 +28,10 @@ var (
 	ErrInvalidLoginTokenConsumedAt = errors.New("invalid login token consumed at")
 	ErrLoginTokenAlreadyConsumed   = errors.New("login token already consumed")
 	ErrLoginTokenExpired           = errors.New("login token expired")
+)
+
+var (
+	ErrUserNotFound       = errors.New("user not found")
+	ErrSessionNotFound    = errors.New("session not found")
+	ErrLoginTokenNotFound = errors.New("login token not found")
 )
