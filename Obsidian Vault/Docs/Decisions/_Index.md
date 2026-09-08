@@ -22,6 +22,7 @@ foram consideradas e quais consequências ela cria.
 | :-- | :-- |
 | [[Docs/Decisions/001 - Plataforma Inicial]] | Go, web online e Android offline-first |
 | [[Docs/Decisions/002 - Progresso por Eventos]] | Sincronização idempotente e monotônica |
+| [[Docs/Decisions/003 - Outbox para Magic Links]] | Entrega transacional e segura de magic links |
 
 ---
 

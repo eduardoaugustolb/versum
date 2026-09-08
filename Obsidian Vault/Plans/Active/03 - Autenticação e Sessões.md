@@ -9,7 +9,7 @@ tags: [versum, plans, api, go, auth, security, sessions]
 up: "[[Plans/Active/_Index|Planos Ativos]]"
 prev: "[[Plans/Active/_Index|Planos Ativos]]"
 next: "[[Plans/Archive/_Index|Arquivo]]"
-related: ["[[Docs/Architecture/Autenticação e Sessões]]", "[[Rules/02 - Segurança]]", "[[Plans/Archive/02 - Catálogo Bíblico]]"]
+related: ["[[Docs/Architecture/Autenticação e Sessões]]", "[[Docs/Decisions/003 - Outbox para Magic Links]]", "[[Rules/02 - Segurança]]", "[[Plans/Archive/02 - Catálogo Bíblico]]"]
 ---
 
 # Autenticação e Sessões
@@ -45,6 +45,10 @@ push e qualquer dado pessoal passam a depender de uma sessão autenticada.
 - O envio de e-mail fica atrás de uma porta; o primeiro adapter pode ser um
   transportador local para desenvolvimento e um provedor configurável para
   produção.
+- Token, evento de entrega e transições de sessão que exigem consistência são
+  coordenados por uma unidade de trabalho específica de identidade. A entrega
+  de magic link usa outbox transacional conforme a
+  [[Docs/Decisions/003 - Outbox para Magic Links|ADR 003]].
 
 ## Escopo técnico
 
@@ -58,9 +62,14 @@ Criar as tabelas e restrições para:
   consulta e limpeza;
 - `sessions`: hash do segredo da sessão, usuário, dispositivo, expiração,
   revogação e datas de uso.
+- `outbox_events`: tipo, payload cifrado, versão da chave, tentativas,
+  disponibilidade para retry, estado de processamento, erro redigido e datas
+  de criação/processamento.
 
 As invariantes críticas devem ser garantidas pelo PostgreSQL. Tokens consumidos
 e sessões revogadas não podem voltar a ser válidos sob concorrência.
+`LoginToken`, evento de outbox e qualquer criação associada devem confirmar ou
+falhar juntos na mesma transação.
 
 O módulo deve definir também ciclo de vida dos dados pessoais: coleta mínima,
 retenção limitada ao necessário, exportação e exclusão da conta, com limpeza
@@ -73,12 +82,21 @@ proteção; nenhum segredo ou dado pessoal deve aparecer em texto puro.
 Organizar o módulo `auth` por funcionalidade, com entidades e erros de domínio
 independentes de HTTP, PostgreSQL, e-mail e cookies. Definir portas pequenas
 para relógio, aleatoriedade, hash, repositório transacional, emissor de
-mensagens e armazenamento de sessão.
+mensagens e armazenamento de sessão. O relógio retorna instantes em UTC; datas
+civis com fuso do usuário só recebem value object próprio quando houver regra de
+calendário no domínio.
+
+Definir uma `IdentityAccessUnitOfWork` que disponibiliza repositórios de
+usuário, token e outbox vinculados à mesma transação. A outbox recebe um payload
+cifrado contendo o token bruto de entrega; a tabela de `login_tokens` mantém
+apenas o hash. O worker é o único consumidor autorizado a decriptar esse
+payload para construir o link e enviar o e-mail.
 
 Casos de uso previstos:
 
 - `RequestMagicLink`: normaliza o e-mail, cria ou encontra a identidade,
-  invalida tokens anteriores conforme a política e solicita o envio;
+  invalida tokens anteriores conforme a política e grava o evento de entrega
+  na outbox, sem chamar o provedor de e-mail na transação;
 - `ConsumeMagicLink`: valida o token, marca-o como consumido em operação
   atômica e cria uma sessão;
 - `AuthenticateSession`: valida a sessão e retorna a identidade;
@@ -98,7 +116,19 @@ Redirects do magic link devem aceitar somente destinos de uma allowlist
 configurada. O contrato precisa impedir open redirect e não deve devolver o
 token em logs ou respostas de erro.
 
-### 4. Testes e verificação
+### 4. Worker de outbox e operação
+
+Implementar worker separado para reservar eventos pendentes com `FOR UPDATE
+SKIP LOCKED`, decriptar o payload somente em memória durante a entrega e chamar
+o emissor de e-mail. A confirmação de entrega marca o evento como processado;
+falhas usam retry com backoff e limite de tentativas.
+
+O desenho é *at-least-once*: duplicidade de envio é possível após falha entre o
+provedor aceitar a mensagem e a confirmação no banco. Templates, provedor e
+observabilidade devem tratar esse risco. Métricas e alertas mínimos incluem
+eventos pendentes, atrasados, falhos e tentativas esgotadas.
+
+### 5. Testes e verificação
 
 Cobrir, no mínimo:
 
@@ -109,6 +139,11 @@ Cobrir, no mínimo:
 - cookie seguro e middleware em rotas públicas e privadas;
 - redirects fora da allowlist;
 - integração com PostgreSQL para constraints e transações;
+- atomicidade entre criação do token e gravação da outbox;
+- reserva concorrente de eventos, retry com backoff e recuperação após crash;
+- payload da outbox cifrado, rotação de chave e ausência do token bruto em
+  tabelas, logs, métricas e traces;
+- comportamento seguro diante de entrega duplicada;
 - ausência de segredos nos logs.
 - cifragem e decifragem com chave versionada, incluindo rotação sem perda de
   acesso;
@@ -135,6 +170,8 @@ ser registrados antes da operação em produção.
 
 - Uma pessoa consegue solicitar e consumir um magic link válido uma única vez.
 - Um token nunca é persistido em texto puro nem aparece em logs.
+- A criação do token e o agendamento da entrega são atômicos; o worker consegue
+  recuperar falhas sem expor o token bruto fora do payload cifrado da outbox.
 - A sessão criada pode ser validada, expirada e revogada por dispositivo.
 - Rotas privadas rejeitam requisições sem sessão válida.
 - O catálogo público permanece funcionando sem conta.

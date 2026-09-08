@@ -26,11 +26,18 @@ gestão por ambiente e com rotação. Quando a aplicação precisar localizar um
 registro por um dado cifrado, usa um índice cego com HMAC versionado; o valor
 original não é mantido em texto puro apenas para permitir busca.
 
+Solicitações de magic link criam o token e um evento de entrega na mesma
+transação. O worker envia o e-mail a partir da outbox; o token bruto necessário
+para a URL existe apenas em payload cifrado do evento. Consulte a
+[[Docs/Decisions/003 - Outbox para Magic Links|ADR da outbox]].
+
 ## Regras
 
 - Uma sessão pertence a um dispositivo e pode ser revogada.
 - Redirects de magic link usam allowlist.
 - Tokens, credenciais e URLs assinadas nunca entram em logs.
+- Eventos de outbox com segredo mantêm payload cifrado, versão de chave, retry
+  com backoff e observabilidade de falhas.
 - Dados pessoais não entram em logs, métricas, traces ou backups sem a mesma
   proteção de cifragem e controle de acesso.
 - Download offline, progresso, push e qualquer dado pessoal exigem autenticação.
