@@ -13,7 +13,8 @@ import (
 
 type noopReader struct{}
 
-func (noopReader) ListBooks(context.Context) ([]domain.Book, error) { return nil, nil }
+func (noopReader) ReplaceBook(context.Context, domain.Book, []domain.Verse) error { return nil }
+func (noopReader) ListBooks(context.Context) ([]domain.Book, error)               { return nil, nil }
 func (noopReader) FindChapter(context.Context, string, int) (domain.Chapter, error) {
 	return domain.Chapter{}, domain.ErrChapterNotFound
 }

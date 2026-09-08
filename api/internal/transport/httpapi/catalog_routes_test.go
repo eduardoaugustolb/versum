@@ -13,13 +13,19 @@ import (
 
 type booksReader struct{ books []domain.Book }
 
-func (r booksReader) ListBooks(context.Context) ([]domain.Book, error) { return r.books, nil }
+func (r booksReader) ReplaceBook(context.Context, domain.Book, []domain.Verse) error { return nil }
+func (r booksReader) ListBooks(context.Context) ([]domain.Book, error)               { return r.books, nil }
+func (booksReader) FindChapter(context.Context, string, int) (domain.Chapter, error) {
+	return domain.Chapter{}, domain.ErrChapterNotFound
+}
 
 type chaptersReader struct {
 	chapter domain.Chapter
 	found   bool
 }
 
+func (chaptersReader) ReplaceBook(context.Context, domain.Book, []domain.Verse) error { return nil }
+func (chaptersReader) ListBooks(context.Context) ([]domain.Book, error)               { return nil, nil }
 func (r chaptersReader) FindChapter(context.Context, string, int) (domain.Chapter, error) {
 	if !r.found {
 		return domain.Chapter{}, domain.ErrChapterNotFound
