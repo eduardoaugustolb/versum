@@ -8,7 +8,7 @@ import (
 
 type UserReader interface {
 	FindUserByID(ctx context.Context, id string) (*domain.User, error)
-	FindUserByEmailLookupHMAC(ctx context.Context, emailLookupHMAC []byte) (*domain.User, error)
+	FindUserByEmail(ctx context.Context, email domain.Email) (*domain.User, error)
 }
 
 type SessionReader interface {

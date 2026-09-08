@@ -1,22 +1,12 @@
 package domain
 
 type User struct {
-	id                        string
-	emailCiphertext           []byte
-	emailLookupHMAC           []byte
-	emailEncryptionKeyVersion int
-	emailLookupKeyVersion     int
+	id    string
+	email Email
 }
 
-func NewUser(id string, emailCiphertext []byte, emailLookupHMAC []byte, emailEncryptionKeyVersion int, emailLookupKeyVersion int) (*User, error) {
-
-	user := &User{
-		id:                        id,
-		emailCiphertext:           cloneBytes(emailCiphertext),
-		emailLookupHMAC:           cloneBytes(emailLookupHMAC),
-		emailEncryptionKeyVersion: emailEncryptionKeyVersion,
-		emailLookupKeyVersion:     emailLookupKeyVersion,
-	}
+func NewUser(id string, email Email) (*User, error) {
+	user := &User{id: id, email: email}
 
 	if err := validateUser(user); err != nil {
 		return nil, err
@@ -25,14 +15,8 @@ func NewUser(id string, emailCiphertext []byte, emailLookupHMAC []byte, emailEnc
 	return user, nil
 }
 
-func RehydrateUser(id string, emailCiphertext []byte, emailLookupHMAC []byte, emailEncryptionKeyVersion int, emailLookupKeyVersion int) (*User, error) {
-	user := &User{
-		id:                        id,
-		emailCiphertext:           cloneBytes(emailCiphertext),
-		emailLookupHMAC:           cloneBytes(emailLookupHMAC),
-		emailEncryptionKeyVersion: emailEncryptionKeyVersion,
-		emailLookupKeyVersion:     emailLookupKeyVersion,
-	}
+func RehydrateUser(id string, email Email) (*User, error) {
+	user := &User{id: id, email: email}
 
 	if err := validateUser(user); err != nil {
 		return nil, err
@@ -46,22 +30,6 @@ func validateUser(user *User) error {
 		return ErrInvalidUserID
 	}
 
-	if len(user.emailCiphertext) == 0 {
-		return ErrInvalidEmailCiphertext
-	}
-
-	if len(user.emailLookupHMAC) == 0 {
-		return ErrInvalidEmailLookupHMAC
-	}
-
-	if user.emailEncryptionKeyVersion <= 0 {
-		return ErrInvalidEmailEncryptionKeyVersion
-	}
-
-	if user.emailLookupKeyVersion <= 0 {
-		return ErrInvalidEmailLookupKeyVersion
-	}
-
 	return nil
 }
 
@@ -69,18 +37,6 @@ func (u *User) ID() string {
 	return u.id
 }
 
-func (u *User) EmailCiphertext() []byte {
-	return cloneBytes(u.emailCiphertext)
-}
-
-func (u *User) EmailLookupHMAC() []byte {
-	return cloneBytes(u.emailLookupHMAC)
-}
-
-func (u *User) EmailEncryptionKeyVersion() int {
-	return u.emailEncryptionKeyVersion
-}
-
-func (u *User) EmailLookupKeyVersion() int {
-	return u.emailLookupKeyVersion
+func (u *User) Email() Email {
+	return u.email
 }

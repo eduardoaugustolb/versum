@@ -3,6 +3,10 @@ package domain
 import "errors"
 
 var (
+	ErrInvalidEmail = errors.New("invalid email")
+)
+
+var (
 	ErrInvalidSessionID         = errors.New("invalid session id")
 	ErrInvalidSessionSecretHash = errors.New("invalid session secret hash")
 	ErrInvalidSessionUserID     = errors.New("invalid session user id")
@@ -13,11 +17,7 @@ var (
 )
 
 var (
-	ErrInvalidUserID                    = errors.New("invalid user id")
-	ErrInvalidEmailCiphertext           = errors.New("invalid email ciphertext")
-	ErrInvalidEmailLookupHMAC           = errors.New("invalid email lookup hmac")
-	ErrInvalidEmailEncryptionKeyVersion = errors.New("invalid email encryption key version")
-	ErrInvalidEmailLookupKeyVersion     = errors.New("invalid email lookup key version")
+	ErrInvalidUserID = errors.New("invalid user id")
 )
 
 var (
@@ -28,10 +28,4 @@ var (
 	ErrInvalidLoginTokenConsumedAt = errors.New("invalid login token consumed at")
 	ErrLoginTokenAlreadyConsumed   = errors.New("login token already consumed")
 	ErrLoginTokenExpired           = errors.New("login token expired")
-)
-
-var (
-	ErrUserNotFound       = errors.New("user not found")
-	ErrSessionNotFound    = errors.New("session not found")
-	ErrLoginTokenNotFound = errors.New("login token not found")
 )
