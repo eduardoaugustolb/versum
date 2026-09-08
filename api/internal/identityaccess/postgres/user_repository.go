@@ -68,5 +68,4 @@ func (r *UserRepository) scanUser(ctx context.Context, row dbexec.Row, operation
 	return user, nil
 }
 
-var _ ports.UserReader = (*UserRepository)(nil)
-var _ ports.UserWriter = (*UserRepository)(nil)
+var _ ports.UserRepository = (*UserRepository)(nil)

@@ -9,6 +9,7 @@ import (
 	"github.com/jackc/pgx/v5"
 
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
+	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application/ports"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/domain"
 	"github.com/eduardoaugustolb/versum/api/internal/ports/dbexec"
 )
@@ -18,6 +19,8 @@ type SessionRepository struct{ db dbexec.Executor }
 func NewSessionRepository(db dbexec.Executor) *SessionRepository {
 	return &SessionRepository{db: db}
 }
+
+var _ ports.SessionRepository = (*SessionRepository)(nil)
 
 func (r *SessionRepository) CreateSession(ctx context.Context, session *domain.Session) error {
 	revokedAt, _ := session.RevokedAt()

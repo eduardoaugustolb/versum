@@ -9,6 +9,7 @@ import (
 	"github.com/jackc/pgx/v5"
 
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
+	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application/ports"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/domain"
 	"github.com/eduardoaugustolb/versum/api/internal/ports/dbexec"
 )
@@ -18,6 +19,8 @@ type LoginTokenRepository struct{ db dbexec.Executor }
 func NewLoginTokenRepository(db dbexec.Executor) *LoginTokenRepository {
 	return &LoginTokenRepository{db: db}
 }
+
+var _ ports.LoginTokenRepository = (*LoginTokenRepository)(nil)
 
 func (r *LoginTokenRepository) CreateLoginToken(ctx context.Context, token *domain.LoginToken) error {
 	consumedAt, _ := token.ConsumedAt()
