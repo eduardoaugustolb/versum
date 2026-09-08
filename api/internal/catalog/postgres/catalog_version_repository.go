@@ -4,12 +4,15 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/eduardoaugustolb/versum/api/internal/catalog/application/ports"
 	"github.com/eduardoaugustolb/versum/api/internal/ports/dbexec"
 )
 
 type CatalogVersionRepository struct {
 	db dbexec.Executor
 }
+
+var _ ports.CatalogVersionRepository = (*CatalogVersionRepository)(nil)
 
 func NewCatalogVersionRepository(db dbexec.Executor) *CatalogVersionRepository {
 	return &CatalogVersionRepository{

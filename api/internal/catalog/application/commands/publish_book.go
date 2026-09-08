@@ -39,7 +39,7 @@ func (uc PublishBook) Execute(ctx context.Context, input PublishBookInput) error
 		}
 		verses = append(verses, verse)
 	}
-	return uc.transactions.WithinTransaction(ctx, func(txctx context.Context, writer ports.CatalogWriter) error {
-		return writer.ReplaceBook(txctx, book, verses)
+	return uc.transactions.WithinTransaction(ctx, func(txctx context.Context, repository ports.CatalogRepository) error {
+		return repository.ReplaceBook(txctx, book, verses)
 	})
 }

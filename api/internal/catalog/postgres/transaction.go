@@ -14,7 +14,7 @@ func NewTransactionManager(pool *pgxpool.Pool) TransactionManager {
 	return TransactionManager{pool: pool}
 }
 
-func (m TransactionManager) WithinTransaction(ctx context.Context, fn func(context.Context, ports.CatalogWriter) error) error {
+func (m TransactionManager) WithinTransaction(ctx context.Context, fn func(context.Context, ports.CatalogRepository) error) error {
 	tx, err := m.pool.Begin(ctx)
 	if err != nil {
 		return err

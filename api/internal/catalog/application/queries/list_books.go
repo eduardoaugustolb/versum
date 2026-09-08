@@ -6,9 +6,11 @@ import (
 	"github.com/eduardoaugustolb/versum/api/internal/catalog/domain"
 )
 
-type ListBooks struct{ reader ports.BookReader }
+type ListBooks struct{ repository ports.CatalogRepository }
 
-func NewListBooks(reader ports.BookReader) *ListBooks { return &ListBooks{reader: reader} }
+func NewListBooks(repository ports.CatalogRepository) *ListBooks {
+	return &ListBooks{repository: repository}
+}
 func (q *ListBooks) Execute(ctx context.Context) ([]domain.Book, error) {
-	return q.reader.ListBooks(ctx)
+	return q.repository.ListBooks(ctx)
 }

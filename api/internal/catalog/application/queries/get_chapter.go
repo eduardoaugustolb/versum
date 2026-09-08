@@ -6,9 +6,11 @@ import (
 	"github.com/eduardoaugustolb/versum/api/internal/catalog/domain"
 )
 
-type GetChapter struct{ reader ports.ChapterReader }
+type GetChapter struct{ repository ports.CatalogRepository }
 
-func NewGetChapter(reader ports.ChapterReader) *GetChapter { return &GetChapter{reader: reader} }
+func NewGetChapter(repository ports.CatalogRepository) *GetChapter {
+	return &GetChapter{repository: repository}
+}
 func (q *GetChapter) Execute(ctx context.Context, bookID string, number int) (domain.Chapter, error) {
-	return q.reader.FindChapter(ctx, bookID, number)
+	return q.repository.FindChapter(ctx, bookID, number)
 }

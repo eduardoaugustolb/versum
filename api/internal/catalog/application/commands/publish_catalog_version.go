@@ -2,26 +2,24 @@ package commands
 
 import (
 	"context"
+
+	"github.com/eduardoaugustolb/versum/api/internal/catalog/application/ports"
 )
 
 type PublishCatalogVersionInput struct {
 	CorpusSHA256 string
 }
 
-type CatalogVersionWriter interface {
-	Record(ctx context.Context, corpusSHA256 string) error
-}
-
 type PublishCatalogVersion struct {
-	writer CatalogVersionWriter
+	repository ports.CatalogVersionRepository
 }
 
-func NewPublishCatalogVersion(writer CatalogVersionWriter) PublishCatalogVersion {
+func NewPublishCatalogVersion(repository ports.CatalogVersionRepository) PublishCatalogVersion {
 	return PublishCatalogVersion{
-		writer: writer,
+		repository: repository,
 	}
 }
 
 func (uc *PublishCatalogVersion) Execute(ctx context.Context, input PublishCatalogVersionInput) error {
-	return uc.writer.Record(ctx, input.CorpusSHA256)
+	return uc.repository.Record(ctx, input.CorpusSHA256)
 }

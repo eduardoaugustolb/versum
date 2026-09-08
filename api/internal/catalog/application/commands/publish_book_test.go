@@ -21,9 +21,15 @@ func (w *writer) ReplaceBook(_ context.Context, book domain.Book, verses []domai
 	return w.err
 }
 
-type txManager struct{ writer ports.CatalogWriter }
+func (w *writer) ListBooks(context.Context) ([]domain.Book, error) { return nil, w.err }
 
-func (m txManager) WithinTransaction(ctx context.Context, fn func(context.Context, ports.CatalogWriter) error) error {
+func (w *writer) FindChapter(context.Context, string, int) (domain.Chapter, error) {
+	return domain.Chapter{}, w.err
+}
+
+type txManager struct{ writer ports.CatalogRepository }
+
+func (m txManager) WithinTransaction(ctx context.Context, fn func(context.Context, ports.CatalogRepository) error) error {
 	return fn(ctx, m.writer)
 }
 func input() commands.PublishBookInput {

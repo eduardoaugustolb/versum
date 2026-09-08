@@ -3,6 +3,7 @@ package postgres
 import (
 	"context"
 
+	"github.com/eduardoaugustolb/versum/api/internal/catalog/application/ports"
 	"github.com/eduardoaugustolb/versum/api/internal/catalog/domain"
 	"github.com/eduardoaugustolb/versum/api/internal/ports/dbexec"
 )
@@ -14,6 +15,8 @@ type Repository struct {
 func NewRepository(db dbexec.Executor) *Repository {
 	return &Repository{db: db}
 }
+
+var _ ports.CatalogRepository = (*Repository)(nil)
 
 var verseColumns = []string{"book_id", "chapter", "number", "text", "part"}
 
