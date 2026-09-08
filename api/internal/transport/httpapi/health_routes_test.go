@@ -11,15 +11,17 @@ import (
 	"testing"
 )
 
-type noopReader struct{}
+type noopCatalogRepository struct{}
 
-func (noopReader) ReplaceBook(context.Context, domain.Book, []domain.Verse) error { return nil }
-func (noopReader) ListBooks(context.Context) ([]domain.Book, error)               { return nil, nil }
-func (noopReader) FindChapter(context.Context, string, int) (domain.Chapter, error) {
+func (noopCatalogRepository) ReplaceBook(context.Context, domain.Book, []domain.Verse) error {
+	return nil
+}
+func (noopCatalogRepository) ListBooks(context.Context) ([]domain.Book, error) { return nil, nil }
+func (noopCatalogRepository) FindChapter(context.Context, string, int) (domain.Chapter, error) {
 	return domain.Chapter{}, domain.ErrChapterNotFound
 }
 func TestHealthEndpoint(t *testing.T) {
-	h := httpapi.NewRouter(httpapi.Dependencies{Health: health.CheckHealth{}, Catalog: httpapi.CatalogDependencies{ListBooks: queries.NewListBooks(noopReader{}), GetChapter: queries.NewGetChapter(noopReader{})}})
+	h := httpapi.NewRouter(httpapi.Dependencies{Health: health.CheckHealth{}, Catalog: httpapi.CatalogDependencies{ListBooks: queries.NewListBooks(noopCatalogRepository{}), GetChapter: queries.NewGetChapter(noopCatalogRepository{})}})
 	rec := httptest.NewRecorder()
 	h.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/health", nil))
 	if rec.Code != http.StatusOK || rec.Body.String() != `{"status":"ok"}` {

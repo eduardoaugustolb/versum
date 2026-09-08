@@ -8,12 +8,12 @@ import (
 	"github.com/eduardoaugustolb/versum/api/internal/catalog/application/commands"
 )
 
-type FakeWriter struct {
+type fakeCatalogVersionRepository struct {
 	err       error
 	gotSHA256 string
 }
 
-func (w *FakeWriter) Record(ctx context.Context, corpusSHA string) error {
+func (w *fakeCatalogVersionRepository) Record(ctx context.Context, corpusSHA string) error {
 	w.gotSHA256 = corpusSHA
 	return w.err
 }
@@ -37,10 +37,10 @@ func TestPublishCatalogVersion(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			writer := FakeWriter{
+			repository := fakeCatalogVersionRepository{
 				err: tc.err,
 			}
-			publishCatalogVersion := commands.NewPublishCatalogVersion(&writer)
+			publishCatalogVersion := commands.NewPublishCatalogVersion(&repository)
 			corpusSHA := "testing"
 			err := publishCatalogVersion.Execute(t.Context(), commands.PublishCatalogVersionInput{CorpusSHA256: corpusSHA})
 			if (err != nil) != tc.wantError {
@@ -51,8 +51,8 @@ func TestPublishCatalogVersion(t *testing.T) {
 				t.Fatalf("expected error %v, got %v", tc.err, err)
 			}
 
-			if writer.gotSHA256 != corpusSHA {
-				t.Fatalf("expected gotSHA256 %v, got %v", corpusSHA, writer.gotSHA256)
+			if repository.gotSHA256 != corpusSHA {
+				t.Fatalf("expected gotSHA256 %v, got %v", corpusSHA, repository.gotSHA256)
 			}
 		})
 	}
