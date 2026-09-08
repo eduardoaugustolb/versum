@@ -91,6 +91,7 @@ func (t *LoginToken) ConsumedAt() (time.Time, bool) {
 }
 
 func (t *LoginToken) Consume(now time.Time) error {
+	now = now.UTC()
 	if t.IsConsumed() {
 		return ErrLoginTokenAlreadyConsumed
 	}

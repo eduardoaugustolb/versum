@@ -101,10 +101,12 @@ func (s *Session) ExpiresAt() time.Time {
 }
 
 func (s *Session) Revoke(now time.Time) {
+	now = now.UTC()
 	s.revokedAt = &now
 }
 
 func (s *Session) Use(now time.Time) error {
+	now = now.UTC()
 	if !s.IsValidAt(now) {
 		return ErrInvalidSessionState
 	}

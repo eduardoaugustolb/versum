@@ -50,6 +50,78 @@ push e qualquer dado pessoal passam a depender de uma sessão autenticada.
   de magic link usa outbox transacional conforme a
   [[Docs/Decisions/003 - Outbox para Magic Links|ADR 003]].
 
+## Estado atual e checklist de execução
+
+### Base já estabelecida
+
+- [x] Value object `domain.Email` com validação e normalização.
+- [x] Entidade `User` desacoplada de ciphertext, HMAC e versões de chave.
+- [x] Portas de repositório por agregado no catálogo e em identidade.
+- [x] Repositórios PostgreSQL e testes de integração para usuário, sessão e
+  login token.
+- [x] ADR e plano de segurança para a outbox.
+- [x] Base temporal: porta `Clock`, `SystemClock` em UTC, TTL configurável e
+  `RequestMagicLink` testado com relógio fixo.
+
+### Próxima sequência — nesta ordem
+
+- [ ] **Fixar políticas antes do schema:** decidir criação automática versus
+  conta preexistente, invalidação de tokens anteriores, TTL, limite de retries,
+  retenção e comportamento quando o e-mail falha.
+- [ ] **Fechar as portas criptográficas:** usar `crypto/rand` para token e
+  segredo de sessão; definir hash/HMAC, versionamento, proteção do payload de
+  entrega e origem das chaves fora do banco.
+- [ ] **Criar migration da outbox:** id, tipo, `payload_ciphertext`, versão da
+  chave, tentativas, `available_at`, lease, processamento, erro redigido e
+  índices para eventos prontos.
+- [ ] **Implementar `IdentityAccessUnitOfWork`:** iniciar `pgx.Tx` e expor os
+  repositórios de usuário, token e outbox vinculados à mesma transação.
+- [ ] **Concluir `RequestMagicLink`:** gerar token, persistir somente hash,
+  cifrar o segredo de entrega e gravar o evento na mesma transação. A resposta
+  HTTP é sempre neutra.
+- [ ] **Implementar worker:** reivindicar uma pequena leva de eventos, confirmar
+  a lease, enviar fora da transação e depois marcar sucesso ou reagendar retry.
+- [ ] **Concluir `ConsumeMagicLink`:** consumo condicional e atômico, criação de
+  sessão na mesma transação e limpeza/expiração do segredo de entrega.
+- [ ] **Expor HTTP e cookies:** allowlist de redirect, `Referrer-Policy`, cookie
+  seguro, middleware e resposta sem enumeração de contas.
+- [ ] **Operar e testar:** integração PostgreSQL, cenários concorrentes, crash
+  recovery, logs redigidos, métricas, alertas e runbook.
+
+> [!tip] Bizo 1 — não segure transação aberta durante o envio
+>
+> `FOR UPDATE SKIP LOCKED` serve para reivindicar o evento; a chamada ao
+> provedor de e-mail acontece **depois do commit** da lease. Enviar com a
+> transação aberta prende conexões, bloqueia retries e amplifica indisponibilidade
+> do provedor.
+
+> [!tip] Bizo 2 — o consumo precisa ser protegido também no SQL
+>
+> A regra do domínio é necessária, mas não basta sob concorrência. O consumo
+> deve usar uma atualização condicional equivalente a `consumed_at IS NULL AND
+> expires_at > now`, com retorno que permita distinguir ausência, expiração e
+> reutilização sem corrida entre leitura e escrita.
+
+> [!tip] Bizo 3 — trate a URL como segredo transitório
+>
+> Token na query pode vazar por histórico, analytics, proxy ou `Referer`. A
+> página de consumo deve usar `Referrer-Policy: no-referrer`, trocar o token logo
+> no carregamento e removê-lo do histórico. Nunca registrar URL, cabeçalho ou
+> payload de erro que o contenha.
+
+> [!tip] Bizo 4 — a outbox reduz a janela de falha, não elimina duplicidade
+>
+> O worker pode cair depois de o provedor aceitar a mensagem e antes de marcar o
+> evento como entregue. O sistema precisa tolerar reenvio: token de uso único,
+> template claro e provider idempotency key quando disponível.
+
+> [!tip] Bizo 5 — dados e segredos têm destinos diferentes
+>
+> A tabela de tokens guarda hash; a outbox guarda somente o token bruto cifrado;
+> o e-mail do usuário fica cifrado no registro do usuário. Nenhuma dessas três
+> representações substitui a outra, e todas exigem rotação e limpeza após uso ou
+> expiração.
+
 ## Escopo técnico
 
 ### 1. Modelo e migrations
@@ -89,7 +161,7 @@ calendário no domínio.
 Definir uma `IdentityAccessUnitOfWork` que disponibiliza repositórios de
 usuário, token e outbox vinculados à mesma transação. A outbox recebe um payload
 cifrado contendo o token bruto de entrega; a tabela de `login_tokens` mantém
-apenas o hash. O worker é o único consumidor autorizado a decriptar esse
+apenas o hash. O worker é o único consumidor autorizado a descriptografar esse
 payload para construir o link e enviar o e-mail.
 
 Casos de uso previstos:
@@ -119,7 +191,7 @@ token em logs ou respostas de erro.
 ### 4. Worker de outbox e operação
 
 Implementar worker separado para reservar eventos pendentes com `FOR UPDATE
-SKIP LOCKED`, decriptar o payload somente em memória durante a entrega e chamar
+SKIP LOCKED`, descriptografar o payload somente em memória durante a entrega e chamar
 o emissor de e-mail. A confirmação de entrega marca o evento como processado;
 falhas usam retry com backoff e limite de tentativas.
 

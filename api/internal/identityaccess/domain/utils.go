@@ -10,6 +10,6 @@ func cloneTime(value *time.Time) *time.Time {
 	if value == nil {
 		return nil
 	}
-	copied := *value
+	copied := value.UTC()
 	return &copied
 }
