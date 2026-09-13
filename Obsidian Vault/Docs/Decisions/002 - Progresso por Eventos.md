@@ -16,15 +16,12 @@ related: ["[[Docs/Architecture/Sincronização Offline]]"]
 
 ## Contexto
 
-Dois dispositivos podem ler sem conexão e sincronizar em ordens diferentes. Uma
-atualização que simplesmente substitui o progresso permite duplicação e pode
+Dois dispositivos podem ler sem conexão e sincronizar em ordens diferentes. Uma atualização que simplesmente substitui o progresso permite duplicação e pode
 fazer o estado regredir.
 
 ## Decisão
 
-Representar avanços como eventos idempotentes. O banco aceita cada `eventId`
-uma única vez e mantém uma projeção canônica monotônica: o ponto confirmado mais
-avançado nunca diminui.
+Representar avanços como eventos idempotentes. O banco aceita cada `eventId` uma única vez e mantém uma projeção canônica monotônica: o ponto confirmado mais avançado nunca diminui.
 
 ## Consequências
 

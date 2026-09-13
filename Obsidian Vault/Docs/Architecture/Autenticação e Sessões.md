@@ -27,8 +27,10 @@ registro por um dado cifrado, usa um índice cego com HMAC versionado; o valor
 original não é mantido em texto puro apenas para permitir busca.
 
 Solicitações de magic link criam o token e um evento de entrega na mesma
-transação. O worker envia o e-mail a partir da outbox; o token bruto necessário
-para a URL existe apenas em payload cifrado do evento. Consulte a
+transação. Um consumidor da outbox envia o e-mail; no MVP ele executa no mesmo
+processo da API, como goroutine supervisionada, e poderá virar um processo
+dedicado se a operação exigir isolamento ou escala independente. O token bruto
+necessário para a URL existe apenas em payload cifrado do evento. Consulte a
 [[Docs/Decisions/003 - Outbox para Magic Links|ADR da outbox]].
 
 ## Regras

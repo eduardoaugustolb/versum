@@ -60,11 +60,7 @@ type idGenerator struct{}
 func (idGenerator) Generate() id.UUID { return id.UUID("token-1") }
 
 func TestRequestMagicLinkUsesClockAndConfiguredTTL(t *testing.T) {
-	email, err := domain.ParseEmail("ana@example.com")
-	if err != nil {
-		t.Fatal(err)
-	}
-	user, err := domain.NewUser("user-1", email)
+	user, err := domain.NewUser("user-1", "ana@example.com")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -83,7 +79,7 @@ func TestRequestMagicLinkUsesClockAndConfiguredTTL(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if err := useCase.Execute(t.Context(), email); err != nil {
+	if err := useCase.Execute(t.Context(), user.Email()); err != nil {
 		t.Fatal(err)
 	}
 	if tokens.token == nil {

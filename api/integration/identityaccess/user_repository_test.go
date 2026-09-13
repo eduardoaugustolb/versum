@@ -4,20 +4,20 @@ import (
 	"context"
 	"reflect"
 	"testing"
-	"time"
 
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/domain"
 	identityaccessPg "github.com/eduardoaugustolb/versum/api/internal/identityaccess/postgres"
-	"github.com/eduardoaugustolb/versum/api/internal/ports/dbexec"
-	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func setupUserRepository(ctx context.Context, t *testing.T) (*identityaccessPg.UserRepository, dbexec.Executor, *pgxpool.Pool, *domain.User) {
+func setupUserRepository(ctx context.Context, t *testing.T) (*identityaccessPg.UserRepository, *domain.User) {
+	t.Helper()
+
 	dbExec, pool, err := setupPostgresDBExecutor(ctx, t)
 	if err != nil {
 		t.Fatal(err)
 	}
+	t.Cleanup(pool.Close)
 
 	repo := identityaccessPg.NewUserRepository(dbExec, testEmailProtector{})
 
@@ -26,16 +26,23 @@ func setupUserRepository(ctx context.Context, t *testing.T) (*identityaccessPg.U
 	}
 
 	persistedUser := createTestUser(ctx, t, dbExec, "test", "test@example.com")
-	return repo, dbExec, pool, persistedUser
+
+	t.Cleanup(func() { // executa primeiro, pois Cleanup é LIFO
+		if err := dbExec.Exec(
+			context.Background(),
+			"DELETE FROM users WHERE id = $1",
+			"test",
+		); err != nil {
+			t.Error(err)
+		}
+	})
+
+	return repo, persistedUser
 }
 
 func TestFindUserByID(t *testing.T) {
-	ctx, cancel := context.WithTimeout(t.Context(), 5*time.Second)
-	defer cancel()
-	repo, dbExec, pool, persistedUser := setupUserRepository(ctx, t)
-	defer pool.Close()
-
-	defer dbExec.Exec(ctx, "DELETE FROM users WHERE id = $1", "test")
+	ctx := context.Background()
+	repo, persistedUser := setupUserRepository(ctx, t)
 
 	tests := []struct {
 		name          string
@@ -87,12 +94,8 @@ func TestFindUserByID(t *testing.T) {
 }
 
 func TestFindUserByEmail(t *testing.T) {
-	ctx, cancel := context.WithTimeout(t.Context(), 5*time.Second)
-	defer cancel()
-	repo, dbExec, pool, persistedUser := setupUserRepository(ctx, t)
-	defer pool.Close()
-
-	defer dbExec.Exec(ctx, "DELETE FROM users WHERE id = $1", persistedUser.ID())
+	ctx := context.Background()
+	repo, persistedUser := setupUserRepository(ctx, t)
 
 	tests := []struct {
 		name          string

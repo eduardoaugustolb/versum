@@ -5,6 +5,7 @@
 
 # Agent-local instructions
 AGENTS.md
+.claude/
 
 # Operating systems and editors
 .DS_Store

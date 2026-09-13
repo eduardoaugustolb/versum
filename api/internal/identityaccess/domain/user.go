@@ -5,7 +5,11 @@ type User struct {
 	email Email
 }
 
-func NewUser(id string, email Email) (*User, error) {
+func NewUser(id string, emailRaw string) (*User, error) {
+	email, err := ParseEmail(emailRaw)
+	if err != nil {
+		return nil, err
+	}
 	user := &User{id: id, email: email}
 
 	if err := validateUser(user); err != nil {
@@ -15,7 +19,11 @@ func NewUser(id string, email Email) (*User, error) {
 	return user, nil
 }
 
-func RehydrateUser(id string, email Email) (*User, error) {
+func RehydrateUser(id string, emailRaw string) (*User, error) {
+	email, err := ParseEmail(emailRaw)
+	if err != nil {
+		return nil, err
+	}
 	user := &User{id: id, email: email}
 
 	if err := validateUser(user); err != nil {

@@ -2,22 +2,13 @@ package domain_test
 
 import (
 	"errors"
+	"strings"
 	"testing"
 
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/domain"
 )
 
-func mustEmail(t *testing.T, raw string) domain.Email {
-	t.Helper()
-	email, err := domain.ParseEmail(raw)
-	if err != nil {
-		t.Fatal(err)
-	}
-	return email
-}
-
 func TestNewUser(t *testing.T) {
-	email := mustEmail(t, "ana@example.com")
 	tests := []struct {
 		name    string
 		id      string
@@ -29,7 +20,7 @@ func TestNewUser(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			user, err := domain.NewUser(tt.id, email)
+			user, err := domain.NewUser(tt.id, "ana@example.com")
 			if !errors.Is(err, tt.wantErr) {
 				t.Fatalf("expected error %v, got %v", tt.wantErr, err)
 			}
@@ -41,12 +32,12 @@ func TestNewUser(t *testing.T) {
 }
 
 func TestUserRehydratePreservesEmail(t *testing.T) {
-	email := mustEmail(t, "Ana@EXAMPLE.COM")
-	user, err := domain.RehydrateUser("user-1", email)
+	emailRaw := "Ana@EXAMPLE.COM"
+	user, err := domain.RehydrateUser("user-1", emailRaw)
 	if err != nil {
 		t.Fatalf("rehydration failed: %v", err)
 	}
-	if got := user.Email().String(); got != "ana@example.com" {
+	if got := user.Email().String(); got != strings.ToLower(emailRaw) {
 		t.Fatalf("expected normalized email, got %q", got)
 	}
 }

@@ -40,11 +40,17 @@ token bruto necessário para entrega. Nem o token bruto, nem a URL completa, nem
 o e-mail em texto puro podem aparecer em logs, métricas, traces ou colunas sem
 cifragem. O payload informa a versão da chave de cifragem para permitir rotação.
 
-O worker processa a outbox de forma assíncrona: reserva eventos pendentes com
-`FOR UPDATE SKIP LOCKED`, decripta o payload somente durante a entrega, obtém o
-e-mail protegido do usuário e envia a mensagem. Em sucesso, registra a entrega;
-em falha, aumenta as tentativas e agenda retry com backoff. Depois do limite de
-tentativas, o evento exige observação e tratamento operacional.
+Um consumidor da outbox processa os eventos de forma assíncrona: reserva eventos
+pendentes com `FOR UPDATE SKIP LOCKED`, decripta o payload somente durante a
+entrega, obtém o e-mail protegido do usuário e envia a mensagem. Em sucesso,
+registra a entrega; em falha, aumenta as tentativas e agenda retry com backoff.
+Depois do limite de tentativas, o evento exige observação e tratamento
+operacional.
+
+No MVP, o consumidor executa como goroutine supervisionada no mesmo binário da
+API. É uma responsabilidade lógica separada, mas não exige outro processo ou
+deployment. Pode ser extraído para um worker dedicado quando houver necessidade
+operacional de isolamento, disponibilidade ou escala independente.
 
 ## Garantias e limites
 
@@ -62,8 +68,9 @@ tentativas, o evento exige observação e tratamento operacional.
 - O caso de uso não chama o provedor de e-mail dentro da transação.
 - Repositórios de usuário, token e outbox devem operar sobre a mesma `pgx.Tx`
   durante a unidade de trabalho.
-- É necessário um worker, schema de outbox, política de retry e métricas de
-  eventos pendentes/falhos.
+- É necessário um consumidor da outbox, schema de outbox, política de retry e
+  métricas de eventos pendentes/falhos. Inicialmente ele integra o processo da
+  API; um processo dedicado é uma evolução operacional.
 - O payload cifrado adiciona rotação de chave e limpeza segura após entrega ou
   expiração.
 

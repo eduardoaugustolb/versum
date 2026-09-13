@@ -1,7 +1,7 @@
 # Avaliação Arquitetural do Versum
 
-**Data da avaliação:** 5 de agosto de 2026  
-**Escopo:** documentação do `Obsidian Vault/`, implementação da API Go, corpus bíblico, infraestrutura local, testes e automações existentes.  
+**Data da avaliação:** 7 de setembro de 2026
+**Escopo:** branch `feat/auth`, documentação do `Obsidian Vault/`, implementação da API Go, corpus bíblico, migrations, testes e automações existentes.
 **Objetivo:** fornecer evidências e opções para que a liderança técnica decida como simplificar a arquitetura, corrigir inconsistências e preparar o produto para evolução e escala.
 
 ## Resumo executivo
@@ -10,12 +10,13 @@ A stack e a arquitetura macro são adequadas ao produto. Go, PostgreSQL, `pgx`, 
 
 O principal problema não é a escolha das tecnologias. É a distribuição da complexidade:
 
-- o projeto introduz cedo abstrações e cerimônias de Clean/Hexagonal Architecture;
-- a abstração genérica de SQL não entrega a portabilidade prometida;
-- regras arquiteturais, planos e implementação divergem entre si;
-- sincronização, autenticação, observabilidade e operação, que determinam a robustez real do produto, permanecem subespecificadas;
-- a implementação atual da API ainda não está integrada de ponta a ponta e não compila;
-- não existe CI para impedir regressões da API.
+- o projeto ainda precisa controlar a quantidade de abstrações à medida que novos
+  módulos entram no monólito;
+- sincronização, observabilidade e operação continuam incompletas;
+- autenticação está em planejamento implementável, com as migrations iniciais
+  criadas, mas ainda não possui handlers e casos de uso;
+- o catálogo está implementado, testado e separado como entrega concluída;
+- a API já possui CI próprio, embora a cobertura operacional ainda possa crescer.
 
 A recomendação principal é manter um **monólito modular Go**, assumir PostgreSQL explicitamente, usar interfaces semânticas pequenas definidas pelos consumidores e remover abstrações de infraestrutura sem um segundo caso real. Antes de expandir o backend, devem ser formalizados os contratos de sincronização e autenticação.
 
@@ -25,13 +26,13 @@ A recomendação principal é manter um **monólito modular Go**, assumir Postgr
 | :-- | :-- | :-- |
 | Stack | Adequada | Go, PostgreSQL, `pgx`, `chi`, Expo/React Native e SQLite são escolhas coerentes. |
 | Arquitetura macro | Adequada | Monorepo e monólito modular são suficientes; não há justificativa para microserviços. |
-| Idiomatismo Go | Precisa de revisão | Há abstrações inspiradas em arquiteturas orientadas a classes e duplicação parcial das APIs de `pgx`/`database/sql`. |
-| Limites de domínio | Inconsistentes | As regras dizem que adapters ficam fora do domínio, mas o SQL concreto está no pacote `catalog`. |
-| Escalabilidade | Potencialmente boa, ainda não demonstrada | A API pode ser stateless, porém faltam readiness, shutdown, observabilidade, estratégia de eventos e processo de deploy. |
+| Idiomatismo Go | Em evolução | A porta `dbexec` é pequena e neutra; novas abstrações devem continuar sendo justificadas por casos de uso reais. |
+| Limites de domínio | Coerentes no catálogo | O repositório usa `dbexec`, enquanto o adapter concreto PostgreSQL fica isolado em `internal/adapters/postgres`. |
+| Escalabilidade | Potencialmente boa, ainda não demonstrada | A API pode ser stateless, porém faltam readiness, observabilidade, estratégia de eventos e processo de deploy. |
 | Sincronização | Risco alto | O diferencial central do produto ainda não possui semântica completa nem modelo operacional. |
-| Segurança | Parcial | Existem bons princípios, mas autenticação e sessões não estão especificadas em nível implementável. |
-| Testes e entrega | Insuficientes | Há testes unitários, mas faltam integração PostgreSQL, CI da API e validação do composition root. |
-| Corpus | Boa integridade mecânica | Manifest e hashes são positivos, mas seed atômico, versão no banco e licenciamento precisam ser resolvidos. |
+| Segurança | Em implementação | O contrato de autenticação, cifragem de dados pessoais e migrations estão documentados; o fluxo HTTP ainda falta. |
+| Testes e entrega | Baseline funcional | `go test ./...`, `go vet ./...`, race e CI da API existem; faltam ampliar verificações operacionais. |
+| Corpus | Implementado | Seed transacional por livro, publicação de versão e hash do manifesto estão implementados; licenciamento continua pendente. |
 
 ## Arquitetura documentada
 
@@ -81,16 +82,18 @@ Referências:
 
 ## Achados prioritários
 
-### 1. A abstração SQL não entrega portabilidade real
+### 1. A portabilidade de banco não deve ser um objetivo implícito
 
 **Severidade:** alta  
 **Categoria:** idiomatismo, complexidade e limites arquiteturais
 
-O plano reconhece que placeholders e construções como `$1` e `ON CONFLICT` são específicos do PostgreSQL, mas afirma que trocar de banco exigiria apenas outro `<Driver>Executor`, sem alterar `catalog.Repository`.
+O catálogo agora assume PostgreSQL explicitamente. A antiga abstração genérica
+de SQL foi substituída por `internal/ports/dbexec`, uma porta pequena sem tipos
+de `pgx`; o adapter `postgres.PgxExecutor` conhece o driver concreto.
 
 Essa afirmação não se sustenta: outro banco exigiria mudanças nas queries, nos tipos, na semântica de transação e possivelmente no tratamento de erros.
 
-A implementação replica parcialmente APIs de `database/sql` e `pgx`:
+A porta não promete trocar de banco sem alterar queries ou semântica:
 
 ```go
 type Executor interface {
@@ -100,25 +103,27 @@ type Executor interface {
 }
 ```
 
-Consequências:
+O risco restante é manter a porta genérica maior do que os casos de uso exigem.
+As queries continuam PostgreSQL-específicas por usarem `$1`, `ON CONFLICT` e
+`COPY`.
+
+Consequências da decisão atual:
 
 - mais interfaces e adapters para manter;
-- perda de funcionalidades nativas do `pgx`, como `CommandTag`;
-- ausência de portabilidade efetiva das queries;
-- suporte a transações precisa de novas abstrações;
-- pacote próprio chamado `sql`, com potencial de colisão com `database/sql`;
-- dificuldade adicional para diagnosticar erros específicos do PostgreSQL.
+- o adapter pode ser substituído em testes sem vazar `pgx` para a aplicação;
+- não há promessa de portabilidade ilusória entre bancos.
 
 Evidências:
 
 - `Obsidian Vault/Plans/Archive/02 - Catálogo Bíblico.md:33-53`
 - `Obsidian Vault/Docs/Architecture/Visão Geral.md:74-81`
-- `api/internal/adapters/sql/executor.go:5-20`
-- `api/internal/catalog/query.go:13-14`
+- `api/internal/ports/dbexec/executor.go:1-20`
+- `api/internal/adapters/postgres/pgx_executor.go:1-30`
 
-**Recomendação:** assumir PostgreSQL explicitamente e usar `pgx` diretamente no adapter de persistência. Manter interfaces semânticas como `BookRepository` e `ChapterRepository` no pacote consumidor. Só introduzir suporte a outro banco quando existir um requisito concreto.
+**Estado:** decisão aplicada no catálogo. Só introduzir suporte a outro banco
+quando existir um requisito concreto.
 
-### 2. Regras arquiteturais e implementação se contradizem
+### 2. A separação de driver foi corrigida no catálogo
 
 **Severidade:** alta  
 **Categoria:** limites e manutenibilidade
@@ -130,23 +135,26 @@ As regras determinam que:
 - dependências apontam para dentro;
 - SQL é conhecido apenas pelo adapter PostgreSQL.
 
-Entretanto, `catalog.Repository` e as queries concretas estão em `internal/catalog`, e esse pacote importa `internal/adapters/sql`.
+O catálogo mantém suas queries junto da funcionalidade, mas a execução é feita
+pela porta `dbexec`. O domínio e os casos de uso não importam `pgx`; somente o
+adapter PostgreSQL conhece o driver.
 
 Evidências:
 
 - `Obsidian Vault/Rules/01 - Princípios de Engenharia.md:16-25`
 - `Obsidian Vault/Rules/01 - Princípios de Engenharia.md:39-82`
-- `api/internal/catalog/repository.go:1-16`
-- `api/internal/catalog/query.go:1-14`
+- `api/internal/catalog/postgres/repository.go:1-20`
+- `api/internal/ports/dbexec/executor.go:1-20`
 
-Existem duas abordagens coerentes:
+A decisão registrada é um vertical slice pragmático com isolamento do driver:
 
 | Abordagem | Vantagem | Custo |
 | :-- | :-- | :-- |
 | Vertical slice pragmático | Menos pacotes e indireção; SQL próximo da funcionalidade | `catalog` deixa de ser um domínio puro e passa a incluir infraestrutura |
 | Ports & Adapters | Direção de dependência explícita; domínio sem SQL | Mais um pacote e wiring, justificável onde há regra de negócio real |
 
-**Recomendação:** escolher uma abordagem e documentá-la sem exceções contraditórias. Para este projeto, um adapter PostgreSQL explícito e interfaces pequenas no consumidor oferece o melhor equilíbrio.
+**Estado:** corrigido para o catálogo. O módulo de autenticação deve seguir a
+mesma direção.
 
 ### 3. Há cerimônia excessiva para operações simples
 
@@ -165,53 +173,45 @@ Esse padrão pode ser útil quando há autorização, transação, múltiplas de
 
 **Recomendação:** usar funções ou serviços pequenos para operações simples. Introduzir um caso de uso explícito quando houver comportamento de negócio observável, não como regra obrigatória para toda consulta.
 
-### 4. A API atual não compila e não está conectada ao PostgreSQL
+### 4. A baseline da API foi restaurada
 
-**Severidade:** crítica no estado avaliado  
+**Severidade:** resolvida; baixa como risco residual
 **Categoria:** implementação e entrega
 
-`NewRouter` recebe `httpapi.Dependencies`, mas `cmd/api` passa diretamente um `health.CheckHealth`:
+O composition root agora cria o pool PostgreSQL, confirma a conexão com
+`Ping`, injeta catálogo e health no router, fecha o pool e trata shutdown
+gracioso:
 
 - `api/cmd/api/main.go:22`
 - `api/internal/transport/httpapi/router.go:9`
 - `api/internal/transport/httpapi/dependencies.go:8-16`
 
-Resultado confirmado por `go test ./...`:
+A verificação atual com `go test ./...` passa em todos os pacotes da API.
 
-```text
-cannot use health.NewCheckHealth() (value of struct type health.CheckHealth)
-as httpapi.Dependencies value in argument to httpapi.NewRouter
-```
+Evidências: `api/cmd/api/main.go`, `api/internal/transport/httpapi/router.go` e
+`.github/workflows/api-ci.yml`.
 
-Também não existe no composition root:
+**Estado:** resolvido para a baseline atual. Readiness, observabilidade e
+integração real com um banco de CI continuam como trabalho operacional.
 
-- criação do `pgxpool.Pool`;
-- `Ping` no boot;
-- criação de `PgxExecutor` e do repositório;
-- injeção de `ListBooks` e `GetChapter`;
-- fechamento do pool;
-- shutdown gracioso.
+### 5. O contrato de capítulo foi corrigido na persistência
 
-Como o working tree estava em implementação ativa durante a avaliação, essa falha pode ser transitória. Ainda assim, a ausência de CI permitiu que uma incompatibilidade simples permanecesse sem barreira automatizada remota.
-
-**Recomendação:** finalizar o composition root antes de adicionar novas funcionalidades e criar CI obrigatório para `api/**`.
-
-### 5. O contrato de capítulo não é cumprido pela persistência
-
-**Severidade:** alta  
+**Severidade:** resolvida; baixa como risco residual
 **Categoria:** corretude
 
-`Chapter` expõe `BookName`, mas `FindChapter` consulta apenas `verses` e nunca preenche esse campo.
+`FindChapter` agora faz join com `books`, preenche `BookName`, fecha as rows e
+valida o erro após a iteração.
 
 Evidências:
 
-- `api/internal/catalog/chapter.go:10-15`
-- `api/internal/catalog/query.go:14`
-- `api/internal/catalog/repository.go:40-67`
+- `api/internal/catalog/domain/chapter.go`
+- `api/internal/catalog/postgres/queries.go:5-11`
+- `api/internal/catalog/postgres/repository.go:71-108`
 
-Os testes dos casos de uso e handlers usam stubs que já devolvem `BookName`, por isso não detectam a divergência entre contrato e SQL.
+Os testes de aplicação e transporte cobrem o contrato; a integração com banco
+continua sendo a verificação adicional desejável para o ambiente de CI.
 
-**Recomendação:** consultar o nome do livro no repositório ou removê-lo do contrato. Adicionar teste de integração real com PostgreSQL.
+**Estado:** resolvido no repositório do catálogo.
 
 ### 6. A semântica de sincronização está incompleta
 
@@ -245,20 +245,22 @@ Um usuário pode voltar a Gênesis depois de chegar a Salmos. Nesse cenário, �
 
 **Recomendação:** não implementar event sourcing genérico. Especificar operações tipadas, registrá-las em uma inbox idempotente e atualizar projeções transacionalmente. Definir cursores de servidor, limites de lote e retenção antes da implementação.
 
-### 7. O seed planejado não publica uma projeção fiel e atômica
+### 7. O seed publica uma projeção fiel e atômica
 
 **Severidade:** alta  
 **Categoria:** dados e operação
 
-O corpus é a autoridade do conteúdo, enquanto PostgreSQL é uma projeção. O seed planejado usa upserts e transações por livro.
+O corpus é a autoridade do conteúdo, enquanto PostgreSQL é uma projeção. O seed
+substitui cada livro dentro de uma transação e publica o hash do manifesto em
+`catalog_version`.
 
 Problemas:
 
-- upsert não remove versículos excluídos ou renumerados;
-- falha no meio pode deixar uma mistura de versões;
-- não há versão ou hash do corpus registrado no banco;
-- validar apenas 73 livros não prova que todos os versículos correspondem ao manifesto;
-- não existe atualmente um comando funcional e versionado para carregar o catálogo.
+- a publicação ainda precisa de validação operacional de contagens e hashes no
+  ambiente de deploy;
+- o seed percorre o corpus inteiro, mas a execução e o rollback devem ser
+  cobertos pelo pipeline de integração;
+- licenciamento e proveniência continuam pendentes.
 
 Evidências:
 
@@ -267,14 +269,16 @@ Evidências:
 - `Obsidian Vault/Plans/Archive/02 - Catálogo Bíblico.md:462-474`
 - `api/internal/adapters/postgres/migrations/000001_create-catalog.up.sql:1-18`
 
-**Recomendação:** carregar dados em staging, validar contagens e hashes e publicar a versão atomicamente. Registrar versão e hash do manifesto no banco. Como alternativa, servir o catálogo imutável como artefato estático com cache/CDN e manter PostgreSQL apenas para estado pessoal e busca, se necessária.
+**Estado:** a estratégia principal foi implementada. Falta automatizar as
+validações de publicação no pipeline e documentar licenciamento.
 
-### 8. O schema não protege invariantes suficientes
+### 8. O schema do catálogo protege as invariantes principais
 
 **Severidade:** média  
 **Categoria:** integridade de dados
 
-Faltam restrições para números positivos, texto não vazio e coerência básica:
+O schema do catálogo já possui restrições para números positivos, texto não
+vazio, testamento válido e referências entre livros e versículos:
 
 ```sql
 CHECK (chapter_count > 0)
@@ -284,11 +288,8 @@ CHECK (part > 0)
 CHECK (length(trim(text)) > 0)
 ```
 
-Outros pontos:
+Pontos que ainda merecem decisão futura:
 
-- `CREATE TABLE IF NOT EXISTS` pode esconder um schema incompatível em migrations versionadas;
-- o índice `(book_id, chapter)` é provavelmente redundante com a chave primária;
-- a coluna `"order"` exige quoting permanente e poderia ser `canonical_order`;
 - não há dimensão de tradução ou versão para múltiplos corpus futuros;
 - não existe restrição que relacione o maior capítulo com `chapter_count`.
 
@@ -296,19 +297,18 @@ Evidência:
 
 - `api/internal/adapters/postgres/migrations/000001_create-catalog.up.sql:1-18`
 
-**Recomendação:** endurecer o schema e realizar as validações que não cabem em constraints durante a publicação atômica do corpus.
+**Estado:** fundações do schema foram endurecidas; validações de publicação
+continuam no seed.
 
 ### 9. O serviço ainda não está preparado para operação horizontal
 
 **Severidade:** alta antes de produção  
 **Categoria:** operação e escalabilidade
 
-Embora os handlers sejam stateless, faltam:
+Embora os handlers sejam stateless e o servidor já tenha timeouts, `Ping` no
+boot e shutdown gracioso, ainda faltam:
 
 - liveness e readiness separadas;
-- `Ping` do PostgreSQL com timeout no boot;
-- shutdown gracioso;
-- `ReadHeaderTimeout` e política explícita de timeouts;
 - request ID;
 - recuperação e observação de panic;
 - logs estruturados por requisição;
@@ -316,13 +316,16 @@ Embora os handlers sejam stateless, faltam:
 - tracing ou correlação entre API e worker;
 - métricas de backlog, retries e idade do evento mais antigo;
 - SLOs, alertas e dashboards;
-- processo reproduzível de migration e seed.
+- readiness real vinculada ao banco;
+- processo reproduzível de migration e seed no deploy.
 
-O health check atual sempre devolve `ok`, mesmo sem banco disponível:
+O health check atual é liveness simples e não representa readiness do banco:
 
 - `api/internal/health/check.go:13-15`
 
-**Recomendação:** implementar `/livez` e `/readyz`, lifecycle completo do servidor e instrumentação mínima antes de múltiplas réplicas ou deploy de produção.
+**Recomendação:** separar `/livez` e `/readyz`, conectar readiness ao banco e
+adicionar instrumentação mínima antes de múltiplas réplicas ou deploy de
+produção.
 
 ### 10. Serviços externos estão sendo antecipados
 
@@ -351,32 +354,29 @@ Evidência:
 
 **Recomendação:** não provisionar nem abstrair dependências sem caso de uso implementado. PostgreSQL pode atender a primeira versão de jobs, leases e controles simples.
 
-### 11. Autenticação ainda não constitui um protocolo implementável
+### 11. Autenticação está em implementação
 
 **Severidade:** alta antes da implementação  
 **Categoria:** segurança
 
 As decisões iniciais são adequadas: magic link de uso único, hash no banco, cookie `httpOnly`, sessão por dispositivo e redirects allowlisted.
 
-Ainda faltam decisões sobre:
+O plano `03 - Autenticação e Sessões` agora define magic link de uso único,
+consumo atômico, expiração, sessões revogáveis, allowlist de redirects,
+proteção contra enumeração e cifragem de dados pessoais. As migrations
+`000003_create-auth` já definem usuários, hashes de tokens, sessões e versões
+de chaves.
 
-- entropia e algoritmo de hash;
-- consumo atômico do token;
-- expiração exata e tolerância de relógio;
-- proteção contra enumeração de e-mail;
-- rate limit por IP, e-mail e dispositivo;
-- comportamento diante de scanners automáticos de links;
-- cookies `Secure`, `SameSite`, `Path` e proteção CSRF;
-- rotação, expiração e revogação global de sessões;
-- Android App Links verificados;
-- armazenamento e rotação de chaves;
-- auditoria sem exposição de dados pessoais.
+Ainda falta implementar os casos de uso, handlers, middleware, envio de e-mail,
+rate limiting e testes de concorrência. A associação explícita a dispositivo e
+o cliente Android ficam para uma etapa futura.
 
 Evidência:
 
 - `Obsidian Vault/Docs/Architecture/Autenticação e Sessões.md:18-29`
 
-**Recomendação:** escrever um threat model e um contrato detalhado de autenticação antes de iniciar handlers e migrations.
+**Recomendação:** implementar o plano atual, incluindo threat model, contrato
+HTTP, gestão de chaves e testes antes de liberar rotas privadas.
 
 ### 12. O corpus possui risco de licenciamento
 
@@ -399,18 +399,20 @@ A licença MIT do código não concede automaticamente direitos sobre o corpus.
 
 ## Outros problemas concretos da implementação
 
-### Result sets não são fechados explicitamente
+### Result sets são fechados explicitamente
 
-`ListBooks` e `FindChapter` não executam `defer rows.Close()` após uma consulta bem-sucedida:
+`ListBooks` e `FindChapter` executam `defer rows.Close()` e verificam `rows.Err()`
+após a iteração:
 
-- `api/internal/catalog/repository.go:21-37`
-- `api/internal/catalog/repository.go:46-67`
+- `api/internal/catalog/postgres/repository.go:47-69`
+- `api/internal/catalog/postgres/repository.go:71-108`
 
-O `pgx` fecha as linhas quando a iteração termina normalmente, mas um retorno antecipado por erro de `Scan` pode manter a conexão ocupada por mais tempo.
+**Estado:** resolvido no repositório do catálogo.
 
 ### Validação HTTP é incompleta
 
-Capítulos `0` e negativos chegam à persistência. Valores incompatíveis com `SMALLINT` podem resultar em erro interno em vez de erro de validação.
+Capítulos `0`, negativos e não numéricos são rejeitados no handler antes da
+persistência. Ainda faltam limites explícitos para alguns parâmetros públicos.
 
 Também faltam:
 
@@ -423,27 +425,29 @@ Também faltam:
 
 ### Testes unitários escondem erros de integração
 
-Os testes com stubs verificam a delegação dos casos de uso e o mapeamento HTTP, mas não cobrem:
+Os testes unitários, HTTP e de integração cobrem parte do contrato. Ainda é
+necessário ampliar a cobertura para:
 
 - queries reais;
 - tipos e scans do PostgreSQL;
-- migrations `up` e `down`;
+- migrations `up` e `down` das novas tabelas de autenticação;
 - preenchimento de `BookName`;
 - ordenação real dos versículos;
 - fechamento de rows;
-- startup e shutdown;
 - readiness;
-- composition root.
+- fluxos completos de autenticação e rotação de chaves.
 
 ### PostgreSQL local é publicado em todas as interfaces
 
 `infra/docker-compose.yml` publica `5432:5432` e usa credenciais triviais. Para desenvolvimento local, é mais seguro usar `127.0.0.1:5432:5432`. Ambientes compartilhados devem usar secrets externos e não publicar o banco diretamente.
 
-### Não existe CI para a API
+### CI da API existe, mas precisa ampliar a cobertura operacional
 
-Os workflows atuais cobrem corpus e vault, mas não `api/**`. Hooks locais não substituem CI remoto.
+O workflow `.github/workflows/api-ci.yml` cobre `api/**` com build, vet, testes
+e teste de race. Hooks locais não substituem CI remoto, e o pipeline ainda pode
+ganhar PostgreSQL real para migrations, seed e integração.
 
-Um pipeline mínimo deveria executar:
+O pipeline atual executa:
 
 ```text
 go build ./...
@@ -452,7 +456,8 @@ go test ./...
 go test -race ./...
 ```
 
-Uma etapa separada deve subir PostgreSQL e executar migrations, seed e testes de integração.
+Uma etapa futura deve subir PostgreSQL e executar migrations, seed e testes de
+integração.
 
 ## Arquitetura recomendada
 
@@ -589,30 +594,26 @@ Essa abordagem preserva as vantagens dos eventos sem adotar event sourcing como 
 
 ## Plano recomendado
 
-### Prioridade 0: restaurar uma baseline executável
+### Prioridade 0: manter a baseline executável
 
-1. Corrigir o composition root e restaurar `go test ./...`.
-2. Criar o pool PostgreSQL e executar `Ping` com timeout no boot.
-3. Injetar repositório e operações do catálogo.
-4. Implementar shutdown gracioso e fechamento do pool.
-5. Criar CI da API.
+1. Manter `go test ./...`, `go vet ./...` e `go test -race ./...` verdes.
+2. Cobrir migrations e seed em um PostgreSQL de CI.
+3. Manter composition root, timeouts e shutdown gracioso sob teste.
 
-### Prioridade 1: corrigir fundações do catálogo
+### Prioridade 1: concluir autenticação
 
-1. Decidir sobre a remoção de `sql.Executor`.
-2. Corrigir `BookName` e fechar `Rows` explicitamente.
-3. Endurecer schema e validação HTTP.
-4. Implementar testes de integração PostgreSQL.
-5. Implementar migration e seed reproduzíveis.
-6. Publicar o corpus de forma atômica e registrar sua versão.
+1. Implementar os casos de uso de magic link e sessões.
+2. Implementar envio de e-mail, cookies, middleware e allowlist.
+3. Integrar cifragem, HMAC cego, rotação de chaves e ciclo de vida LGPD.
+4. Cobrir concorrência, expiração, revogação e ausência de segredos em logs.
+5. Executar as migrations de auth em integração PostgreSQL.
 
-### Prioridade 2: definir contratos críticos
+### Prioridade 2: implementar sincronização
 
-1. Especificar a semântica completa de progresso.
-2. Especificar protocolo, idempotência e reconciliação de sync.
-3. Especificar autenticação, sessão e threat model.
-4. Formalizar contrato HTTP para web e mobile.
-5. Resolver licença e proveniência do corpus.
+1. Implementar a semântica completa de progresso.
+2. Implementar protocolo, idempotência e reconciliação de sync.
+3. Formalizar contrato HTTP para web e mobile.
+4. Resolver licença e proveniência do corpus.
 
 ### Prioridade 3: preparar operação
 
@@ -634,15 +635,17 @@ Essa abordagem preserva as vantagens dos eventos sem adotar event sourcing como 
 
 | Verificação | Resultado |
 | :-- | :-- |
-| `api: go test ./...` | Falhou na compilação em `cmd/api/main.go:22` |
-| `bible/tools: go test ./...` | Passou |
-| `tools/vaultlint: go test ./...` | Passou |
+| `api: go test ./...` | Passou em 7 de setembro de 2026 |
+| `api: go vet ./...` | Passou em 7 de setembro de 2026 |
+| `api: go test -race ./...` | Passou em 7 de setembro de 2026; integração PostgreSQL foi pulada sem `DATABASE_URL` |
+| `bible/tools: go test ./...` | Passou na avaliação anterior |
+| `tools/vaultlint: go test ./...` | Passou na avaliação anterior |
 
 ## Limitações da avaliação
 
-- A análise representa o working tree local em 5 de agosto de 2026, que continha mudanças modificadas e arquivos ainda não rastreados.
-- A falha de compilação pode representar trabalho em andamento, mas continua relevante pela ausência de CI da API.
-- Web, mobile, worker, autenticação e sincronização ainda não possuem implementação suficiente para revisão de código.
+- A análise representa a branch `feat/auth` em 7 de setembro de 2026; as migrations de autenticação estão versionadas no commit `6cd47f5`.
+- Web, mobile, worker e sincronização ainda não possuem implementação suficiente para revisão de código.
+- Autenticação possui contrato e migrations, mas não fluxo executável completo.
 - Não foram realizados testes de carga, segurança ofensiva ou recuperação de desastre.
 - A análise de licenciamento identifica ausência de documentação; não constitui parecer jurídico.
 
@@ -658,7 +661,7 @@ Essa abordagem preserva as vantagens dos eventos sem adotar event sourcing como 
 - `Obsidian Vault/Plans/Archive/02 - Catálogo Bíblico.md`
 - `api/cmd/api/main.go`
 - `api/internal/catalog/`
-- `api/internal/adapters/sql/`
+- `api/internal/ports/dbexec/`
 - `api/internal/adapters/postgres/`
 - `api/internal/transport/httpapi/`
 - `infra/docker-compose.yml`

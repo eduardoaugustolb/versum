@@ -61,7 +61,7 @@ func (r *UserRepository) scanUser(ctx context.Context, row dbexec.Row, operation
 	if err != nil {
 		return nil, fmt.Errorf("%s: unprotecting user email: %w", operation, err)
 	}
-	user, err := domain.RehydrateUser(id, email)
+	user, err := domain.RehydrateUser(id, email.String())
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", operation, err)
 	}

@@ -65,13 +65,13 @@ push e qualquer dado pessoal passam a depender de uma sessão autenticada.
 
 ### Próxima sequência — nesta ordem
 
-- [ ] **Fixar políticas antes do schema:** decidir criação automática versus
+- [x] **Fixar políticas antes do schema:** decidir criação automática versus
   conta preexistente, invalidação de tokens anteriores, TTL, limite de retries,
   retenção e comportamento quando o e-mail falha.
 - [ ] **Fechar as portas criptográficas:** usar `crypto/rand` para token e
   segredo de sessão; definir hash/HMAC, versionamento, proteção do payload de
   entrega e origem das chaves fora do banco.
-- [ ] **Criar migration da outbox:** id, tipo, `payload_ciphertext`, versão da
+- [x] **Criar migration da outbox:** id, tipo, `payload_ciphertext`, versão da
   chave, tentativas, `available_at`, lease, processamento, erro redigido e
   índices para eventos prontos.
 - [ ] **Implementar `IdentityAccessUnitOfWork`:** iniciar `pgx.Tx` e expor os
@@ -79,14 +79,47 @@ push e qualquer dado pessoal passam a depender de uma sessão autenticada.
 - [ ] **Concluir `RequestMagicLink`:** gerar token, persistir somente hash,
   cifrar o segredo de entrega e gravar o evento na mesma transação. A resposta
   HTTP é sempre neutra.
-- [ ] **Implementar worker:** reivindicar uma pequena leva de eventos, confirmar
-  a lease, enviar fora da transação e depois marcar sucesso ou reagendar retry.
+- [ ] **Implementar consumidor da outbox no processo da API:** iniciar uma
+  goroutine supervisionada no bootstrap para reivindicar uma pequena leva de
+  eventos, confirmar a lease, enviar fora da transação e depois marcar sucesso
+  ou reagendar retry. Extrair para processo dedicado somente com necessidade
+  operacional comprovada.
 - [ ] **Concluir `ConsumeMagicLink`:** consumo condicional e atômico, criação de
   sessão na mesma transação e limpeza/expiração do segredo de entrega.
 - [ ] **Expor HTTP e cookies:** allowlist de redirect, `Referrer-Policy`, cookie
   seguro, middleware e resposta sem enumeração de contas.
 - [ ] **Operar e testar:** integração PostgreSQL, cenários concorrentes, crash
   recovery, logs redigidos, métricas, alertas e runbook.
+
+### Roteiro de implementação detalhado
+
+1. Fixar e validar as políticas de autenticação: criação automática ou conta
+   preexistente, TTL, invalidação de links anteriores, retenção e política de
+   retry de entrega.
+2. Configurar as políticas no bootstrap por ambiente e injetá-las nos casos de
+   uso e no worker.
+3. Fechar as portas criptográficas: aleatoriedade com `crypto/rand`, hash de
+   token e segredo de sessão, HMAC de e-mail, cifragem versionada e origem
+   externa das chaves.
+4. Criar a outbox genérica: migration, entidade, portas e repositório para
+   eventos com payload cifrado, lease, tentativas e agendamento.
+5. Implementar `IdentityAccessUnitOfWork` com `pgx.Tx`, expondo usuário, token
+   e outbox na mesma transação.
+6. Concluir `RequestMagicLink`: localizar ou criar a identidade conforme a
+   política, persistir somente o hash do token e criar o evento de entrega
+   cifrado na mesma transação.
+7. Implementar o worker da outbox: reservar eventos, enviar depois do commit,
+   confirmar sucesso ou reagendar falha com backoff e limite de tentativas.
+8. Concluir `ConsumeMagicLink`: consumir condicionalmente no SQL, criar a
+   sessão na mesma transação e limpar o segredo de entrega.
+9. Implementar o ciclo de vida de sessões: autenticar, revogar uma sessão e
+   revogar todas as sessões, com hash, expiração e identificação do dispositivo.
+10. Expor HTTP: solicitar e consumir magic link, sessão atual, logout, cookie
+    seguro, allowlist de redirects, `Referrer-Policy` e middleware das rotas
+    privadas.
+11. Operar e testar: integração PostgreSQL, concorrência, recuperação após
+    crash, retries, logs redigidos, métricas, alertas e runbook; executar
+    `go test ./...` e `go vet ./...`.
 
 > [!tip] Bizo 1 — não segure transação aberta durante o envio
 >
@@ -188,12 +221,18 @@ Redirects do magic link devem aceitar somente destinos de uma allowlist
 configurada. O contrato precisa impedir open redirect e não deve devolver o
 token em logs ou respostas de erro.
 
-### 4. Worker de outbox e operação
+### 4. Consumidor da outbox e operação
 
-Implementar worker separado para reservar eventos pendentes com `FOR UPDATE
-SKIP LOCKED`, descriptografar o payload somente em memória durante a entrega e chamar
+Implementar um consumidor da outbox no mesmo processo da API, como goroutine
+supervisionada no bootstrap. Ele reserva eventos pendentes com `FOR UPDATE SKIP
+LOCKED`, descriptografa o payload somente em memória durante a entrega e chama
 o emissor de e-mail. A confirmação de entrega marca o evento como processado;
-falhas usam retry com backoff e limite de tentativas.
+falhas usam retry com backoff e limite de tentativas. A lease e a reserva devem
+permitir que mais de uma instância da API consuma eventos com segurança.
+
+Extrair esse consumidor para um processo ou deployment dedicado é uma evolução
+operacional, indicada quando isolamento de falhas, disponibilidade durante
+reinícios da API ou escala independente justificarem a complexidade adicional.
 
 O desenho é *at-least-once*: duplicidade de envio é possível após falha entre o
 provedor aceitar a mensagem e a confirmação no banco. Templates, provedor e

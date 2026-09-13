@@ -4,8 +4,9 @@ package application
 import "errors"
 
 var (
-	ErrUserNotFound        = errors.New("user not found")
-	ErrSessionNotFound     = errors.New("session not found")
-	ErrLoginTokenNotFound  = errors.New("login token not found")
-	ErrInvalidMagicLinkTTL = errors.New("invalid magic link ttl")
+	ErrUserNotFound           = errors.New("user not found")
+	ErrSessionNotFound        = errors.New("session not found")
+	ErrLoginTokenNotFound     = errors.New("login token not found")
+	ErrInvalidMagicLinkTTL    = errors.New("invalid magic link ttl")
+	ErrInvalidMagicLinkPolicy = errors.New("invalid magic link policy")
 )

@@ -55,11 +55,7 @@ func (testEmailProtector) LookupHMAC(_ context.Context, email domain.Email) ([]b
 
 func createTestUser(ctx context.Context, t *testing.T, db dbexec.Executor, id, rawEmail string) *domain.User {
 	t.Helper()
-	email, err := domain.ParseEmail(rawEmail)
-	if err != nil {
-		t.Fatal(err)
-	}
-	user, err := domain.NewUser(id, email)
+	user, err := domain.NewUser(id, rawEmail)
 	if err != nil {
 		t.Fatal(err)
 	}
