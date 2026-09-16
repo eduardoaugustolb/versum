@@ -17,6 +17,12 @@ type Rows interface {
 	Close()
 }
 
+type Transaction interface {
+	Commit(ctx context.Context) error
+	Rollback(ctx context.Context) error
+	Executor
+}
+
 type Executor interface {
 	QueryRow(ctx context.Context, sql string, args ...any) Row
 	Query(ctx context.Context, sql string, args ...any) (Rows, error)
@@ -27,4 +33,5 @@ type Executor interface {
 	// table and columns are plain identifiers — no driver type leaks into
 	// the signature, same as the rest of this port.
 	CopyFrom(ctx context.Context, table string, columns []string, rows [][]any) (int64, error)
+	Begin(ctx context.Context) (Transaction, error)
 }

@@ -9,4 +9,5 @@ import "net/http"
 
 type Router interface {
 	Get(pattern string, handler http.HandlerFunc)
+	Post(pattern string, handler http.HandlerFunc)
 }

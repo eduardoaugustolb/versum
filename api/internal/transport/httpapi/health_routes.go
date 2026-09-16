@@ -14,6 +14,6 @@ type healthResponse struct {
 func registerHealthRoutes(router httprouter.Router, useCase health.CheckHealth) {
 	router.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		status := useCase.Execute()
-		writeJSON(w, http.StatusOK, healthResponse{Status: status.State})
+		writeJSON(w, r, http.StatusOK, healthResponse{Status: status.State})
 	})
 }

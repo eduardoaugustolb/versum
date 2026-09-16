@@ -1,8 +1,8 @@
 package httpapi
 
 import (
-	"encoding/json"
 	"errors"
+	"log/slog"
 	"net/http"
 	"strconv"
 
@@ -14,7 +14,17 @@ func registerCatalogRoutes(router httprouter.Router, deps CatalogDependencies) {
 	router.Get("/books", func(w http.ResponseWriter, r *http.Request) {
 		books, err := deps.ListBooks.Execute(r.Context())
 		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
+			slog.ErrorContext(
+				r.Context(),
+				"failed to list books",
+				"error", err,
+			)
+
+			http.Error(
+				w,
+				"internal server error",
+				http.StatusInternalServerError,
+			)
 			return
 		}
 
@@ -22,7 +32,8 @@ func registerCatalogRoutes(router httprouter.Router, deps CatalogDependencies) {
 		for _, book := range books {
 			response = append(response, newBookResponse(book))
 		}
-		writeJSON(w, http.StatusOK, response)
+
+		writeJSON(w, r, http.StatusOK, response)
 	})
 
 	router.Get("/books/{bookId}/chapters/{number}", func(w http.ResponseWriter, r *http.Request) {
@@ -30,32 +41,41 @@ func registerCatalogRoutes(router httprouter.Router, deps CatalogDependencies) {
 
 		number, err := strconv.Atoi(r.PathValue("number"))
 		if err != nil || number <= 0 {
-			w.WriteHeader(http.StatusBadRequest)
+			http.Error(
+				w,
+				"invalid chapter number",
+				http.StatusBadRequest,
+			)
 			return
 		}
 
 		chapter, err := deps.GetChapter.Execute(r.Context(), bookID, number)
 		if err != nil {
 			if errors.Is(err, domain.ErrChapterNotFound) {
-				w.WriteHeader(http.StatusNotFound)
+				http.Error(
+					w,
+					"chapter not found",
+					http.StatusNotFound,
+				)
 				return
 			}
-			w.WriteHeader(http.StatusInternalServerError)
+
+			slog.ErrorContext(
+				r.Context(),
+				"failed to get chapter",
+				"book_id", bookID,
+				"chapter_number", number,
+				"error", err,
+			)
+
+			http.Error(
+				w,
+				"internal server error",
+				http.StatusInternalServerError,
+			)
 			return
 		}
 
-		writeJSON(w, http.StatusOK, newChapterResponse(chapter))
+		writeJSON(w, r, http.StatusOK, newChapterResponse(chapter))
 	})
-}
-
-func writeJSON(w http.ResponseWriter, status int, v any) {
-	body, err := json.Marshal(v)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(status)
-	w.Write(body)
 }

@@ -29,6 +29,10 @@ func (userRepositoryExecutor) CopyFrom(context.Context, string, []string, [][]an
 	return 0, nil
 }
 
+func (userRepositoryExecutor) Begin(context.Context) (dbexec.Transaction, error) {
+	return nil, nil
+}
+
 type errorRow struct{ err error }
 
 func (r errorRow) Scan(...any) error { return r.err }

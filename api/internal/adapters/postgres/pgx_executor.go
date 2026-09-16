@@ -16,9 +16,12 @@ type pgxConn interface {
 	QueryRow(ctx context.Context, sql string, args ...any) pgx.Row
 	Exec(ctx context.Context, sql string, args ...any) (pgconn.CommandTag, error)
 	CopyFrom(ctx context.Context, tableName pgx.Identifier, columnNames []string, rowSrc pgx.CopyFromSource) (int64, error)
+	Begin(ctx context.Context) (pgx.Tx, error)
 }
 
 type PgxExecutor struct{ conn pgxConn }
+
+var _ dbexec.Executor = PgxExecutor{}
 
 func NewPgxExecutor(conn pgxConn) PgxExecutor {
 	return PgxExecutor{conn: conn}
@@ -41,4 +44,11 @@ func (e PgxExecutor) CopyFrom(ctx context.Context, table string, columns []strin
 	return e.conn.CopyFrom(ctx, pgx.Identifier{table}, columns, pgx.CopyFromRows(rows))
 }
 
-var _ dbexec.Executor = PgxExecutor{}
+func (e PgxExecutor) Begin(ctx context.Context) (dbexec.Transaction, error) {
+	tx, err := e.conn.Begin(ctx)
+	if err != nil {
+		return nil, err
+	}
+	dbexecTx := NewPgxTransaction(tx)
+	return dbexecTx, nil
+}

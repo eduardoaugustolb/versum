@@ -11,6 +11,7 @@ func NewRouter(deps Dependencies) http.Handler {
 
 	registerHealthRoutes(router, deps.Health)
 	registerCatalogRoutes(router, deps.Catalog)
+	registerIdentityAccessRoutes(router, deps.IdentityAccess)
 
 	return router
 }

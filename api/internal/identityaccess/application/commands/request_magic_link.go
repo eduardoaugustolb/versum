@@ -2,6 +2,7 @@ package commands
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -47,9 +48,21 @@ func NewRequestMagicLink(
 
 func (uc *RequestMagicLink) Execute(ctx context.Context, email domain.Email) error {
 	user, err := uc.userRepo.FindUserByEmail(ctx, email)
-	if err != nil {
+	if err != nil && !errors.Is(err, application.ErrUserNotFound) {
 		return fmt.Errorf("finding user by email: %w", err)
 	}
+
+	if errors.Is(err, application.ErrUserNotFound) {
+		userID := string(uc.idGenerator.Generate())
+		user, err = domain.NewUser(userID, email.String())
+		if err != nil {
+			return fmt.Errorf("creating user: %w", err)
+		}
+		if err := uc.userRepo.CreateUser(ctx, user); err != nil {
+			return fmt.Errorf("saving user: %w", err)
+		}
+	}
+
 	loginTokenRaw, err := uc.tokenGenerator.GenerateLoginToken()
 	if err != nil {
 		return fmt.Errorf("generating login token: %w", err)
