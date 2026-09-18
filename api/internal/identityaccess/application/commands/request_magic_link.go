@@ -2,6 +2,7 @@ package commands
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"time"
@@ -9,13 +10,13 @@ import (
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
 	identityAccessPorts "github.com/eduardoaugustolb/versum/api/internal/identityaccess/application/ports"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/domain"
+	outboxDomain "github.com/eduardoaugustolb/versum/api/internal/outboxevent/domain"
 	"github.com/eduardoaugustolb/versum/api/internal/ports/clock"
 	"github.com/eduardoaugustolb/versum/api/internal/ports/id"
 )
 
 type RequestMagicLink struct {
-	userRepo       identityAccessPorts.UserRepository
-	loginTokenRepo identityAccessPorts.LoginTokenRepository
+	unitOfwork identityAccessPorts.IdentityAccessUnitOfWork
 	tokenGenerator identityAccessPorts.LoginTokenGenerator
 	tokenHasher    identityAccessPorts.LoginTokenHasher
 	idGenerator    id.IDGenerator
@@ -24,8 +25,7 @@ type RequestMagicLink struct {
 }
 
 func NewRequestMagicLink(
-	userRepo identityAccessPorts.UserRepository,
-	loginTokenRepo identityAccessPorts.LoginTokenRepository,
+	unitOfWork identityAccessPorts.IdentityAccessUnitOfWork,
 	tokenGenerator identityAccessPorts.LoginTokenGenerator,
 	tokenHasher identityAccessPorts.LoginTokenHasher,
 	idGenerator id.IDGenerator,
@@ -36,8 +36,7 @@ func NewRequestMagicLink(
 		return nil, application.ErrInvalidMagicLinkTTL
 	}
 	return &RequestMagicLink{
-		userRepo:       userRepo,
-		loginTokenRepo: loginTokenRepo,
+		unitOfwork: unitOfWork,
 		tokenGenerator: tokenGenerator,
 		tokenHasher:    tokenHasher,
 		idGenerator:    idGenerator,
@@ -47,7 +46,13 @@ func NewRequestMagicLink(
 }
 
 func (uc *RequestMagicLink) Execute(ctx context.Context, email domain.Email) error {
-	user, err := uc.userRepo.FindUserByEmail(ctx, email)
+	return uc.unitOfwork.WithinTransaction(ctx, func(repositories identityAccessPorts.IdentityAccessUnitOfWorkRepositories) error {
+		return uc.execute(ctx, email, repositories)
+	})
+}
+
+func (uc *RequestMagicLink) execute(ctx context.Context, email domain.Email, repositories identityAccessPorts.IdentityAccessUnitOfWorkRepositories) error {
+	user, err := repositories.Users.FindUserByEmail(ctx, email)
 	if err != nil && !errors.Is(err, application.ErrUserNotFound) {
 		return fmt.Errorf("finding user by email: %w", err)
 	}
@@ -58,7 +63,7 @@ func (uc *RequestMagicLink) Execute(ctx context.Context, email domain.Email) err
 		if err != nil {
 			return fmt.Errorf("creating user: %w", err)
 		}
-		if err := uc.userRepo.CreateUser(ctx, user); err != nil {
+		if err := repositories.Users.CreateUser(ctx, user); err != nil {
 			return fmt.Errorf("saving user: %w", err)
 		}
 	}
@@ -87,8 +92,30 @@ func (uc *RequestMagicLink) Execute(ctx context.Context, email domain.Email) err
 		return fmt.Errorf("creating login token: %w", err)
 	}
 
-	if err := uc.loginTokenRepo.CreateLoginToken(ctx, loginToken); err != nil {
+	if err := repositories.LoginTokens.CreateLoginToken(ctx, loginToken); err != nil {
 		return fmt.Errorf("saving login token: %w", err)
+	}
+
+	eventID := uc.idGenerator.Generate()
+	eventType := outboxDomain.EventTypeMagicLinkRequested
+
+	payload, err := json.Marshal(struct {
+		Email string `json:"email"`
+		Token string `json:"token"`
+	}{Email: email.String(), Token: loginTokenRaw})
+	if err != nil {
+		return fmt.Errorf("encoding event payload: %w", err)
+	}
+
+	event, err := outboxDomain.NewEvent(eventID.String(), eventType.String(), payload)
+
+	if err != nil {
+		return fmt.Errorf("creating event: %w", err)
+	}
+
+	err = repositories.Outbox.Publish(ctx, event)
+	if err != nil {
+		return fmt.Errorf("publishing event: %w", err)
 	}
 
 	return nil

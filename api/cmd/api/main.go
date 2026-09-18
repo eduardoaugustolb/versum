@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/joho/godotenv"
 
 	"github.com/eduardoaugustolb/versum/api/internal/adapters/postgres"
 	"github.com/eduardoaugustolb/versum/api/internal/catalog/application/queries"
@@ -21,6 +22,11 @@ import (
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		slog.Error("error loading .env file")
+		os.Exit(1)
+	}
 	cfg, err := config.Load(os.Getenv)
 	if err != nil {
 		slog.Error("failed to load configuration", "error", err)

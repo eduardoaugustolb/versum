@@ -51,14 +51,10 @@ func TestRepositoryPublishesProtectedEvent(t *testing.T) {
 	ctx := t.Context()
 	repository, db, _ := setupOutboxRepository(ctx, t)
 
-	createdAt := time.Now().UTC().Truncate(time.Microsecond)
-	availableAt := createdAt.Add(time.Minute)
 	event, err := domain.NewEvent(
 		"outbox-event-1",
 		"identityaccess.magic_link_requested",
 		[]byte("raw-secret-payload"),
-		availableAt,
-		createdAt,
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -106,7 +102,7 @@ func TestRepositoryPublishesProtectedEvent(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if id != event.ID() || eventType != event.EventType() {
+	if id != event.ID() || eventType != event.EventType().String() {
 		t.Fatalf("unexpected persisted event identity: id=%q type=%q", id, eventType)
 	}
 	if string(payloadCiphertext) != "protected:raw-secret-payload" {
@@ -121,7 +117,7 @@ func TestRepositoryPublishesProtectedEvent(t *testing.T) {
 	if attempts != 0 || leaseToken != nil || leasedUntil != nil || processedAt != nil || failedAt != nil || lastErrorRedacted != nil {
 		t.Fatal("new persisted event must be pending and unleased")
 	}
-	if !storedAvailableAt.Equal(event.AvailableAt()) || !storedCreatedAt.Equal(event.CreatedAt()) {
-		t.Fatalf("unexpected persisted timestamps: available_at=%s created_at=%s", storedAvailableAt, storedCreatedAt)
+	if storedAvailableAt.IsZero() || storedCreatedAt.IsZero() {
+		t.Fatal("expected database timestamps")
 	}
 }

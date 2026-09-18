@@ -25,32 +25,13 @@ func (r *OutboxRepository) Publish(ctx context.Context, event *domain.Event) err
 	if err != nil {
 		return fmt.Errorf("protecting payload: %w", err)
 	}
-	protectedEvent, err := domain.RehydrateEvent(
-		event.ID(),
-		event.EventType(),
-		protectedPayload.Ciphertext,
-		event.Attempts(),
-		event.AvailableAt(),
-		event.LeaseToken(),
-		event.LeasedUntil(),
-		event.ProcessedAt(),
-		event.FailedAt(),
-		event.LastErrorRedacted(),
-		event.CreatedAt(),
-	)
-	if err != nil {
-		return fmt.Errorf("rehydrating event: %w", err)
-	}
-
 	err = r.dbExecutor.Exec(
 		ctx,
 		PublishEventQuery,
-		protectedEvent.ID(),
-		protectedEvent.EventType(),
-		protectedEvent.Payload(),
+		event.ID(),
+		event.EventType().String(),
+		protectedPayload.Ciphertext,
 		protectedPayload.KeyVersion,
-		protectedEvent.AvailableAt(),
-		protectedEvent.CreatedAt(),
 	)
 	if err != nil {
 		return fmt.Errorf("publishing outbox event: %w", err)

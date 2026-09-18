@@ -2,13 +2,11 @@ package httpapi_test
 
 import (
 	"context"
-	"github.com/eduardoaugustolb/versum/api/internal/catalog/application/queries"
-	"github.com/eduardoaugustolb/versum/api/internal/catalog/domain"
-	"github.com/eduardoaugustolb/versum/api/internal/health"
-	"github.com/eduardoaugustolb/versum/api/internal/transport/httpapi"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/eduardoaugustolb/versum/api/internal/catalog/domain"
 )
 
 type booksRepository struct{ books []domain.Book }
@@ -32,9 +30,7 @@ func (r chaptersRepository) FindChapter(context.Context, string, int) (domain.Ch
 	}
 	return r.chapter, nil
 }
-func router(br booksRepository, cr chaptersRepository) http.Handler {
-	return httpapi.NewRouter(httpapi.Dependencies{Health: health.CheckHealth{}, Catalog: httpapi.CatalogDependencies{ListBooks: queries.NewListBooks(br), GetChapter: queries.NewGetChapter(cr)}})
-}
+
 func TestListBooksEndpoint(t *testing.T) {
 	book, _ := domain.NewBook(domain.NewBookParams{ID: "gn", Order: 1, Name: "Gênesis", Testament: domain.TestamentOld, ChapterCount: 50})
 	rec := httptest.NewRecorder()

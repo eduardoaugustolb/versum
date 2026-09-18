@@ -8,7 +8,9 @@ import (
 
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application/commands"
+	identityports "github.com/eduardoaugustolb/versum/api/internal/identityaccess/application/ports"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/domain"
+	outboxdomain "github.com/eduardoaugustolb/versum/api/internal/outboxevent/domain"
 	"github.com/eduardoaugustolb/versum/api/internal/ports/id"
 )
 
@@ -59,6 +61,23 @@ type idGenerator struct{}
 
 func (idGenerator) Generate() id.UUID { return id.UUID("token-1") }
 
+type outboxRepository struct{ event *outboxdomain.Event }
+
+func (r *outboxRepository) Publish(_ context.Context, event *outboxdomain.Event) error {
+	r.event = event
+	return nil
+}
+
+type unitOfWork struct {
+	users  identityports.UserRepository
+	tokens identityports.LoginTokenRepository
+	outbox identityports.IdentityAccessUnitOfWorkRepositories
+}
+
+func (u unitOfWork) WithinTransaction(ctx context.Context, fn func(identityports.IdentityAccessUnitOfWorkRepositories) error) error {
+	return fn(u.outbox)
+}
+
 func TestRequestMagicLinkUsesClockAndConfiguredTTL(t *testing.T) {
 	user, err := domain.NewUser("user-1", "ana@example.com")
 	if err != nil {
@@ -66,9 +85,10 @@ func TestRequestMagicLinkUsesClockAndConfiguredTTL(t *testing.T) {
 	}
 	now := time.Date(2026, time.January, 1, 10, 0, 0, 0, time.FixedZone("BRT", -3*60*60))
 	tokens := &loginTokenRepository{}
+	outbox := &outboxRepository{}
+	transactions := unitOfWork{outbox: identityports.IdentityAccessUnitOfWorkRepositories{Users: userRepository{user: user}, LoginTokens: tokens, Outbox: outbox}}
 	useCase, err := commands.NewRequestMagicLink(
-		userRepository{user: user},
-		tokens,
+		transactions,
 		tokenGenerator{},
 		tokenHasher{},
 		idGenerator{},
@@ -85,6 +105,9 @@ func TestRequestMagicLinkUsesClockAndConfiguredTTL(t *testing.T) {
 	if tokens.token == nil {
 		t.Fatal("expected a persisted login token")
 	}
+	if outbox.event == nil || outbox.event.EventType() != outboxdomain.EventTypeMagicLinkRequested {
+		t.Fatalf("expected magic link event, got %#v", outbox.event)
+	}
 	if tokens.token.ID() != "token-1" || string(tokens.token.TokenHash()) != "hashed-token" {
 		t.Fatalf("unexpected token: %+v", tokens.token)
 	}
@@ -98,7 +121,7 @@ func TestRequestMagicLinkUsesClockAndConfiguredTTL(t *testing.T) {
 }
 
 func TestNewRequestMagicLinkRejectsNonPositiveTTL(t *testing.T) {
-	_, err := commands.NewRequestMagicLink(nil, nil, nil, nil, nil, fixedClock{}, 0)
+	_, err := commands.NewRequestMagicLink(nil, nil, nil, nil, fixedClock{}, 0)
 	if !errors.Is(err, application.ErrInvalidMagicLinkTTL) {
 		t.Fatalf("expected invalid TTL error, got %v", err)
 	}

@@ -6,9 +6,7 @@ const (
 			id,
 			event_type,
 			payload_ciphertext,
-			payload_key_version,
-			available_at,
-			created_at
-		) VALUES ($1, $2, $3, $4, $5, $6)
+			payload_key_version
+		) VALUES ($1, $2, $3, $4)
 	`
 )
