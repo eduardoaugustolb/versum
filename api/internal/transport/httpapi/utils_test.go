@@ -9,7 +9,7 @@ import (
 )
 
 func router(br booksRepository, cr chaptersRepository) http.Handler {
-	return httpapi.NewRouter(httpapi.Dependencies{
+	return httpapi.NewHandler(httpapi.Dependencies{
 		Health: health.CheckHealth{},
 		Catalog: httpapi.CatalogDependencies{
 			ListBooks:  queries.NewListBooks(br),

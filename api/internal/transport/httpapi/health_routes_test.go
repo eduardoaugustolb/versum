@@ -21,7 +21,7 @@ func (noopCatalogRepository) FindChapter(context.Context, string, int) (domain.C
 	return domain.Chapter{}, domain.ErrChapterNotFound
 }
 func TestHealthEndpoint(t *testing.T) {
-	h := httpapi.NewRouter(httpapi.Dependencies{Health: health.CheckHealth{}, Catalog: httpapi.CatalogDependencies{ListBooks: queries.NewListBooks(noopCatalogRepository{}), GetChapter: queries.NewGetChapter(noopCatalogRepository{})}})
+	h := httpapi.NewHandler(httpapi.Dependencies{Health: health.CheckHealth{}, Catalog: httpapi.CatalogDependencies{ListBooks: queries.NewListBooks(noopCatalogRepository{}), GetChapter: queries.NewGetChapter(noopCatalogRepository{})}})
 	rec := httptest.NewRecorder()
 	h.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/health", nil))
 	if rec.Code != http.StatusOK || rec.Body.String() != `{"status":"ok"}` {

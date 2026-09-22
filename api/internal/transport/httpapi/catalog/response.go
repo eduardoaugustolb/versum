@@ -1,4 +1,4 @@
-package httpapi
+package catalog
 
 import "github.com/eduardoaugustolb/versum/api/internal/catalog/domain"
 
@@ -31,9 +31,9 @@ func newBookResponse(book domain.Book) bookResponse {
 
 func newChapterResponse(chapter domain.Chapter) chapterResponse {
 	verses := chapter.Verses()
-	response := chapterResponse{BookID: chapter.BookID(), BookName: chapter.BookName(), Number: chapter.Number(), Verses: make([]verseResponse, 0, len(verses))}
+	result := chapterResponse{BookID: chapter.BookID(), BookName: chapter.BookName(), Number: chapter.Number(), Verses: make([]verseResponse, 0, len(verses))}
 	for _, verse := range verses {
-		response.Verses = append(response.Verses, verseResponse{BookID: verse.BookID(), Chapter: verse.Chapter(), Number: verse.Number(), Text: verse.Text(), Part: verse.Part()})
+		result.Verses = append(result.Verses, verseResponse{BookID: verse.BookID(), Chapter: verse.Chapter(), Number: verse.Number(), Text: verse.Text(), Part: verse.Part()})
 	}
-	return response
+	return result
 }

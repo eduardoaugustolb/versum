@@ -130,7 +130,7 @@ func newIdentityAccessHandler(t *testing.T) (*httptest.ResponseRecorder, http.Ha
 	if err != nil {
 		t.Fatal(err)
 	}
-	handler := httpapi.NewRouter(httpapi.Dependencies{
+	handler := httpapi.NewHandler(httpapi.Dependencies{
 		Health:         health.CheckHealth{},
 		IdentityAccess: httpapi.IdentityAccessDependencies{RequestMagicLink: useCase},
 	})

@@ -1,9 +1,9 @@
 package httpapi
 
 import (
-	"github.com/eduardoaugustolb/versum/api/internal/catalog/application/queries"
 	"github.com/eduardoaugustolb/versum/api/internal/health"
-	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application/commands"
+	cataloghttp "github.com/eduardoaugustolb/versum/api/internal/transport/httpapi/catalog"
+	identityaccesshttp "github.com/eduardoaugustolb/versum/api/internal/transport/httpapi/identityaccess"
 )
 
 type Dependencies struct {
@@ -12,11 +12,8 @@ type Dependencies struct {
 	IdentityAccess IdentityAccessDependencies
 }
 
-type CatalogDependencies struct {
-	ListBooks  *queries.ListBooks
-	GetChapter *queries.GetChapter
-}
+// CatalogDependencies is retained at the composition boundary for callers.
+type CatalogDependencies = cataloghttp.Dependencies
 
-type IdentityAccessDependencies struct {
-	RequestMagicLink *commands.RequestMagicLink
-}
+// IdentityAccessDependencies is retained at the composition boundary for callers.
+type IdentityAccessDependencies = identityaccesshttp.Dependencies

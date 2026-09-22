@@ -82,7 +82,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	router := httpapi.NewRouter(httpapi.Dependencies{
+	router := httpapi.NewHandler(httpapi.Dependencies{
 		Health: health.NewCheckHealth(),
 		Catalog: httpapi.CatalogDependencies{
 			ListBooks:  queries.NewListBooks(catalogRepo),
