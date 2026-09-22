@@ -3,8 +3,8 @@ package commands_test
 import (
 	"context"
 	"errors"
+	ports "github.com/eduardoaugustolb/versum/api/internal/catalog/application"
 	"github.com/eduardoaugustolb/versum/api/internal/catalog/application/commands"
-	"github.com/eduardoaugustolb/versum/api/internal/catalog/application/ports"
 	"github.com/eduardoaugustolb/versum/api/internal/catalog/domain"
 	"testing"
 )

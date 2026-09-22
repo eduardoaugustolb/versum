@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/eduardoaugustolb/versum/api/internal/catalog/application/ports"
-	"github.com/eduardoaugustolb/versum/api/internal/ports/dbexec"
+	ports "github.com/eduardoaugustolb/versum/api/internal/catalog/application"
+	dbexec "github.com/eduardoaugustolb/versum/api/internal/database"
 )
 
 type CatalogVersionRepository struct {

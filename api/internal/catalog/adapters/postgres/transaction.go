@@ -3,8 +3,8 @@ package postgres
 import (
 	"context"
 
-	adapterpostgres "github.com/eduardoaugustolb/versum/api/internal/adapters/postgres"
-	"github.com/eduardoaugustolb/versum/api/internal/catalog/application/ports"
+	ports "github.com/eduardoaugustolb/versum/api/internal/catalog/application"
+	adapterpostgres "github.com/eduardoaugustolb/versum/api/internal/database/postgres"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 

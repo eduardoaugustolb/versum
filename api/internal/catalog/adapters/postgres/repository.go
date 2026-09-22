@@ -3,9 +3,9 @@ package postgres
 import (
 	"context"
 
-	"github.com/eduardoaugustolb/versum/api/internal/catalog/application/ports"
+	ports "github.com/eduardoaugustolb/versum/api/internal/catalog/application"
 	"github.com/eduardoaugustolb/versum/api/internal/catalog/domain"
-	"github.com/eduardoaugustolb/versum/api/internal/ports/dbexec"
+	dbexec "github.com/eduardoaugustolb/versum/api/internal/database"
 )
 
 type Repository struct {

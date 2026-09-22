@@ -3,7 +3,7 @@ package commands
 import (
 	"context"
 
-	"github.com/eduardoaugustolb/versum/api/internal/catalog/application/ports"
+	ports "github.com/eduardoaugustolb/versum/api/internal/catalog/application"
 )
 
 type PublishCatalogVersionInput struct {

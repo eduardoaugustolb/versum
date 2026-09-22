@@ -6,9 +6,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/eduardoaugustolb/versum/api/internal/adapters/postgres"
+	catalogpostgres "github.com/eduardoaugustolb/versum/api/internal/catalog/adapters/postgres"
 	"github.com/eduardoaugustolb/versum/api/internal/catalog/domain"
-	catalogpostgres "github.com/eduardoaugustolb/versum/api/internal/catalog/postgres"
+	"github.com/eduardoaugustolb/versum/api/internal/database/postgres"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
