@@ -9,14 +9,13 @@ import (
 	"testing"
 	"time"
 
+	"github.com/eduardoaugustolb/versum/api/internal/clock"
 	"github.com/eduardoaugustolb/versum/api/internal/health"
 	identityapplication "github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
+	identityports "github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
 	identitycommands "github.com/eduardoaugustolb/versum/api/internal/identityaccess/application/commands"
-	identityports "github.com/eduardoaugustolb/versum/api/internal/identityaccess/application/ports"
 	identitydomain "github.com/eduardoaugustolb/versum/api/internal/identityaccess/domain"
 	outboxdomain "github.com/eduardoaugustolb/versum/api/internal/outboxevent/domain"
-	"github.com/eduardoaugustolb/versum/api/internal/ports/clock"
-	"github.com/eduardoaugustolb/versum/api/internal/ports/id"
 	"github.com/eduardoaugustolb/versum/api/internal/transport/httpapi"
 )
 
@@ -108,9 +107,9 @@ func (identityTokenHasher) Hash(value string) ([]byte, error) {
 
 type identityIDGenerator struct{ next int }
 
-func (g *identityIDGenerator) Generate() id.UUID {
+func (g *identityIDGenerator) Generate() string {
 	g.next++
-	return id.UUID("id-" + string(rune('0'+g.next)))
+	return "id-" + string(rune('0'+g.next))
 }
 
 type identityClock struct{}

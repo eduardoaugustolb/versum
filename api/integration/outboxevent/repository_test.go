@@ -6,11 +6,11 @@ import (
 	"testing"
 	"time"
 
-	adapterpostgres "github.com/eduardoaugustolb/versum/api/internal/adapters/postgres"
-	"github.com/eduardoaugustolb/versum/api/internal/outboxevent/application/ports"
+	dbexec "github.com/eduardoaugustolb/versum/api/internal/database"
+	adapterpostgres "github.com/eduardoaugustolb/versum/api/internal/database/postgres"
+	outboxeventpg "github.com/eduardoaugustolb/versum/api/internal/outboxevent/adapters/postgres"
+	ports "github.com/eduardoaugustolb/versum/api/internal/outboxevent/application"
 	"github.com/eduardoaugustolb/versum/api/internal/outboxevent/domain"
-	outboxeventpg "github.com/eduardoaugustolb/versum/api/internal/outboxevent/postgres"
-	"github.com/eduardoaugustolb/versum/api/internal/ports/dbexec"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 

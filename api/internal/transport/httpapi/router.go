@@ -6,6 +6,11 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
+type Router interface {
+	Get(pattern string, handler http.HandlerFunc)
+	Post(pattern string, handler http.HandlerFunc)
+}
+
 func NewRouter(deps Dependencies) http.Handler {
 	router := chi.NewRouter()
 

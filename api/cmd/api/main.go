@@ -10,13 +10,21 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/eduardoaugustolb/versum/api/internal/clock"
+	keyring2 "github.com/eduardoaugustolb/versum/api/internal/cryptography/keyring"
+	"github.com/eduardoaugustolb/versum/api/internal/id"
+	identitycryptography "github.com/eduardoaugustolb/versum/api/internal/identityaccess/adapters/cryptography"
+	identityaccessPg "github.com/eduardoaugustolb/versum/api/internal/identityaccess/adapters/postgres"
+	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application/commands"
+	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application/policy"
+	outboxcryptography "github.com/eduardoaugustolb/versum/api/internal/outboxevent/adapters/cryptography"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
 
-	"github.com/eduardoaugustolb/versum/api/internal/adapters/postgres"
+	catalogpostgres "github.com/eduardoaugustolb/versum/api/internal/catalog/adapters/postgres"
 	"github.com/eduardoaugustolb/versum/api/internal/catalog/application/queries"
-	catalogpostgres "github.com/eduardoaugustolb/versum/api/internal/catalog/postgres"
 	"github.com/eduardoaugustolb/versum/api/internal/config"
+	"github.com/eduardoaugustolb/versum/api/internal/database/postgres"
 	"github.com/eduardoaugustolb/versum/api/internal/health"
 	"github.com/eduardoaugustolb/versum/api/internal/transport/httpapi"
 )
@@ -40,13 +48,48 @@ func main() {
 	}
 	defer pool.Close()
 
-	repo := catalogpostgres.NewRepository(postgres.NewPgxExecutor(pool))
+	dbExecutor := postgres.NewPgxExecutor(pool)
+
+	catalogRepo := catalogpostgres.NewRepository(dbExecutor)
+
+	keyring := keyring2.NewKeyRingStatic(cfg)
+	emailProtector := identitycryptography.NewAESGCMEmailProtector(keyring)
+	payloadProtector := outboxcryptography.NewAESGCMPayloadProtector(keyring)
+
+	randomTokenGenerator := identitycryptography.RandomTokenGenerator{}
+
+	defaultHasher := identitycryptography.SHA256Hasher{}
+	uuidGenerator := id.UUIDGenerator{}
+
+	defaultClock := clock.SystemClock{}
+
+	magicLinkPolicy := policy.MagicLinkPolicy{}
+	magicLinkPolicy.ApplyDefaults()
+
+	indentityAccessUnitOfWork := identityaccessPg.NewUnitOfWork(dbExecutor, emailProtector, payloadProtector)
+
+	requestMagicLink, err := commands.NewRequestMagicLink(
+		indentityAccessUnitOfWork,
+		randomTokenGenerator,
+		defaultHasher,
+		uuidGenerator,
+		defaultClock,
+		magicLinkPolicy.TTL,
+	)
+
+	if err != nil {
+		slog.Error("failed to create request magic link", "error", err)
+		os.Exit(1)
+	}
 
 	router := httpapi.NewRouter(httpapi.Dependencies{
 		Health: health.NewCheckHealth(),
 		Catalog: httpapi.CatalogDependencies{
-			ListBooks:  queries.NewListBooks(repo),
-			GetChapter: queries.NewGetChapter(repo),
+			ListBooks:  queries.NewListBooks(catalogRepo),
+			GetChapter: queries.NewGetChapter(catalogRepo),
+		},
+		IdentityAccess: httpapi.IdentityAccessDependencies{
+			RequestMagicLink: requestMagicLink,
 		},
 	})
 

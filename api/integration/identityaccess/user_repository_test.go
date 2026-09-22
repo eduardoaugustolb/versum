@@ -2,12 +2,13 @@ package identityaccess_test
 
 import (
 	"context"
+	"errors"
 	"reflect"
 	"testing"
 
+	identityaccessPg "github.com/eduardoaugustolb/versum/api/internal/identityaccess/adapters/postgres"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/domain"
-	identityaccessPg "github.com/eduardoaugustolb/versum/api/internal/identityaccess/postgres"
 )
 
 func setupUserRepository(ctx context.Context, t *testing.T) (*identityaccessPg.UserRepository, *domain.User) {
@@ -141,6 +142,101 @@ func TestFindUserByEmail(t *testing.T) {
 			}
 			if !reflect.DeepEqual(*user, test.expectedUser) {
 				t.Errorf("expected user: %v, got: %v", test.expectedUser, user)
+			}
+		})
+	}
+}
+
+func TestFindUserByEmailMigratesLookupKeyVersion(t *testing.T) {
+	ctx := context.Background()
+	dbExec, pool, err := setupPostgresDBExecutor(ctx, t)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(pool.Close)
+
+	const userID = "lookup-rotation-user"
+	const rawEmail = "lookup-rotation@example.com"
+	if err := dbExec.Exec(ctx, "DELETE FROM users WHERE id = $1", userID); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		if err := dbExec.Exec(context.Background(), "DELETE FROM users WHERE id = $1", userID); err != nil {
+			t.Error(err)
+		}
+	})
+
+	if err := dbExec.Exec(
+		ctx,
+		`INSERT INTO users (id, email_ciphertext, email_lookup_hmac, email_encryption_key_version, email_lookup_key_version)
+		 VALUES ($1, $2, $3, $4, $5)`,
+		userID,
+		[]byte("ciphertext:"+rawEmail),
+		[]byte("lookup:v1:"+rawEmail),
+		1,
+		1,
+	); err != nil {
+		t.Fatal(err)
+	}
+
+	repo := identityaccessPg.NewUserRepository(dbExec, rotatingEmailProtector{})
+	email, err := domain.ParseEmail(rawEmail)
+	if err != nil {
+		t.Fatal(err)
+	}
+	user, err := repo.FindUserByEmail(ctx, email)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if user.ID() != userID {
+		t.Fatalf("expected user %q, got %q", userID, user.ID())
+	}
+
+	var lookupHMAC []byte
+	var lookupKeyVersion int
+	if err := dbExec.QueryRow(ctx, "SELECT email_lookup_hmac, email_lookup_key_version FROM users WHERE id = $1", userID).Scan(&lookupHMAC, &lookupKeyVersion); err != nil {
+		t.Fatal(err)
+	}
+	if string(lookupHMAC) != "lookup:v2:"+rawEmail || lookupKeyVersion != 2 {
+		t.Fatalf("expected lookup migration to version 2, got hmac=%q version=%d", lookupHMAC, lookupKeyVersion)
+	}
+}
+
+func TestCreateUser(t *testing.T) {
+	ctx := context.Background()
+	repo, persistedUser := setupUserRepository(ctx, t)
+	anotherEmail, err := domain.ParseEmail("anotheruser@test.com")
+	if err != nil {
+		t.Fatal(err)
+	}
+	tests := []struct {
+		name          string
+		id            string
+		email         domain.Email
+		expectedError error
+	}{
+		{
+			name:          "try create existed user",
+			email:         persistedUser.Email(),
+			id:            persistedUser.ID(),
+			expectedError: application.ErrUserAlreadyExists,
+		},
+		{
+			name:  "create user",
+			email: anotherEmail,
+			id:    "another-id",
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			user, err := domain.NewUser(tc.id, tc.email.String())
+			if err != nil {
+				t.Fatal(err)
+			}
+			err = repo.CreateUser(ctx, user)
+			if !errors.Is(err, tc.expectedError) {
+				t.Errorf("expected error matching: %v, got: %v", tc.expectedError, err)
 			}
 		})
 	}

@@ -6,10 +6,10 @@ import (
 	"testing"
 	"time"
 
+	dbexec "github.com/eduardoaugustolb/versum/api/internal/database"
+	identityaccesspg "github.com/eduardoaugustolb/versum/api/internal/identityaccess/adapters/postgres"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/domain"
-	identityaccesspg "github.com/eduardoaugustolb/versum/api/internal/identityaccess/postgres"
-	"github.com/eduardoaugustolb/versum/api/internal/ports/dbexec"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 

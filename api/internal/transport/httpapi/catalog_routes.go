@@ -7,10 +7,9 @@ import (
 	"strconv"
 
 	"github.com/eduardoaugustolb/versum/api/internal/catalog/domain"
-	"github.com/eduardoaugustolb/versum/api/internal/ports/httprouter"
 )
 
-func registerCatalogRoutes(router httprouter.Router, deps CatalogDependencies) {
+func registerCatalogRoutes(router Router, deps CatalogDependencies) {
 	router.Get("/books", func(w http.ResponseWriter, r *http.Request) {
 		books, err := deps.ListBooks.Execute(r.Context())
 		if err != nil {

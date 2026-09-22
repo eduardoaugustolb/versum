@@ -6,11 +6,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/eduardoaugustolb/versum/api/internal/adapters/postgres"
-	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application/ports"
+	dbexec "github.com/eduardoaugustolb/versum/api/internal/database"
+	"github.com/eduardoaugustolb/versum/api/internal/database/postgres"
+	identityaccesspg "github.com/eduardoaugustolb/versum/api/internal/identityaccess/adapters/postgres"
+	ports "github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/domain"
-	identityaccesspg "github.com/eduardoaugustolb/versum/api/internal/identityaccess/postgres"
-	"github.com/eduardoaugustolb/versum/api/internal/ports/dbexec"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -51,6 +51,38 @@ func (testEmailProtector) Unprotect(_ context.Context, protected ports.Protected
 
 func (testEmailProtector) LookupHMAC(_ context.Context, email domain.Email) ([]byte, error) {
 	return []byte("lookup:" + email.String()), nil
+}
+
+func (testEmailProtector) LookupCandidates(_ context.Context, email domain.Email) ([]ports.LookupCandidate, error) {
+	return []ports.LookupCandidate{{LookupKeyVersion: 1, LookupHMAC: []byte("lookup:" + email.String())}}, nil
+}
+
+type rotatingEmailProtector struct{}
+
+func (rotatingEmailProtector) Protect(_ context.Context, email domain.Email) (ports.ProtectedEmail, error) {
+	value := email.String()
+	return ports.ProtectedEmail{
+		Ciphertext:           []byte("ciphertext:" + value),
+		LookupHMAC:           []byte("lookup:v2:" + value),
+		EncryptionKeyVersion: 1,
+		LookupKeyVersion:     2,
+	}, nil
+}
+
+func (rotatingEmailProtector) Unprotect(_ context.Context, protected ports.ProtectedEmail) (domain.Email, error) {
+	return domain.ParseEmail(strings.TrimPrefix(string(protected.Ciphertext), "ciphertext:"))
+}
+
+func (rotatingEmailProtector) LookupHMAC(_ context.Context, email domain.Email) ([]byte, error) {
+	return []byte("lookup:v2:" + email.String()), nil
+}
+
+func (rotatingEmailProtector) LookupCandidates(_ context.Context, email domain.Email) ([]ports.LookupCandidate, error) {
+	value := email.String()
+	return []ports.LookupCandidate{
+		{LookupKeyVersion: 2, LookupHMAC: []byte("lookup:v2:" + value)},
+		{LookupKeyVersion: 1, LookupHMAC: []byte("lookup:v1:" + value)},
+	}, nil
 }
 
 func createTestUser(ctx context.Context, t *testing.T, db dbexec.Executor, id, rawEmail string) *domain.User {
