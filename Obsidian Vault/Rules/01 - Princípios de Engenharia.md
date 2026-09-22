@@ -14,7 +14,7 @@ next: "[[Rules/02 - Segurança]]"
 ## Regra
 
 - Organizar código por funcionalidade, não por camada global.
-- Definir portas no caso de uso que delas depende.
+- Definir interfaces no caso de uso ou pacote de aplicação que delas depende.
 - Cada caso de uso resolve uma única operação de negócio: um método público
   (`Execute`, ou nome equivalente) por struct, sem acumular ações não
   relacionadas.
@@ -23,11 +23,11 @@ next: "[[Rules/02 - Segurança]]"
   que o chama: a dependência aponta do caso de uso para a porta, nunca o
   contrário. Isso permite múltiplos adapters (Postgres, mock de teste etc.)
   para a mesma porta sem que o caso de uso saiba que SQL existe.
-- Isolar qualquer driver ou framework concreto atrás de uma porta pequena e
+- Isolar qualquer driver ou framework concreto atrás de uma interface pequena e
   neutra — sem nenhum tipo dele na própria assinatura da porta, não só um
   wrapper fino. Isso vale para banco (`dbexec.Executor`, sem tipo de `pgx`)
-  e para o roteador HTTP (`httprouter.Router`, sem tipo de `chi`) do mesmo
-  jeito: quem usa a porta (`catalog/application`, `catalog_routes.go`) nunca
+  e para o roteador HTTP (`httpapi.Router`, sem tipo de `chi`) do mesmo
+  jeito: quem usa a interface (`catalog/application`, `catalog_routes.go`) nunca
   importa o pacote do driver; só o adapter concreto
   (`postgres.PgxExecutor`, `router.go`) importa. Trocar de tecnologia vira
   mudar o que é injetado na composição, não reescrever quem usa a porta —
@@ -49,7 +49,7 @@ não uma meta de quantidade de interfaces ou camadas.
 
 ## Exemplo
 
-O caso de uso define a porta (`Repository`) e depende só dela. O adapter
+O caso de uso define a interface (`Repository`) e depende só dela. O adapter
 Postgres implementa a porta e é o único lugar que conhece SQL:
 
 ```go
@@ -70,7 +70,7 @@ func (uc CheckHealth) Execute(ctx context.Context) (Status, error) {
 ```
 
 ```go
-// internal/adapters/postgres/health_repository.go — adapter implementa a porta
+// internal/health/adapters/postgres/health_repository.go — adapter implementa a interface
 package postgres
 
 type HealthRepository struct {
@@ -92,14 +92,14 @@ SQL e o pool de conexão; `health.CheckHealth` conhece só a interface
 `Repository`. Nenhum dos dois conhece o outro lado — o composition root em
 `cmd/api` é quem liga `postgres.HealthRepository{}` a `health.CheckHealth{repo: ...}`.
 
-## Isolar driver/framework atrás de uma porta
+## Isolar driver/framework atrás de uma interface
 
 O mesmo padrão se aplica a qualquer biblioteca externa que o código realmente
 aciona, não só bancos. Duas instâncias reais no `api/`:
 
 ```go
-// internal/ports/dbexec/executor.go — porta neutra, sem tipo de pgx
-package dbexec
+// internal/database/executor.go — interface neutra, sem tipo de pgx
+package database
 
 type Row interface {
     Scan(dest ...any) error
@@ -120,18 +120,18 @@ type Executor interface {
 ```
 
 ```go
-// internal/ports/httprouter/router.go — porta neutra, sem tipo de chi
-package httprouter
+// internal/transport/httpapi/router.go — interface neutra, sem tipo de chi
+package httpapi
 
 type Router interface {
     Get(pattern string, handler http.HandlerFunc)
 }
 ```
 
-`internal/adapters/postgres.PgxExecutor` implementa `dbexec.Executor` e é o
+`internal/database/postgres.PgxExecutor` implementa `database.Executor` e é o
 único lugar que importa `pgx`. `internal/transport/httpapi/router.go`
 constrói o `chi.NewRouter()` concreto e é o único lugar que importa `chi` —
-`health_routes.go` e `catalog_routes.go` recebem `httprouter.Router` e usam
+`health_routes.go` e `catalog_routes.go` recebem `httpapi.Router` e usam
 só `net/http` puro (`r.PathValue(...)` em vez de `chi.URLParam`, disponível
 desde Go 1.22 e populado pelo `chi` automaticamente).
 

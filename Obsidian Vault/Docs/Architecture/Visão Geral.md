@@ -57,29 +57,33 @@ api/
   cmd/worker/                 composition root do worker assíncrono
   internal/<domínio>/         módulo vertical do domínio
     domain/                    entidades e invariantes, sem HTTP, SQL ou context.Context
-    application/               casos de uso e portas definidas pelos consumidores
+    application/               casos de uso e contratos definidos pelos consumidores
       commands/                operações que alteram estado
       queries/                 operações de leitura
-      ports/                   interfaces da aplicação
-    postgres/                  repositórios e queries específicos do PostgreSQL
-  internal/ports/dbexec/         porta de execução SQL, neutra entre drivers (sem tipo de pgx)
-  internal/ports/httprouter/     porta de registro de rota, neutra entre roteadores (sem tipo de chi)
-  internal/adapters/<tecnologia>/   driver concreto que implementa a porta (postgres, redis, s3, email, fcm, discord)
-  internal/transport/httpapi/       adapter HTTP — router.go monta o chi concreto; os demais arquivos usam só httprouter.Router e net/http
+      *_repository.go          interfaces de persistência e serviços externos
+    adapters/postgres/         adapter PostgreSQL específico do contexto
+    adapters/cryptography/     adapter criptográfico específico do contexto
+  internal/database/postgres/    executor pgx, transações e migrations
+  internal/clock/                relógio de sistema
+  internal/id/                   geração de identificadores
+  internal/cryptography/keyring/ acesso a chaves criptográficas
+  internal/transport/httpapi/       adapter HTTP — router.go monta o chi concreto; os handlers usam uma interface local de Router e net/http
 ```
 
 Todo driver ou framework de terceiro que o código realmente aciona — banco,
-roteador HTTP, fila, o que for — fica atrás de uma porta pequena e neutra:
-sem nenhum tipo do driver na própria assinatura da porta, só no adapter que
-a implementa. `catalog/postgres.Repository` depende de `dbexec.Executor`
-(implementado por `postgres.PgxExecutor`, que conhece `pgx`). Os repositórios
-retornam entidades de `catalog/domain`; a tradução para respostas HTTP fica em
-`transport/httpapi`. Para operações de escrita, `PublishBook` usa uma porta
-de transação que fornece um writer vinculado à transação;
-`catalog_routes.go`/`health_routes.go` dependem de `httprouter.Router`
-(satisfeita diretamente por `chi.Router`, sem adapter — só `router.go`
-conhece `chi`). Casos de uso não conhecem SQL nem `pgx`; o handler HTTP não
-conhece regra de negócio nem `chi`.
+roteador HTTP, fila, o que for — fica atrás de uma interface pequena e neutra:
+sem nenhum tipo do driver na própria assinatura. Em Go, a interface é definida
+no pacote que a consome, em vez de uma pasta global chamada `ports`.
+`catalog/application` declara os contratos dos seus casos de uso;
+`catalog/adapters/postgres.Repository` os implementa e depende de
+`database.Executor`, implementado por `database/postgres` e
+único local que conhece `pgx`. Os repositórios retornam entidades de
+`catalog/domain`; a tradução para respostas HTTP fica em `transport/httpapi`.
+Para operações de escrita, `PublishBook` usa uma interface de transação que
+fornece um writer vinculado à transação. `router.go` é o único arquivo que
+conhece `chi`; handlers dependem só da interface local `httpapi.Router` e de
+`net/http`. Casos de uso não conhecem SQL nem `pgx`; o handler HTTP não conhece
+regra de negócio nem `chi`.
 
 No catálogo, leituras e escritas também são separadas em
 `application/queries` e `application/commands`. Isso é uma aplicação
@@ -94,9 +98,13 @@ não tem nada a ver com o que ele decide. Ver
 [[Plans/Archive/02 - Catálogo Bíblico]] pro histórico dessa decisão (foi
 revertida e revisada duas vezes antes de chegar nesse formato).
 
-`internal/adapters/<tecnologia>/` guarda o que exige infraestrutura própria
-sem uma porta neutra equivalente ainda definida: migrations SQL, Redis, S3,
-e-mail, FCM, Discord.
+Os adapters de um bounded context ficam no próprio módulo, como
+`identityaccess/adapters/postgres` ou
+`outboxevent/adapters/cryptography`. Infraestrutura realmente compartilhada
+fica em pacotes explícitos de `internal`, como `database`, `clock`, `id` e
+`cryptography/keyring`. Essa organização por funcionalidade é uma convenção
+Go; ela não altera a regra de dependência da Clean Architecture nem o modelo
+Ports & Adapters.
 
 O padrão de caso de uso e porta — com exemplo de código — está detalhado em
 [[Rules/01 - Princípios de Engenharia]].
