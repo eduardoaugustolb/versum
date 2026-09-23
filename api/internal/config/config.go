@@ -14,6 +14,7 @@ type Config struct {
 
 type EnvironmentVariable struct {
 	DatabaseURL          string
+	RedisURL             string
 	LookupKey            []byte
 	LookupKeyVersion     int
 	LookupKeys           map[int][]byte
@@ -44,6 +45,13 @@ func Load(lookup func(string) string) (Config, error) {
 		return Config{}, ErrDatabaseURLNotSet
 	}
 	cfg.DatabaseURL = databaseURL
+
+	// Redis
+	redisURL := lookup(DefaultRedisURLKey)
+	if redisURL == "" {
+		return Config{}, ErrRedisURLNotSet
+	}
+	cfg.RedisURL = redisURL
 
 	// Encryption
 	encryptionKey := lookup(DefaultEncryptionSecretKey)

@@ -3,12 +3,15 @@ package httpapi_test
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 	"time"
 
+	miniredis "github.com/alicebob/miniredis/v2"
+	redisadapter "github.com/eduardoaugustolb/versum/api/internal/cache/redis"
 	"github.com/eduardoaugustolb/versum/api/internal/clock"
 	"github.com/eduardoaugustolb/versum/api/internal/health"
 	identityapplication "github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
@@ -17,6 +20,7 @@ import (
 	identitydomain "github.com/eduardoaugustolb/versum/api/internal/identityaccess/domain"
 	outboxdomain "github.com/eduardoaugustolb/versum/api/internal/outboxevent/domain"
 	"github.com/eduardoaugustolb/versum/api/internal/transport/httpapi"
+	redisclient "github.com/redis/go-redis/v9"
 )
 
 type identityUserRepository struct {
@@ -120,6 +124,10 @@ var _ clock.Clock = identityClock{}
 
 func newIdentityAccessHandler(t *testing.T) (*httptest.ResponseRecorder, http.Handler) {
 	t.Helper()
+	redisServer := miniredis.RunT(t)
+	redisClient := redisclient.NewClient(&redisclient.Options{Addr: redisServer.Addr()})
+	t.Cleanup(func() { _ = redisClient.Close() })
+
 	users := &identityUserRepository{}
 	tokens := &identityLoginTokenRepository{}
 	outbox := &identityOutboxRepository{}
@@ -131,10 +139,66 @@ func newIdentityAccessHandler(t *testing.T) (*httptest.ResponseRecorder, http.Ha
 		t.Fatal(err)
 	}
 	handler := httpapi.NewHandler(httpapi.Dependencies{
-		Health:         health.CheckHealth{},
-		IdentityAccess: httpapi.IdentityAccessDependencies{RequestMagicLink: useCase},
+		Health: health.CheckHealth{},
+		Cache:  redisadapter.NewRedisCache(redisClient),
+		IdentityAccess: httpapi.IdentityAccessDependencies{
+			RequestMagicLink: useCase,
+			Cache:            redisadapter.NewRedisCache(redisClient),
+		},
 	})
 	return httptest.NewRecorder(), handler
+}
+
+func TestRequestMagicLinkEndpointRateLimitsRequestsFromSameAddress(t *testing.T) {
+	_, handler := newIdentityAccessHandler(t)
+
+	for requestNumber := 1; requestNumber <= 10; requestNumber++ {
+		recorder := httptest.NewRecorder()
+		request := httptest.NewRequest(http.MethodPost, "/auth/magic-link", strings.NewReader(`{"email":"ana@example.com"}`))
+		request.Header.Set("Content-Type", "application/json")
+		request.RemoteAddr = "198.51.100.1:54321"
+		handler.ServeHTTP(recorder, request)
+
+		if recorder.Code != http.StatusOK {
+			t.Fatalf("request %d: expected 200, got %d: %s", requestNumber, recorder.Code, recorder.Body.String())
+		}
+	}
+
+	recorder := httptest.NewRecorder()
+	request := httptest.NewRequest(http.MethodPost, "/auth/magic-link", strings.NewReader(`{"email":"ana@example.com"}`))
+	request.Header.Set("Content-Type", "application/json")
+	request.RemoteAddr = "198.51.100.1:54321"
+	handler.ServeHTTP(recorder, request)
+
+	if recorder.Code != http.StatusTooManyRequests {
+		t.Fatalf("expected 429, got %d: %s", recorder.Code, recorder.Body.String())
+	}
+}
+
+func TestRequestMagicLinkEndpointRateLimitsSameEmailAcrossAddresses(t *testing.T) {
+	_, handler := newIdentityAccessHandler(t)
+
+	for requestNumber := 1; requestNumber <= 10; requestNumber++ {
+		recorder := httptest.NewRecorder()
+		request := httptest.NewRequest(http.MethodPost, "/auth/magic-link", strings.NewReader(`{"email":" ANA@EXAMPLE.COM "}`))
+		request.Header.Set("Content-Type", "application/json")
+		request.RemoteAddr = fmt.Sprintf("198.51.100.%d:54321", requestNumber)
+		handler.ServeHTTP(recorder, request)
+
+		if recorder.Code != http.StatusOK {
+			t.Fatalf("request %d: expected 200, got %d: %s", requestNumber, recorder.Code, recorder.Body.String())
+		}
+	}
+
+	recorder := httptest.NewRecorder()
+	request := httptest.NewRequest(http.MethodPost, "/auth/magic-link", strings.NewReader(`{"email":"ana@example.com"}`))
+	request.Header.Set("Content-Type", "application/json")
+	request.RemoteAddr = "198.51.100.11:54321"
+	handler.ServeHTTP(recorder, request)
+
+	if recorder.Code != http.StatusTooManyRequests {
+		t.Fatalf("expected 429, got %d: %s", recorder.Code, recorder.Body.String())
+	}
 }
 
 func TestRequestMagicLinkEndpoint(t *testing.T) {

@@ -1,4 +1,17 @@
 services:
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:6379:6379"
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - redis_data:/data
   pg_database:
     image: postgres:16
     container_name: pg_database
@@ -20,3 +33,4 @@ services:
 
 volumes:
   pg_data:
+  redis_data:

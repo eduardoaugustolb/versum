@@ -12,6 +12,7 @@ func testLookup(overrides map[string]string) func(string) string {
 		"ENVIRONMENT":                         string(config.DefaultEnvironment),
 		"PORT":                                config.DefaultPort,
 		config.DefaultDatabaseURLKey:          config.DefaultDatabaseURL,
+		config.DefaultRedisURLKey:             "redis://127.0.0.1:6379/0",
 		config.DefaultEncryptionSecretKey:     "01234567890123456789012345678901",
 		config.DefaultEncryptionSecretVersion: "1",
 		config.DefaultPreviousEncryptionKeys:  "",

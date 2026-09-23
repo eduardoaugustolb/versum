@@ -34,7 +34,7 @@ func (r chaptersRepository) FindChapter(context.Context, string, int) (domain.Ch
 func TestListBooksEndpoint(t *testing.T) {
 	book, _ := domain.NewBook(domain.NewBookParams{ID: "gn", Order: 1, Name: "Gênesis", Testament: domain.TestamentOld, ChapterCount: 50})
 	rec := httptest.NewRecorder()
-	router(booksRepository{[]domain.Book{book}}, chaptersRepository{}).ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/books", nil))
+	router(t, booksRepository{[]domain.Book{book}}, chaptersRepository{}).ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/books", nil))
 	if rec.Code != http.StatusOK || rec.Body.String() != `[{"id":"gn","order":1,"name":"Gênesis","testament":"old","chapter_count":50}]` {
 		t.Fatalf("unexpected response: %d %s", rec.Code, rec.Body)
 	}
@@ -42,21 +42,21 @@ func TestListBooksEndpoint(t *testing.T) {
 func TestGetChapterEndpoint(t *testing.T) {
 	chapter := domain.NewChapter("gn", "Gênesis", 9, nil)
 	rec := httptest.NewRecorder()
-	router(booksRepository{}, chaptersRepository{chapter: chapter, found: true}).ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/books/gn/chapters/9", nil))
+	router(t, booksRepository{}, chaptersRepository{chapter: chapter, found: true}).ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/books/gn/chapters/9", nil))
 	if rec.Code != http.StatusOK || rec.Body.String() != `{"book_id":"gn","book_name":"Gênesis","number":9,"verses":[]}` {
 		t.Fatalf("unexpected response: %d %s", rec.Code, rec.Body)
 	}
 }
 func TestGetChapterEndpointNotFound(t *testing.T) {
 	rec := httptest.NewRecorder()
-	router(booksRepository{}, chaptersRepository{}).ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/books/xx/chapters/1", nil))
+	router(t, booksRepository{}, chaptersRepository{}).ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/books/xx/chapters/1", nil))
 	if rec.Code != http.StatusNotFound {
 		t.Fatalf("expected 404, got %d", rec.Code)
 	}
 }
 func TestGetChapterEndpointInvalidNumber(t *testing.T) {
 	rec := httptest.NewRecorder()
-	router(booksRepository{}, chaptersRepository{}).ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/books/gn/chapters/0", nil))
+	router(t, booksRepository{}, chaptersRepository{}).ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/books/gn/chapters/0", nil))
 	if rec.Code != http.StatusBadRequest {
 		t.Fatalf("expected 400, got %d", rec.Code)
 	}

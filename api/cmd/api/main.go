@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
@@ -10,23 +11,24 @@ import (
 	"syscall"
 	"time"
 
+	redisCache "github.com/eduardoaugustolb/versum/api/internal/cache/redis"
+	catalogpostgres "github.com/eduardoaugustolb/versum/api/internal/catalog/adapters/postgres"
+	"github.com/eduardoaugustolb/versum/api/internal/catalog/application/queries"
 	"github.com/eduardoaugustolb/versum/api/internal/clock"
+	"github.com/eduardoaugustolb/versum/api/internal/config"
 	keyring2 "github.com/eduardoaugustolb/versum/api/internal/cryptography/keyring"
+	"github.com/eduardoaugustolb/versum/api/internal/database/postgres"
+	"github.com/eduardoaugustolb/versum/api/internal/health"
 	"github.com/eduardoaugustolb/versum/api/internal/id"
 	identitycryptography "github.com/eduardoaugustolb/versum/api/internal/identityaccess/adapters/cryptography"
 	identityaccessPg "github.com/eduardoaugustolb/versum/api/internal/identityaccess/adapters/postgres"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application/commands"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application/policy"
 	outboxcryptography "github.com/eduardoaugustolb/versum/api/internal/outboxevent/adapters/cryptography"
+	"github.com/eduardoaugustolb/versum/api/internal/transport/httpapi"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
-
-	catalogpostgres "github.com/eduardoaugustolb/versum/api/internal/catalog/adapters/postgres"
-	"github.com/eduardoaugustolb/versum/api/internal/catalog/application/queries"
-	"github.com/eduardoaugustolb/versum/api/internal/config"
-	"github.com/eduardoaugustolb/versum/api/internal/database/postgres"
-	"github.com/eduardoaugustolb/versum/api/internal/health"
-	"github.com/eduardoaugustolb/versum/api/internal/transport/httpapi"
+	"github.com/redis/go-redis/v9"
 )
 
 func main() {
@@ -49,6 +51,14 @@ func main() {
 	defer pool.Close()
 
 	dbExecutor := postgres.NewPgxExecutor(pool)
+
+	rdb, err := newRedisClient(cfg.RedisURL)
+	if err != nil {
+		slog.Error("failed to create redis client", "error", err)
+		os.Exit(1)
+	}
+
+	redisCacheClient := redisCache.NewRedisCache(rdb)
 
 	catalogRepo := catalogpostgres.NewRepository(dbExecutor)
 
@@ -90,7 +100,9 @@ func main() {
 		},
 		IdentityAccess: httpapi.IdentityAccessDependencies{
 			RequestMagicLink: requestMagicLink,
+			Cache:            redisCacheClient,
 		},
+		Cache: redisCacheClient,
 	})
 
 	srv := &http.Server{
@@ -104,6 +116,20 @@ func main() {
 	runServer(srv, cfg)
 }
 
+func newRedisClient(redisURL string) (*redis.Client, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	rdbOpts, err := redis.ParseURL(redisURL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse redis url: %w", err)
+	}
+	rdb := redis.NewClient(rdbOpts)
+	if err := rdb.Ping(ctx).Err(); err != nil {
+		return nil, fmt.Errorf("failed to ping redis: %w", err)
+	}
+	return rdb, nil
+}
+
 // newDatabasePool opens the pool and confirms the database is reachable
 // before the server accepts traffic, instead of failing on the first request.
 func newDatabasePool(databaseURL string) (*pgxpool.Pool, error) {
@@ -112,12 +138,12 @@ func newDatabasePool(databaseURL string) (*pgxpool.Pool, error) {
 
 	pool, err := pgxpool.New(ctx, databaseURL)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create database pool: %w", err)
 	}
 
 	if err := pool.Ping(ctx); err != nil {
 		pool.Close()
-		return nil, err
+		return nil, fmt.Errorf("failed to ping database: %w", err)
 	}
 
 	return pool, nil
