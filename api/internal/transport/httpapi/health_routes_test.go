@@ -1,7 +1,6 @@
 package httpapi_test
 
 import (
-	"context"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -9,21 +8,10 @@ import (
 	miniredis "github.com/alicebob/miniredis/v2"
 	redisadapter "github.com/eduardoaugustolb/versum/api/internal/cache/redis"
 	"github.com/eduardoaugustolb/versum/api/internal/catalog/application/queries"
-	"github.com/eduardoaugustolb/versum/api/internal/catalog/domain"
 	"github.com/eduardoaugustolb/versum/api/internal/health"
 	"github.com/eduardoaugustolb/versum/api/internal/transport/httpapi"
 	redisclient "github.com/redis/go-redis/v9"
 )
-
-type noopCatalogRepository struct{}
-
-func (noopCatalogRepository) ReplaceBook(context.Context, domain.Book, []domain.Verse) error {
-	return nil
-}
-func (noopCatalogRepository) ListBooks(context.Context) ([]domain.Book, error) { return nil, nil }
-func (noopCatalogRepository) FindChapter(context.Context, string, int) (domain.Chapter, error) {
-	return domain.Chapter{}, domain.ErrChapterNotFound
-}
 
 func newHealthHandler(t *testing.T) http.Handler {
 	t.Helper()

@@ -26,9 +26,8 @@ type Dependencies struct {
 // RegisterRoutes registers identity and access endpoints.
 func RegisterRoutes(router routing.Router, deps Dependencies) {
 	if deps.Cache == nil {
-		panic("httpapi: identityaccess: cache dependency is required")
+		slog.Warn("identityaccess cache not configured, magic-link requests will fail")
 	}
-
 	handler := handler{
 		deps:           deps,
 		emailRateLimit: middleware.NewRateLimit(func(_ *http.Request) string { return "identityaccess:magic-link:email" }, time.Minute, 10, deps.Cache, false),
@@ -73,7 +72,7 @@ func (h handler) requestMagicLink(w http.ResponseWriter, request *http.Request) 
 	allowed, err := h.emailRateLimit.Allow(request.Context(), rateLimitEmailKey(email))
 	if err != nil {
 		slog.ErrorContext(request.Context(), "failed to allow magic link email rate limit", "error", err)
-		http.Error(w, "internal server error", http.StatusInternalServerError)
+		http.Error(w, "service unavailable", http.StatusServiceUnavailable)
 		return
 	}
 	if !allowed {

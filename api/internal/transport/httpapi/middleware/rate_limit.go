@@ -20,6 +20,9 @@ type RateLimit struct {
 }
 
 func NewRateLimit(generateID func(r *http.Request) string, window time.Duration, limit int, cache cache.Cache, canSkip bool) *RateLimit {
+	if cache == nil {
+		slog.Warn("rate limit cache not configured, limited requests will fail unless canSkip is set")
+	}
 	return &RateLimit{
 		generateID: generateID,
 		window:     window,
@@ -38,6 +41,11 @@ func clientIP(r *http.Request) string {
 }
 
 func (r *RateLimit) Allow(ctx context.Context, key string) (bool, error) {
+	// Without cache the limit cannot be evaluated; fail closed so callers
+	// honor canSkip (global limiter skips, auth limiter returns 503).
+	if r == nil || r.cache == nil {
+		return false, fmt.Errorf("rate limit cache not configured")
+	}
 	batch := r.cache.Batch()
 	countResult := batch.Increment(ctx, key)
 	ttlResult := batch.TTL(ctx, key)
@@ -66,6 +74,13 @@ func (r *RateLimit) Allow(ctx context.Context, key string) (bool, error) {
 
 func (r *RateLimit) Execute(handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		// Nil receiver is a wiring bug (NewRateLimit never returns nil),
+		// so canSkip is unknowable — always fail closed.
+		if r == nil {
+			slog.ErrorContext(req.Context(), "rate limit middleware not configured")
+			http.Error(w, "service unavailable", http.StatusServiceUnavailable)
+			return
+		}
 		key := r.generateID(req) + ":ratelimit:" + clientIP(req)
 		allowed, err := r.Allow(req.Context(), key)
 		if err != nil && r.canSkip {
@@ -74,7 +89,7 @@ func (r *RateLimit) Execute(handler http.Handler) http.Handler {
 		}
 
 		if err != nil {
-			slog.Error("failed to allow rate limit", "error", err)
+			slog.ErrorContext(req.Context(), "failed to allow rate limit", "error", err)
 			http.Error(w, "service unavailable", http.StatusServiceUnavailable)
 			return
 		}

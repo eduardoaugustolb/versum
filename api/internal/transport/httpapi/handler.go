@@ -14,14 +14,14 @@ import (
 // handler consumed by net/http.
 func NewHandler(deps Dependencies) http.Handler {
 	router := chiadapter.New()
-	if deps.Cache == nil {
-		panic("httpapi: cache dependency is required")
-	}
 
 	middleware.ApplyDefault(router, deps.Cache)
 
 	healthhttp.RegisterRoutes(router, deps.Health)
 	cataloghttp.RegisterRoutes(router, deps.Catalog)
+	if deps.IdentityAccess.Cache == nil {
+		deps.IdentityAccess.Cache = deps.Cache
+	}
 	identityaccesshttp.RegisterRoutes(router, deps.IdentityAccess)
 
 	return router
