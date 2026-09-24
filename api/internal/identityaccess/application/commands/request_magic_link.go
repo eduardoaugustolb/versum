@@ -5,22 +5,22 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"time"
 
 	"github.com/eduardoaugustolb/versum/api/internal/clock"
 	"github.com/eduardoaugustolb/versum/api/internal/id"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
+	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application/policy"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/domain"
 	outboxDomain "github.com/eduardoaugustolb/versum/api/internal/outboxevent/domain"
 )
 
 type RequestMagicLink struct {
-	unitOfwork     application.IdentityAccessUnitOfWork
-	tokenGenerator application.LoginTokenGenerator
-	tokenHasher    application.LoginTokenHasher
-	idGenerator    id.Generator
-	clock          clock.Clock
-	magicLinkTTL   time.Duration
+	unitOfwork      application.IdentityAccessUnitOfWork
+	tokenGenerator  application.LoginTokenGenerator
+	tokenHasher     application.LoginTokenHasher
+	idGenerator     id.Generator
+	clock           clock.Clock
+	magicLinkPolicy policy.MagicLinkPolicy
 }
 
 func NewRequestMagicLink(
@@ -29,18 +29,18 @@ func NewRequestMagicLink(
 	tokenHasher application.LoginTokenHasher,
 	idGenerator id.Generator,
 	clock clock.Clock,
-	magicLinkTTL time.Duration,
+	magicLinkPolicy policy.MagicLinkPolicy,
 ) (*RequestMagicLink, error) {
-	if magicLinkTTL <= 0 {
+	if magicLinkPolicy.TTL <= 0 {
 		return nil, application.ErrInvalidMagicLinkTTL
 	}
 	return &RequestMagicLink{
-		unitOfwork:     unitOfWork,
-		tokenGenerator: tokenGenerator,
-		tokenHasher:    tokenHasher,
-		idGenerator:    idGenerator,
-		clock:          clock,
-		magicLinkTTL:   magicLinkTTL,
+		unitOfwork:      unitOfWork,
+		tokenGenerator:  tokenGenerator,
+		tokenHasher:     tokenHasher,
+		idGenerator:     idGenerator,
+		clock:           clock,
+		magicLinkPolicy: magicLinkPolicy,
 	}, nil
 }
 
@@ -88,7 +88,7 @@ func (uc *RequestMagicLink) execute(ctx context.Context, rawEmail string, reposi
 		id,
 		loginTokenHash,
 		user.ID(),
-		now.Add(uc.magicLinkTTL),
+		now.Add(uc.magicLinkPolicy.TTL),
 		now,
 	)
 

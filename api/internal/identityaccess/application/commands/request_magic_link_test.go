@@ -9,6 +9,7 @@ import (
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
 	identityports "github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application/commands"
+	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application/policy"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/domain"
 	outboxdomain "github.com/eduardoaugustolb/versum/api/internal/outboxevent/domain"
 )
@@ -117,7 +118,7 @@ func TestRequestMagicLinkUsesClockAndConfiguredTTL(t *testing.T) {
 		tokenHasher{},
 		idGenerator{},
 		fixedClock{now: now},
-		15*time.Minute,
+		policy.DefaultMagicLinkPolicy,
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -145,7 +146,9 @@ func TestRequestMagicLinkUsesClockAndConfiguredTTL(t *testing.T) {
 }
 
 func TestNewRequestMagicLinkRejectsNonPositiveTTL(t *testing.T) {
-	_, err := commands.NewRequestMagicLink(nil, nil, nil, nil, fixedClock{}, 0)
+	p := policy.DefaultMagicLinkPolicy
+	p.TTL = 0
+	_, err := commands.NewRequestMagicLink(nil, nil, nil, nil, fixedClock{}, p)
 	if !errors.Is(err, application.ErrInvalidMagicLinkTTL) {
 		t.Fatalf("expected invalid TTL error, got %v", err)
 	}
@@ -169,7 +172,7 @@ func TestRequestMagicLinkUsesExistingUser(t *testing.T) {
 		tokenHasher{},
 		idGenerator{},
 		fixedClock{now: time.Now()},
-		15*time.Minute,
+		policy.DefaultMagicLinkPolicy,
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -202,7 +205,7 @@ func TestRequestMagicLinkDoesNotCreateUserFoundByPreviousLookupKey(t *testing.T)
 		tokenHasher{},
 		idGenerator{},
 		fixedClock{now: time.Now()},
-		15*time.Minute,
+		policy.DefaultMagicLinkPolicy,
 	)
 	if err != nil {
 		t.Fatal(err)

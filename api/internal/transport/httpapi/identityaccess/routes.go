@@ -65,7 +65,8 @@ func (h handler) requestMagicLink(w http.ResponseWriter, request *http.Request) 
 	}
 	email, err := domain.ParseEmail(body.Email)
 	if err != nil {
-		http.Error(w, "invalid email", http.StatusBadRequest)
+		// neutral response
+		http.Error(w, "invalid body", http.StatusBadRequest)
 		return
 	}
 
