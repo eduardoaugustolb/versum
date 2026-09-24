@@ -17,6 +17,7 @@ import (
 	identityapplication "github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
 	identityports "github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
 	identitycommands "github.com/eduardoaugustolb/versum/api/internal/identityaccess/application/commands"
+	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application/policy"
 	identitydomain "github.com/eduardoaugustolb/versum/api/internal/identityaccess/domain"
 	outboxdomain "github.com/eduardoaugustolb/versum/api/internal/outboxevent/domain"
 	"github.com/eduardoaugustolb/versum/api/internal/transport/httpapi"
@@ -134,7 +135,7 @@ func newIdentityAccessHandler(t *testing.T) (*httptest.ResponseRecorder, http.Ha
 	uow := &identityUnitOfWork{repositories: identityports.IdentityAccessUnitOfWorkRepositories{
 		Users: users, LoginTokens: tokens, Sessions: identitySessionRepository{}, Outbox: outbox,
 	}}
-	useCase, err := identitycommands.NewRequestMagicLink(uow, identityTokenGenerator{}, identityTokenHasher{}, &identityIDGenerator{}, identityClock{}, 15*time.Minute)
+	useCase, err := identitycommands.NewRequestMagicLink(uow, identityTokenGenerator{}, identityTokenHasher{}, &identityIDGenerator{}, identityClock{}, policy.DefaultMagicLinkPolicy)
 	if err != nil {
 		t.Fatal(err)
 	}

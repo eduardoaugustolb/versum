@@ -84,7 +84,7 @@ func main() {
 		defaultHasher,
 		uuidGenerator,
 		defaultClock,
-		magicLinkPolicy.TTL,
+		magicLinkPolicy,
 	)
 
 	if err != nil {
