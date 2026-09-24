@@ -104,9 +104,9 @@ func (uc *RequestMagicLink) execute(ctx context.Context, email domain.Email, rep
 	eventType := outboxDomain.EventTypeMagicLinkRequested
 
 	payload, err := json.Marshal(struct {
-		Email string `json:"email"`
-		Token string `json:"token"`
-	}{Email: user.Email().String(), Token: loginTokenRaw})
+		UserID       string `json:"user_id"`
+		LoginTokenID string `json:"login_token_id"`
+	}{UserID: user.ID(), LoginTokenID: loginToken.ID()})
 	if err != nil {
 		return fmt.Errorf("encoding event payload: %w", err)
 	}
