@@ -124,7 +124,7 @@ func TestRequestMagicLinkUsesClockAndConfiguredTTL(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if err := useCase.Execute(t.Context(), user.Email().String()); err != nil {
+	if err := useCase.Execute(t.Context(), user.Email()); err != nil {
 		t.Fatal(err)
 	}
 	if tokens.token == nil {
@@ -178,7 +178,7 @@ func TestRequestMagicLinkUsesExistingUser(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if err := useCase.Execute(t.Context(), existingUser.Email().String()); err != nil {
+	if err := useCase.Execute(t.Context(), existingUser.Email()); err != nil {
 		t.Fatal(err)
 	}
 	if tokens.token == nil || tokens.token.UserID() != existingUser.ID() {
@@ -211,7 +211,7 @@ func TestRequestMagicLinkDoesNotCreateUserFoundByPreviousLookupKey(t *testing.T)
 		t.Fatal(err)
 	}
 
-	if err := useCase.Execute(t.Context(), existingUser.Email().String()); err != nil {
+	if err := useCase.Execute(t.Context(), existingUser.Email()); err != nil {
 		t.Fatal(err)
 	}
 	if users.createCalled {

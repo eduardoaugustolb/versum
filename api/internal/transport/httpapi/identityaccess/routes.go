@@ -85,7 +85,7 @@ func (h handler) requestMagicLink(w http.ResponseWriter, request *http.Request) 
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return
 	}
-	if err := h.deps.RequestMagicLink.Execute(request.Context(), email.String()); err != nil {
+	if err := h.deps.RequestMagicLink.Execute(request.Context(), email); err != nil {
 		if errors.Is(err, domain.ErrInvalidEmail) {
 			http.Error(w, "invalid email", http.StatusBadRequest)
 			return

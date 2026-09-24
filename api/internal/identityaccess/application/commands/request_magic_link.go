@@ -44,15 +44,15 @@ func NewRequestMagicLink(
 	}, nil
 }
 
-func (uc *RequestMagicLink) Execute(ctx context.Context, rawEmail string) error {
+func (uc *RequestMagicLink) Execute(ctx context.Context, email domain.Email) error {
 	return uc.unitOfwork.WithinTransaction(ctx, func(repositories application.IdentityAccessUnitOfWorkRepositories) error {
-		return uc.execute(ctx, rawEmail, repositories)
+		return uc.execute(ctx, email, repositories)
 	})
 }
 
-func (uc *RequestMagicLink) execute(ctx context.Context, rawEmail string, repositories application.IdentityAccessUnitOfWorkRepositories) error {
+func (uc *RequestMagicLink) execute(ctx context.Context, email domain.Email, repositories application.IdentityAccessUnitOfWorkRepositories) error {
 	userID := uc.idGenerator.Generate()
-	user, err := domain.NewUser(userID, rawEmail)
+	user, err := domain.NewUser(userID, email.String())
 	if err != nil {
 		return fmt.Errorf("creating user: %w", err)
 	}
