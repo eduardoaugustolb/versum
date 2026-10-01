@@ -22,7 +22,7 @@ func setupUserRepository(ctx context.Context, t *testing.T) (*identityaccessPg.U
 
 	repo := identityaccessPg.NewUserRepository(dbExec, testEmailProtector{})
 
-	if err := dbExec.Exec(ctx, "DELETE FROM users WHERE id = $1", "test"); err != nil {
+	if err := dbExec.Exec(ctx, "DELETE FROM users WHERE id IN ($1, $2)", "test", "another-id"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -31,8 +31,8 @@ func setupUserRepository(ctx context.Context, t *testing.T) (*identityaccessPg.U
 	t.Cleanup(func() { // executa primeiro, pois Cleanup é LIFO
 		if err := dbExec.Exec(
 			context.Background(),
-			"DELETE FROM users WHERE id = $1",
-			"test",
+			"DELETE FROM users WHERE id IN ($1, $2)",
+			"test", "another-id",
 		); err != nil {
 			t.Error(err)
 		}
