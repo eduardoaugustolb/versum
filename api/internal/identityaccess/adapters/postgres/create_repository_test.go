@@ -13,26 +13,26 @@ import (
 
 func TestLoginTokenRepositoryTranslatesUniqueViolationOnCreate(t *testing.T) {
 	now := time.Now()
-	token, err := domain.NewLoginToken("token-1", []byte("hash"), "user-1", now.Add(time.Hour), now)
+	token, err := domain.NewLoginToken("token-1", "user-1", now.Add(time.Hour), now)
 	if err != nil {
 		t.Fatal(err)
 	}
 	repo := NewLoginTokenRepository(userRepositoryExecutor{execErr: &pgconn.PgError{Code: uniqueViolationCode}})
 
-	if err := repo.CreateLoginToken(t.Context(), token); !errors.Is(err, application.ErrLoginTokenAlreadyExists) {
+	if err := repo.Create(t.Context(), token, "secret"); !errors.Is(err, application.ErrLoginTokenAlreadyExists) {
 		t.Fatalf("expected already-exists error, got %v", err)
 	}
 }
 
 func TestSessionRepositoryTranslatesUniqueViolationOnCreate(t *testing.T) {
 	now := time.Now()
-	session, err := domain.NewSession("session-1", []byte("hash"), "user-1", now.Add(time.Hour), now)
+	session, err := domain.NewSession("session-1", "user-1", "family-1", domain.SessionClient{}, now.Add(time.Hour), now)
 	if err != nil {
 		t.Fatal(err)
 	}
 	repo := NewSessionRepository(userRepositoryExecutor{execErr: &pgconn.PgError{Code: uniqueViolationCode}})
 
-	if err := repo.CreateSession(t.Context(), session); !errors.Is(err, application.ErrSessionAlreadyExists) {
+	if err := repo.CreateSession(t.Context(), session, "secret"); !errors.Is(err, application.ErrSessionAlreadyExists) {
 		t.Fatalf("expected already-exists error, got %v", err)
 	}
 }

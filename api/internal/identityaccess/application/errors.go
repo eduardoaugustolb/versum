@@ -4,6 +4,8 @@ package application
 import "errors"
 
 var (
+	ErrInvalidSessionTTL       = errors.New("invalid session ttl")
+	ErrInvalidSessionSecret    = errors.New("invalid session secret")
 	ErrUserNotFound            = errors.New("user not found")
 	ErrUserAlreadyExists       = errors.New("user already exists")
 	ErrSessionNotFound         = errors.New("session not found")

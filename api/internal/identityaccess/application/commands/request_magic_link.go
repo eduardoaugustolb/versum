@@ -17,7 +17,6 @@ import (
 type RequestMagicLink struct {
 	unitOfwork      application.IdentityAccessUnitOfWork
 	tokenGenerator  application.LoginTokenGenerator
-	tokenHasher     application.LoginTokenHasher
 	idGenerator     id.Generator
 	clock           clock.Clock
 	magicLinkPolicy policy.MagicLinkPolicy
@@ -26,7 +25,6 @@ type RequestMagicLink struct {
 func NewRequestMagicLink(
 	unitOfWork application.IdentityAccessUnitOfWork,
 	tokenGenerator application.LoginTokenGenerator,
-	tokenHasher application.LoginTokenHasher,
 	idGenerator id.Generator,
 	clock clock.Clock,
 	magicLinkPolicy policy.MagicLinkPolicy,
@@ -37,7 +35,6 @@ func NewRequestMagicLink(
 	return &RequestMagicLink{
 		unitOfwork:      unitOfWork,
 		tokenGenerator:  tokenGenerator,
-		tokenHasher:     tokenHasher,
 		idGenerator:     idGenerator,
 		clock:           clock,
 		magicLinkPolicy: magicLinkPolicy,
@@ -76,17 +73,12 @@ func (uc *RequestMagicLink) execute(ctx context.Context, email domain.Email, rep
 	if err != nil {
 		return fmt.Errorf("generating login token: %w", err)
 	}
-	loginTokenHash, err := uc.tokenHasher.Hash(loginTokenRaw)
-	if err != nil {
-		return fmt.Errorf("hashing login token: %w", err)
-	}
 
 	id := uc.idGenerator.Generate()
 	now := uc.clock.Now().UTC()
 
 	loginToken, err := domain.NewLoginToken(
 		id,
-		loginTokenHash,
 		user.ID(),
 		now.Add(uc.magicLinkPolicy.TTL),
 		now,
@@ -96,7 +88,7 @@ func (uc *RequestMagicLink) execute(ctx context.Context, email domain.Email, rep
 		return fmt.Errorf("creating login token: %w", err)
 	}
 
-	if err := repositories.LoginTokens.CreateLoginToken(ctx, loginToken); err != nil {
+	if err := repositories.LoginTokens.Create(ctx, loginToken, loginTokenRaw); err != nil {
 		return fmt.Errorf("saving login token: %w", err)
 	}
 

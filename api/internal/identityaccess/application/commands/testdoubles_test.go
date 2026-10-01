@@ -21,7 +21,6 @@ var (
 	_ clock.Clock                            = (*FakeClock)(nil)
 	_ id.Generator                           = (*FakeIDGenerator)(nil)
 	_ identityports.LoginTokenGenerator      = (*FakeLoginTokenGenerator)(nil)
-	_ identityports.LoginTokenHasher         = (*FakeLoginTokenHasher)(nil)
 )
 
 // FakeUserRepository é o mock universal de identityports.UserRepository.
@@ -91,33 +90,43 @@ func (f *FakeUserRepository) FindUserByEmail(ctx context.Context, email domain.E
 
 // FakeLoginTokenRepository é o mock universal de identityports.LoginTokenRepository.
 type FakeLoginTokenRepository struct {
-	ByID   map[string]*domain.LoginToken
-	ByHash map[string]*domain.LoginToken
+	ByID    map[string]*domain.LoginToken
+	ByToken map[string]*domain.LoginToken
 
-	CreateErr     error
-	FindByIDErr   error
-	FindByHashErr error
-	ConsumeErr    error
+	CreateErr      error
+	FindByIDErr    error
+	FindByTokenErr error
+	SaveErr        error
 
-	OnCreate func(context.Context, *domain.LoginToken) error
+	OnCreate func(context.Context, *domain.LoginToken, string) error
 
-	Created     *domain.LoginToken
-	CreateCalls int
+	CreatedSecret string
+	Created       *domain.LoginToken
+	CreateCalls   int
 }
 
-func (f *FakeLoginTokenRepository) CreateLoginToken(ctx context.Context, token *domain.LoginToken) error {
+func (f *FakeLoginTokenRepository) Create(ctx context.Context, token *domain.LoginToken, secret string) error {
 	f.CreateCalls++
 	if f.OnCreate != nil {
-		return f.OnCreate(ctx, token)
+		return f.OnCreate(ctx, token, secret)
 	}
 	if f.CreateErr != nil {
 		return f.CreateErr
 	}
 	f.Created = token
+	f.CreatedSecret = secret
+	if f.ByID == nil {
+		f.ByID = map[string]*domain.LoginToken{}
+	}
+	f.ByID[token.ID()] = token
+	if f.ByToken == nil {
+		f.ByToken = map[string]*domain.LoginToken{}
+	}
+	f.ByToken[secret] = token
 	return nil
 }
 
-func (f *FakeLoginTokenRepository) FindLoginTokenByID(_ context.Context, id string) (*domain.LoginToken, error) {
+func (f *FakeLoginTokenRepository) FindByID(_ context.Context, id string) (*domain.LoginToken, error) {
 	if f.FindByIDErr != nil {
 		return nil, f.FindByIDErr
 	}
@@ -127,48 +136,70 @@ func (f *FakeLoginTokenRepository) FindLoginTokenByID(_ context.Context, id stri
 	return nil, identityports.ErrLoginTokenNotFound
 }
 
-func (f *FakeLoginTokenRepository) FindLoginTokenByTokenHash(_ context.Context, tokenHash []byte) (*domain.LoginToken, error) {
-	if f.FindByHashErr != nil {
-		return nil, f.FindByHashErr
+func (f *FakeLoginTokenRepository) FindByToken(_ context.Context, secret string) (*domain.LoginToken, error) {
+	if f.FindByTokenErr != nil {
+		return nil, f.FindByTokenErr
 	}
-	if token, ok := f.ByHash[string(tokenHash)]; ok {
+	if token, ok := f.ByToken[secret]; ok {
 		return token, nil
 	}
 	return nil, identityports.ErrLoginTokenNotFound
 }
 
-func (f *FakeLoginTokenRepository) ConsumeLoginTokenByTokenHash(_ context.Context, _ []byte, _ *time.Time) error {
-	return f.ConsumeErr
+func (f *FakeLoginTokenRepository) Save(_ context.Context, _ *domain.LoginToken) error {
+	return f.SaveErr
 }
 
 // FakeSessionRepository é o mock universal de identityports.SessionRepository.
 type FakeSessionRepository struct {
-	CreateErr   error
-	FindByIDErr error
-	RevokeErr   error
+	FindBySecretErr error
+	ByID            map[string]*domain.Session
+	BySecret        map[string]*domain.Session
+	CreatedSecrets  []string
+	CreateErr       error
+	FindByIDErr     error
+	RevokeErr       error
 
 	Created     []*domain.Session
 	CreateCalls int
 	RevokeCalls []string
 }
 
-func (f *FakeSessionRepository) CreateSession(_ context.Context, session *domain.Session) error {
+func (f *FakeSessionRepository) CreateSession(_ context.Context, session *domain.Session, secret string) error {
 	f.CreateCalls++
 	if f.CreateErr != nil {
 		return f.CreateErr
 	}
 	f.Created = append(f.Created, session)
+	f.CreatedSecrets = append(f.CreatedSecrets, secret)
+	if f.ByID == nil {
+		f.ByID = map[string]*domain.Session{}
+	}
+	f.ByID[session.ID()] = session
+	if f.BySecret == nil {
+		f.BySecret = map[string]*domain.Session{}
+	}
+	f.BySecret[secret] = session
 	return nil
 }
 
-func (f *FakeSessionRepository) FindSessionByID(_ context.Context, _ string) (*domain.Session, error) {
+func (f *FakeSessionRepository) FindSessionByID(_ context.Context, id string) (*domain.Session, error) {
 	if f.FindByIDErr != nil {
 		return nil, f.FindByIDErr
+	}
+	if session, ok := f.ByID[id]; ok {
+		return session, nil
 	}
 	return nil, identityports.ErrSessionNotFound
 }
 
-func (f *FakeSessionRepository) FindSessionBySecretHash(_ context.Context, _ []byte) (*domain.Session, error) {
+func (f *FakeSessionRepository) FindSessionBySecret(_ context.Context, secret string) (*domain.Session, error) {
+	if f.FindBySecretErr != nil {
+		return nil, f.FindBySecretErr
+	}
+	if session, ok := f.BySecret[secret]; ok {
+		return session, nil
+	}
 	return nil, identityports.ErrSessionNotFound
 }
 
@@ -270,18 +301,10 @@ func (f FakeLoginTokenGenerator) GenerateLoginToken() (string, error) {
 	return "raw-token", nil
 }
 
-// FakeLoginTokenHasher é o mock universal de identityports.LoginTokenHasher.
-type FakeLoginTokenHasher struct {
-	Sum []byte
-	Err error
+func (r *FakeSessionRepository) LockSessionsByUserID(context.Context, string) error  { return nil }
+func (r *FakeSessionRepository) SaveRotation(context.Context, *domain.Session) error { return nil }
+func (r *FakeSessionRepository) RevokeSessionFamily(context.Context, string, string, time.Time) error {
+	return nil
 }
 
-func (f FakeLoginTokenHasher) Hash(_ string) ([]byte, error) {
-	if f.Err != nil {
-		return nil, f.Err
-	}
-	if f.Sum != nil {
-		return f.Sum, nil
-	}
-	return []byte("hashed-token"), nil
-}
+func (r *FakeSessionRepository) SaveUsage(context.Context, *domain.Session) error { return nil }

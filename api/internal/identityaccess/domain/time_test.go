@@ -12,7 +12,7 @@ func TestIdentityAccessTimesAreStoredInUTC(t *testing.T) {
 	now := time.Date(2026, time.January, 1, 10, 0, 0, 0, brt)
 	expiresAt := now.Add(time.Hour)
 
-	session, err := domain.NewSession("session-1", []byte("hash"), "user-1", expiresAt, now)
+	session, err := domain.NewSession("session-1", "user-1", "family-1", domain.SessionClient{}, expiresAt, now)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -24,7 +24,7 @@ func TestIdentityAccessTimesAreStoredInUTC(t *testing.T) {
 		t.Fatalf("expected UTC session revocation, got %s", revokedAt.Location())
 	}
 
-	token, err := domain.NewLoginToken("token-1", []byte("hash"), "user-1", expiresAt, now)
+	token, err := domain.NewLoginToken("token-1", "user-1", expiresAt, now)
 	if err != nil {
 		t.Fatal(err)
 	}

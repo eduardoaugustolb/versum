@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+	"crypto/sha256"
 	"errors"
 	"fmt"
 	"time"
@@ -22,17 +23,24 @@ func NewSessionRepository(db dbexec.Executor) *SessionRepository {
 
 var _ ports.SessionRepository = (*SessionRepository)(nil)
 
-func (r *SessionRepository) CreateSession(ctx context.Context, session *domain.Session) error {
+func (r *SessionRepository) CreateSession(ctx context.Context, session *domain.Session, secret string) error {
+	if secret == "" {
+		return application.ErrInvalidSessionSecret
+	}
+	hash := sha256.Sum256([]byte(secret))
+	if _, replaced := session.ReplacedBySessionID(); replaced {
+		return domain.ErrInvalidSessionReplacement
+	}
 	revokedAt, _ := session.RevokedAt()
-	usedAt, _ := session.UsedAt()
-	var revokedAtValue, usedAtValue any
+	lastUsedAt, _ := session.LastUsedAt()
+	var revokedAtValue, lastUsedAtValue any
 	if !revokedAt.IsZero() {
 		revokedAtValue = revokedAt
 	}
-	if !usedAt.IsZero() {
-		usedAtValue = usedAt
+	if !lastUsedAt.IsZero() {
+		lastUsedAtValue = lastUsedAt
 	}
-	if err := r.db.Exec(ctx, CreateSessionQuery, session.ID(), session.SecretHash(), session.UserID(), revokedAtValue, usedAtValue, session.ExpiresAt()); err != nil {
+	if err := r.db.Exec(ctx, CreateSessionQuery, session.ID(), hash[:], session.UserID(), revokedAtValue, lastUsedAtValue, session.ExpiresAt(), session.FamilyID(), session.IPAddress(), session.UserAgent()); err != nil {
 		if isUniqueViolation(err) {
 			return application.ErrSessionAlreadyExists
 		}
@@ -48,11 +56,12 @@ func (r *SessionRepository) FindSessionByID(ctx context.Context, id string) (*do
 	return scanSession(r.db.QueryRow(ctx, FindSessionByIDQuery, id), "finding session by id")
 }
 
-func (r *SessionRepository) FindSessionBySecretHash(ctx context.Context, secretHash []byte) (*domain.Session, error) {
-	if len(secretHash) == 0 {
-		return nil, domain.ErrInvalidSessionSecretHash
+func (r *SessionRepository) FindSessionBySecret(ctx context.Context, secret string) (*domain.Session, error) {
+	if secret == "" {
+		return nil, application.ErrInvalidSessionSecret
 	}
-	return scanSession(r.db.QueryRow(ctx, FindSessionBySecretHashQuery, secretHash), "finding session by secret hash")
+	hash := sha256.Sum256([]byte(secret))
+	return scanSession(r.db.QueryRow(ctx, FindSessionBySecretHashQuery, hash[:]), "finding session by secret")
 }
 
 func (r *SessionRepository) ListSessionsByUserID(ctx context.Context, userID string) ([]domain.Session, error) {
@@ -106,19 +115,91 @@ func (r *SessionRepository) RevokeAllSessions(ctx context.Context, userID string
 }
 
 func scanSession(row dbexec.Row, operation string) (*domain.Session, error) {
-	var id, userID string
-	var secretHash []byte
-	var revokedAt, usedAt *time.Time
+	var id, userID, familyID, ipAddress, userAgent string
+	var replacement *string
+	var revokedAt, lastUsedAt *time.Time
 	var expiresAt time.Time
-	if err := row.Scan(&id, &secretHash, &userID, &revokedAt, &usedAt, &expiresAt); err != nil {
+	if err := row.Scan(&id, &userID, &revokedAt, &lastUsedAt, &expiresAt, &familyID, &ipAddress, &userAgent, &replacement); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, application.ErrSessionNotFound
 		}
 		return nil, fmt.Errorf("%s: %w", operation, err)
 	}
-	session, err := domain.RehydrateSession(id, secretHash, userID, revokedAt, usedAt, expiresAt)
+	replacedBy := ""
+	if replacement != nil {
+		replacedBy = *replacement
+	}
+	session, err := domain.RehydrateSession(id, userID, familyID, domain.SessionClient{IPAddress: ipAddress, UserAgent: userAgent}, revokedAt, lastUsedAt, expiresAt, replacedBy)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", operation, err)
 	}
 	return session, nil
+}
+
+func (r *SessionRepository) LockSessionsByUserID(ctx context.Context, userID string) error {
+	if userID == "" {
+		return domain.ErrInvalidSessionUserID
+	}
+	var id string
+	err := r.db.QueryRow(ctx, LockSessionsByUserIDQuery, userID).Scan(&id)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return application.ErrUserNotFound
+	}
+	if err != nil {
+		return fmt.Errorf("locking user sessions: %w", err)
+	}
+	return nil
+}
+
+func (r *SessionRepository) SaveRotation(ctx context.Context, session *domain.Session) error {
+	replacement, ok := session.ReplacedBySessionID()
+	if !ok {
+		return domain.ErrInvalidSessionReplacement
+	}
+	revokedAt, _ := session.RevokedAt()
+	lastUsedAt, _ := session.LastUsedAt()
+	var id string
+	err := r.db.QueryRow(ctx, SaveSessionRotationQuery, session.ID(), revokedAt, lastUsedAt, replacement).Scan(&id)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return domain.ErrInvalidSessionState
+	}
+	if err != nil {
+		return fmt.Errorf("saving session rotation: %w", err)
+	}
+	return nil
+}
+
+func (r *SessionRepository) RevokeSessionFamily(ctx context.Context, userID, familyID string, revokedAt time.Time) error {
+	if userID == "" {
+		return domain.ErrInvalidSessionUserID
+	}
+	if familyID == "" {
+		return domain.ErrInvalidSessionFamilyID
+	}
+	if revokedAt.IsZero() {
+		return domain.ErrInvalidSessionRevokedAt
+	}
+	if err := r.db.Exec(ctx, RevokeSessionFamilyQuery, userID, familyID, revokedAt.UTC()); err != nil {
+		return fmt.Errorf("revoking session family: %w", err)
+	}
+	return nil
+}
+
+func (r *SessionRepository) SaveUsage(ctx context.Context, session *domain.Session) error {
+	lastUsedAt, ok := session.LastUsedAt()
+	if !ok {
+		return domain.ErrInvalidSessionLastUsedAt
+	}
+	if !session.IsValidAt(lastUsedAt) {
+		return domain.ErrInvalidSessionState
+	}
+	var id string
+	err := r.db.QueryRow(ctx, SaveSessionUsageQuery, session.ID(), lastUsedAt).Scan(&id)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return domain.ErrInvalidSessionState
+	}
+	if err != nil {
+		return fmt.Errorf("saving session usage: %w", err)
+	}
+	return nil
 }

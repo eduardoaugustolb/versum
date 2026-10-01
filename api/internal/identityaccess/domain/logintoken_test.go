@@ -1,7 +1,6 @@
 package domain_test
 
 import (
-	"bytes"
 	"errors"
 	"testing"
 	"time"
@@ -14,23 +13,21 @@ func TestNewLoginToken(t *testing.T) {
 	tests := []struct {
 		name      string
 		id        string
-		hash      []byte
 		userID    string
 		expiresAt time.Time
 		wantErr   error
 	}{
-		{"valid", "token-1", []byte("hash"), "user-1", now.Add(time.Hour), nil},
-		{"missing id", "", []byte("hash"), "user-1", now.Add(time.Hour), domain.ErrInvalidLoginTokenID},
-		{"empty hash", "token-1", []byte{}, "user-1", now.Add(time.Hour), domain.ErrInvalidLoginTokenHash},
-		{"missing user", "token-1", []byte("hash"), "", now.Add(time.Hour), domain.ErrInvalidLoginTokenUserID},
-		{"zero expiration", "token-1", []byte("hash"), "user-1", time.Time{}, domain.ErrInvalidLoginTokenExpiresAt},
-		{"expiration equal to now", "token-1", []byte("hash"), "user-1", now, domain.ErrInvalidLoginTokenExpiresAt},
-		{"expiration in the past", "token-1", []byte("hash"), "user-1", now.Add(-time.Second), domain.ErrInvalidLoginTokenExpiresAt},
+		{"valid", "token-1", "user-1", now.Add(time.Hour), nil},
+		{"missing id", "", "user-1", now.Add(time.Hour), domain.ErrInvalidLoginTokenID},
+		{"missing user", "token-1", "", now.Add(time.Hour), domain.ErrInvalidLoginTokenUserID},
+		{"zero expiration", "token-1", "user-1", time.Time{}, domain.ErrInvalidLoginTokenExpiresAt},
+		{"expiration equal to now", "token-1", "user-1", now, domain.ErrInvalidLoginTokenExpiresAt},
+		{"expiration in the past", "token-1", "user-1", now.Add(-time.Second), domain.ErrInvalidLoginTokenExpiresAt},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			token, err := domain.NewLoginToken(tt.id, tt.hash, tt.userID, tt.expiresAt, now)
+			token, err := domain.NewLoginToken(tt.id, tt.userID, tt.expiresAt, now)
 			if !errors.Is(err, tt.wantErr) {
 				t.Fatalf("expected error %v, got %v", tt.wantErr, err)
 			}
@@ -43,7 +40,7 @@ func TestNewLoginToken(t *testing.T) {
 
 func TestLoginTokenRehydrateOptionalConsumedAt(t *testing.T) {
 	expiresAt := time.Date(2026, time.January, 1, 13, 0, 0, 0, time.UTC)
-	token, err := domain.RehydrateLoginToken("token-1", []byte("hash"), "user-1", expiresAt, nil)
+	token, err := domain.RehydrateLoginToken("token-1", "user-1", expiresAt, nil)
 	if err != nil {
 		t.Fatalf("rehydration failed: %v", err)
 	}
@@ -55,7 +52,7 @@ func TestLoginTokenRehydrateOptionalConsumedAt(t *testing.T) {
 	}
 
 	consumedAt := expiresAt.Add(-time.Minute)
-	consumed, err := domain.RehydrateLoginToken("token-1", []byte("hash"), "user-1", expiresAt, &consumedAt)
+	consumed, err := domain.RehydrateLoginToken("token-1", "user-1", expiresAt, &consumedAt)
 	if err != nil {
 		t.Fatalf("rehydration of consumed token failed: %v", err)
 	}
@@ -65,14 +62,14 @@ func TestLoginTokenRehydrateOptionalConsumedAt(t *testing.T) {
 	}
 
 	zero := time.Time{}
-	if _, err := domain.RehydrateLoginToken("token-1", []byte("hash"), "user-1", expiresAt, &zero); !errors.Is(err, domain.ErrInvalidLoginTokenConsumedAt) {
+	if _, err := domain.RehydrateLoginToken("token-1", "user-1", expiresAt, &zero); !errors.Is(err, domain.ErrInvalidLoginTokenConsumedAt) {
 		t.Fatalf("expected zero consumed_at error, got %v", err)
 	}
 }
 
 func TestLoginTokenConsume(t *testing.T) {
 	now := time.Date(2026, time.January, 1, 12, 0, 0, 0, time.UTC)
-	token, err := domain.NewLoginToken("token-1", []byte("hash"), "user-1", now.Add(time.Hour), now)
+	token, err := domain.NewLoginToken("token-1", "user-1", now.Add(time.Hour), now)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -86,7 +83,7 @@ func TestLoginTokenConsume(t *testing.T) {
 		t.Fatalf("expected duplicate consumption error, got %v", err)
 	}
 
-	expired, err := domain.NewLoginToken("token-2", []byte("hash"), "user-1", now.Add(time.Hour), now)
+	expired, err := domain.NewLoginToken("token-2", "user-1", now.Add(time.Hour), now)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -95,27 +92,9 @@ func TestLoginTokenConsume(t *testing.T) {
 	}
 }
 
-func TestLoginTokenDefensiveCopies(t *testing.T) {
-	now := time.Date(2026, time.January, 1, 12, 0, 0, 0, time.UTC)
-	hash := []byte("hash")
-	token, err := domain.NewLoginToken("token-1", hash, "user-1", now.Add(time.Hour), now)
-	if err != nil {
-		t.Fatal(err)
-	}
-	hash[0] = 'X'
-	if bytes.Equal(token.TokenHash(), hash) {
-		t.Fatal("token retained the input hash reference")
-	}
-	returned := token.TokenHash()
-	returned[0] = 'Y'
-	if bytes.Equal(token.TokenHash(), returned) {
-		t.Fatal("getter exposed the internal hash reference")
-	}
-}
-
 func TestLoginTokenIsExpired(t *testing.T) {
 	now := time.Date(2026, time.January, 1, 12, 0, 0, 0, time.UTC)
-	token, err := domain.NewLoginToken("token-1", []byte("hash"), "user-1", now.Add(time.Hour), now)
+	token, err := domain.NewLoginToken("token-1", "user-1", now.Add(time.Hour), now)
 	if err != nil {
 		t.Fatal(err)
 	}

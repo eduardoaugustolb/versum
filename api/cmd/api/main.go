@@ -68,7 +68,6 @@ func main() {
 
 	randomTokenGenerator := identitycryptography.RandomTokenGenerator{}
 
-	defaultHasher := identitycryptography.SHA256Hasher{}
 	uuidGenerator := id.UUIDGenerator{}
 
 	defaultClock := clock.SystemClock{}
@@ -81,7 +80,6 @@ func main() {
 	requestMagicLink, err := commands.NewRequestMagicLink(
 		indentityAccessUnitOfWork,
 		randomTokenGenerator,
-		defaultHasher,
 		uuidGenerator,
 		defaultClock,
 		magicLinkPolicy,

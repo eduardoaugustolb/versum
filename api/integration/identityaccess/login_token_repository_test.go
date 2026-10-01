@@ -1,7 +1,9 @@
 package identityaccess_test
 
 import (
+	"bytes"
 	"context"
+	"crypto/sha256"
 	"errors"
 	"testing"
 	"time"
@@ -28,10 +30,10 @@ func setupLoginTokenRepository(ctx context.Context, t *testing.T) (*identityacce
 	return identityaccesspg.NewLoginTokenRepository(db), db, pool, user
 }
 
-func newLoginToken(t *testing.T, id string, hash []byte, userID string) *domain.LoginToken {
+func newLoginToken(t *testing.T, id string, userID string) *domain.LoginToken {
 	t.Helper()
 	now := time.Now().UTC().Truncate(time.Microsecond)
-	token, err := domain.NewLoginToken(id, hash, userID, now.Add(time.Hour), now)
+	token, err := domain.NewLoginToken(id, userID, now.Add(time.Hour), now)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -40,27 +42,41 @@ func newLoginToken(t *testing.T, id string, hash []byte, userID string) *domain.
 
 func TestLoginTokenRepositoryCreatesFindsAndConsumes(t *testing.T) {
 	ctx := t.Context()
-	repo, _, _, user := setupLoginTokenRepository(ctx, t)
-	want := newLoginToken(t, "token-1", []byte("token-hash-1"), user.ID())
-	if err := repo.CreateLoginToken(ctx, want); err != nil {
+	repo, db, _, user := setupLoginTokenRepository(ctx, t)
+	want := newLoginToken(t, "token-1", user.ID())
+	if err := repo.Create(ctx, want, "secret"); err != nil {
 		t.Fatal(err)
 	}
-	got, err := repo.FindLoginTokenByID(ctx, want.ID())
+	var storedHash []byte
+	if err := db.QueryRow(ctx, "SELECT token_hash FROM login_tokens WHERE id = $1", want.ID()).Scan(&storedHash); err != nil {
+		t.Fatal(err)
+	}
+	expectedHash := sha256.Sum256([]byte("secret"))
+	if !bytes.Equal(storedHash, expectedHash[:]) {
+		t.Fatal("database must contain only the secret digest")
+	}
+	got, err := repo.FindByID(ctx, want.ID())
 	if err != nil {
 		t.Fatal(err)
 	}
-	if got.ID() != want.ID() || got.UserID() != want.UserID() || string(got.TokenHash()) != string(want.TokenHash()) || !got.ExpiresAt().Equal(want.ExpiresAt()) {
+	if got.ID() != want.ID() || got.UserID() != want.UserID() || !got.ExpiresAt().Equal(want.ExpiresAt()) {
 		t.Fatalf("unexpected login token: %+v", got)
 	}
-	byHash, err := repo.FindLoginTokenByTokenHash(ctx, want.TokenHash())
+	byHash, err := repo.FindByToken(ctx, "secret")
 	if err != nil || byHash.ID() != want.ID() {
 		t.Fatalf("unexpected lookup result: %+v, %v", byHash, err)
 	}
 	consumedAt := time.Now().UTC().Truncate(time.Microsecond)
-	if err := repo.ConsumeLoginTokenByTokenHash(ctx, want.TokenHash(), &consumedAt); err != nil {
+	if err := want.Consume(consumedAt); err != nil {
 		t.Fatal(err)
 	}
-	consumed, err := repo.FindLoginTokenByID(ctx, want.ID())
+	if err := repo.Save(ctx, want); err != nil {
+		t.Fatal(err)
+	}
+	if err := repo.Save(ctx, want); !errors.Is(err, domain.ErrLoginTokenAlreadyConsumed) {
+		t.Fatalf("expected duplicate consumption error, got %v", err)
+	}
+	consumed, err := repo.FindByID(ctx, want.ID())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -72,10 +88,10 @@ func TestLoginTokenRepositoryCreatesFindsAndConsumes(t *testing.T) {
 
 func TestLoginTokenRepositoryReturnsNotFound(t *testing.T) {
 	repo, _, _, _ := setupLoginTokenRepository(t.Context(), t)
-	if _, err := repo.FindLoginTokenByID(t.Context(), "missing"); !errors.Is(err, application.ErrLoginTokenNotFound) {
+	if _, err := repo.FindByID(t.Context(), "missing"); !errors.Is(err, application.ErrLoginTokenNotFound) {
 		t.Fatalf("expected missing-token error, got %v", err)
 	}
-	if _, err := repo.FindLoginTokenByTokenHash(t.Context(), []byte("missing")); !errors.Is(err, application.ErrLoginTokenNotFound) {
+	if _, err := repo.FindByToken(t.Context(), "missing"); !errors.Is(err, application.ErrLoginTokenNotFound) {
 		t.Fatalf("expected missing-token error, got %v", err)
 	}
 }

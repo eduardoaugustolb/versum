@@ -20,3 +20,7 @@ func (RandomTokenGenerator) GenerateLoginToken() (string, error) {
 
 	return base64.RawURLEncoding.EncodeToString(raw), nil
 }
+
+func (g RandomTokenGenerator) GenerateSessionSecret() (string, error) {
+	return g.GenerateLoginToken()
+}

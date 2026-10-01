@@ -1,88 +1,75 @@
 package domain
 
-import "time"
+import (
+	"net/netip"
+	"strings"
+	"time"
+)
+
+// SessionClient describes the client observed when this session was issued.
+// These attributes are risk signals, not proof of possession of a credential.
+type SessionClient struct {
+	IPAddress string
+	UserAgent string
+}
 
 type Session struct {
-	id         string
-	secretHash []byte
-	userID     string
-	revokedAt  *time.Time
-	usedAt     *time.Time
-	expiresAt  *time.Time
+	id, userID, familyID  string
+	client                SessionClient
+	revokedAt, lastUsedAt *time.Time
+	expiresAt             time.Time
+	replacedBySessionID   string
 }
 
-func NewSession(id string, secretHash []byte, userId string, expiresAt time.Time, now time.Time) (*Session, error) {
-	if !expiresAt.After(now) {
+func NewSession(id, userID, familyID string, client SessionClient, expiresAt, now time.Time) (*Session, error) {
+	if now.IsZero() || !expiresAt.After(now) {
 		return nil, ErrInvalidSessionExpiresAt
 	}
-
-	session := &Session{
-		id:         id,
-		secretHash: cloneBytes(secretHash),
-		userID:     userId,
-		expiresAt:  cloneTime(&expiresAt),
-	}
-
-	if err := validateSessionOptions(session); err != nil {
-		return nil, err
-	}
-
-	return session, nil
+	return RehydrateSession(id, userID, familyID, client, nil, nil, expiresAt, "")
 }
 
-func RehydrateSession(id string, secretHash []byte, userID string, revokedAt *time.Time, usedAt *time.Time, expiresAt time.Time) (*Session, error) {
-	session := &Session{
-		id:         id,
-		secretHash: cloneBytes(secretHash),
-		userID:     userID,
-		revokedAt:  cloneTime(revokedAt),
-		usedAt:     cloneTime(usedAt),
-		expiresAt:  cloneTime(&expiresAt),
+func RehydrateSession(id, userID, familyID string, client SessionClient, revokedAt, lastUsedAt *time.Time, expiresAt time.Time, replacedBySessionID string) (*Session, error) {
+	if strings.TrimSpace(id) == "" {
+		return nil, ErrInvalidSessionID
 	}
-
-	if err := validateSessionOptions(session); err != nil {
-		return nil, err
+	if strings.TrimSpace(userID) == "" {
+		return nil, ErrInvalidSessionUserID
 	}
-
-	return session, nil
+	if strings.TrimSpace(familyID) == "" {
+		return nil, ErrInvalidSessionFamilyID
+	}
+	if expiresAt.IsZero() {
+		return nil, ErrInvalidSessionExpiresAt
+	}
+	if revokedAt != nil && revokedAt.IsZero() {
+		return nil, ErrInvalidSessionRevokedAt
+	}
+	if lastUsedAt != nil && (lastUsedAt.IsZero() || !lastUsedAt.Before(expiresAt)) {
+		return nil, ErrInvalidSessionLastUsedAt
+	}
+	if replacedBySessionID != "" && (strings.TrimSpace(replacedBySessionID) == "" || replacedBySessionID == id || revokedAt == nil) {
+		return nil, ErrInvalidSessionReplacement
+	}
+	if client.IPAddress != "" {
+		addr, err := netip.ParseAddr(client.IPAddress)
+		if err != nil || addr.Zone() != "" {
+			return nil, ErrInvalidSessionIPAddress
+		}
+		client.IPAddress = addr.Unmap().String()
+	}
+	if len(client.UserAgent) > 1024 || strings.ContainsAny(client.UserAgent, "\r\n\x00") {
+		return nil, ErrInvalidSessionUserAgent
+	}
+	return &Session{id: id, userID: userID, familyID: familyID, client: client, revokedAt: cloneTime(revokedAt), lastUsedAt: cloneTime(lastUsedAt), expiresAt: expiresAt.UTC(), replacedBySessionID: replacedBySessionID}, nil
 }
 
-func validateSessionOptions(session *Session) error {
-	if session.id == "" {
-		return ErrInvalidSessionID
-	}
-
-	if len(session.secretHash) == 0 {
-		return ErrInvalidSessionSecretHash
-	}
-
-	if session.usedAt != nil && session.usedAt.IsZero() {
-		return ErrInvalidSessionUsedAt
-	}
-
-	if session.userID == "" {
-		return ErrInvalidSessionUserID
-	}
-
-	if session.expiresAt == nil || session.expiresAt.IsZero() {
-		return ErrInvalidSessionExpiresAt
-	}
-
-	if session.revokedAt != nil && session.revokedAt.IsZero() {
-		return ErrInvalidSessionRevokedAt
-	}
-
-	return nil
-}
-
-func (s *Session) ID() string {
-	return s.id
-}
-func (s *Session) SecretHash() []byte {
-	return cloneBytes(s.secretHash)
-}
-func (s *Session) UserID() string {
-	return s.userID
+func (s *Session) ID() string        { return s.id }
+func (s *Session) UserID() string    { return s.userID }
+func (s *Session) FamilyID() string  { return s.familyID }
+func (s *Session) IPAddress() string { return s.client.IPAddress }
+func (s *Session) UserAgent() string { return s.client.UserAgent }
+func (s *Session) ReplacedBySessionID() (string, bool) {
+	return s.replacedBySessionID, s.replacedBySessionID != ""
 }
 func (s *Session) RevokedAt() (time.Time, bool) {
 	if s.revokedAt == nil {
@@ -90,40 +77,63 @@ func (s *Session) RevokedAt() (time.Time, bool) {
 	}
 	return *s.revokedAt, true
 }
-func (s *Session) UsedAt() (time.Time, bool) {
-	if s.usedAt == nil {
+func (s *Session) LastUsedAt() (time.Time, bool) {
+	if s.lastUsedAt == nil {
 		return time.Time{}, false
 	}
-	return *s.usedAt, true
+	return *s.lastUsedAt, true
 }
-func (s *Session) ExpiresAt() time.Time {
-	return *s.expiresAt
-}
-
-func (s *Session) Revoke(now time.Time) {
-	now = now.UTC()
-	s.revokedAt = &now
+func (s *Session) ExpiresAt() time.Time         { return s.expiresAt }
+func (s *Session) IsRevoked() bool              { return s.revokedAt != nil }
+func (s *Session) IsExpired(now time.Time) bool { return !s.expiresAt.After(now) }
+func (s *Session) IsValidAt(now time.Time) bool {
+	return !now.IsZero() && !s.IsRevoked() && s.replacedBySessionID == "" && !s.IsExpired(now)
 }
 
-func (s *Session) Use(now time.Time) error {
-	now = now.UTC()
-	if !s.IsValidAt(now) {
-		return ErrInvalidSessionState
+// Revoke is idempotent and preserves the first revocation timestamp.
+func (s *Session) Revoke(now time.Time) error {
+	if now.IsZero() {
+		return ErrInvalidSessionRevokedAt
 	}
-
-	usedAt := now
-	s.usedAt = &usedAt
+	if s.revokedAt == nil {
+		now = now.UTC()
+		s.revokedAt = &now
+	}
 	return nil
 }
 
-func (s *Session) IsRevoked() bool {
-	return s.revokedAt != nil
+func (s *Session) Use(now time.Time) error {
+	if s.replacedBySessionID != "" {
+		return ErrSessionReused
+	}
+	if !s.IsValidAt(now) {
+		return ErrInvalidSessionState
+	}
+	if s.lastUsedAt != nil && now.Before(*s.lastUsedAt) {
+		return ErrInvalidSessionLastUsedAt
+	}
+	now = now.UTC()
+	s.lastUsedAt = &now
+	return nil
 }
 
-func (s *Session) IsExpired(now time.Time) bool {
-	return s.expiresAt == nil || !s.expiresAt.After(now)
-}
-
-func (s *Session) IsValidAt(now time.Time) bool {
-	return !s.IsRevoked() && !s.IsExpired(now)
+// ReplaceWith invalidates this credential without extending the family's lifetime.
+func (s *Session) ReplaceWith(next *Session, now time.Time) error {
+	if s.replacedBySessionID != "" {
+		return ErrSessionReused
+	}
+	if !s.IsValidAt(now) {
+		return ErrInvalidSessionState
+	}
+	if next == nil || next.id == s.id || next.familyID != s.familyID || next.userID != s.userID || !next.IsValidAt(now) || next.expiresAt.After(s.expiresAt) || next.lastUsedAt != nil {
+		return ErrInvalidSessionReplacement
+	}
+	if err := s.Use(now); err != nil {
+		return err
+	}
+	if err := s.Revoke(now); err != nil {
+		return err
+	}
+	s.replacedBySessionID = next.id
+	return nil
 }

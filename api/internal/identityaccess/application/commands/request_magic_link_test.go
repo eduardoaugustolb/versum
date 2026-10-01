@@ -34,7 +34,6 @@ func TestRequestMagicLinkUsesClockAndConfiguredTTL(t *testing.T) {
 	useCase, err := commands.NewRequestMagicLink(
 		transactions,
 		FakeLoginTokenGenerator{Token: "raw-token"},
-		FakeLoginTokenHasher{Sum: []byte("hashed-token")},
 		&FakeIDGenerator{IDs: []string{"ignored-user-id", "token-1", "event-1"}},
 		FakeClock{NowTime: now},
 		policy.DefaultMagicLinkPolicy,
@@ -52,7 +51,7 @@ func TestRequestMagicLinkUsesClockAndConfiguredTTL(t *testing.T) {
 	if len(outbox.Published) != 1 || outbox.Published[0].EventType() != outboxdomain.EventTypeMagicLinkRequested {
 		t.Fatalf("expected magic link event, got %#v", outbox.Published)
 	}
-	if tokens.Created.ID() != "token-1" || string(tokens.Created.TokenHash()) != "hashed-token" {
+	if tokens.Created.ID() != "token-1" || tokens.CreatedSecret != "raw-token" {
 		t.Fatalf("unexpected token: %+v", tokens.Created)
 	}
 	if tokens.Created.ExpiresAt().Location() != time.UTC {
@@ -67,7 +66,7 @@ func TestRequestMagicLinkUsesClockAndConfiguredTTL(t *testing.T) {
 func TestNewRequestMagicLinkRejectsNonPositiveTTL(t *testing.T) {
 	p := policy.DefaultMagicLinkPolicy
 	p.TTL = 0
-	_, err := commands.NewRequestMagicLink(nil, nil, nil, nil, FakeClock{}, p)
+	_, err := commands.NewRequestMagicLink(nil, nil, nil, FakeClock{}, p)
 	if !errors.Is(err, application.ErrInvalidMagicLinkTTL) {
 		t.Fatalf("expected invalid TTL error, got %v", err)
 	}
@@ -85,7 +84,6 @@ func TestRequestMagicLinkUsesExistingUser(t *testing.T) {
 	useCase, err := commands.NewRequestMagicLink(
 		transactions,
 		FakeLoginTokenGenerator{},
-		FakeLoginTokenHasher{},
 		&FakeIDGenerator{IDs: []string{"ignored-user-id", "token-1", "event-1"}},
 		FakeClock{NowTime: time.Now()},
 		policy.DefaultMagicLinkPolicy,
@@ -117,7 +115,6 @@ func TestRequestMagicLinkDoesNotCreateUserFoundByPreviousLookupKey(t *testing.T)
 	useCase, err := commands.NewRequestMagicLink(
 		transactions,
 		FakeLoginTokenGenerator{},
-		FakeLoginTokenHasher{},
 		&FakeIDGenerator{IDs: []string{"ignored-user-id", "token-1", "event-1"}},
 		FakeClock{NowTime: time.Now()},
 		policy.DefaultMagicLinkPolicy,
@@ -149,7 +146,6 @@ func TestRequestMagicLinkCreatesMissingUser(t *testing.T) {
 	useCase, err := commands.NewRequestMagicLink(
 		transactions,
 		FakeLoginTokenGenerator{},
-		FakeLoginTokenHasher{},
 		&FakeIDGenerator{IDs: []string{"new-user", "token-1", "event-1"}},
 		FakeClock{NowTime: time.Now()},
 		policy.DefaultMagicLinkPolicy,

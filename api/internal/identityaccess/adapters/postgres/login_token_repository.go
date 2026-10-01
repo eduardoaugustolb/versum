@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+	"crypto/sha256"
 	"errors"
 	"fmt"
 	"time"
@@ -22,13 +23,17 @@ func NewLoginTokenRepository(db dbexec.Executor) *LoginTokenRepository {
 
 var _ ports.LoginTokenRepository = (*LoginTokenRepository)(nil)
 
-func (r *LoginTokenRepository) CreateLoginToken(ctx context.Context, token *domain.LoginToken) error {
+func (r *LoginTokenRepository) Create(ctx context.Context, token *domain.LoginToken, secret string) error {
+	if secret == "" {
+		return application.ErrInvalidLoginTokenSecret
+	}
+	hash := sha256.Sum256([]byte(secret))
 	consumedAt, _ := token.ConsumedAt()
 	var consumedAtValue any
 	if !consumedAt.IsZero() {
 		consumedAtValue = consumedAt
 	}
-	if err := r.db.Exec(ctx, CreateLoginTokenQuery, token.ID(), token.TokenHash(), token.UserID(), token.ExpiresAt(), consumedAtValue); err != nil {
+	if err := r.db.Exec(ctx, CreateLoginTokenQuery, token.ID(), hash[:], token.UserID(), token.ExpiresAt(), consumedAtValue); err != nil {
 		if isUniqueViolation(err) {
 			return application.ErrLoginTokenAlreadyExists
 		}
@@ -37,45 +42,48 @@ func (r *LoginTokenRepository) CreateLoginToken(ctx context.Context, token *doma
 	return nil
 }
 
-func (r *LoginTokenRepository) FindLoginTokenByID(ctx context.Context, id string) (*domain.LoginToken, error) {
+func (r *LoginTokenRepository) FindByID(ctx context.Context, id string) (*domain.LoginToken, error) {
 	if id == "" {
 		return nil, domain.ErrInvalidLoginTokenID
 	}
 	return scanLoginToken(r.db.QueryRow(ctx, FindLoginTokenByIDQuery, id), "finding login token by id")
 }
 
-func (r *LoginTokenRepository) FindLoginTokenByTokenHash(ctx context.Context, tokenHash []byte) (*domain.LoginToken, error) {
-	if len(tokenHash) == 0 {
-		return nil, domain.ErrInvalidLoginTokenHash
+func (r *LoginTokenRepository) FindByToken(ctx context.Context, secret string) (*domain.LoginToken, error) {
+	if secret == "" {
+		return nil, application.ErrInvalidLoginTokenSecret
 	}
-	return scanLoginToken(r.db.QueryRow(ctx, FindLoginTokenByTokenHashQuery, tokenHash), "finding login token by token hash")
+	hash := sha256.Sum256([]byte(secret))
+	return scanLoginToken(r.db.QueryRow(ctx, FindLoginTokenByTokenHashQuery, hash[:]), "finding login token by token")
 }
 
-func (r *LoginTokenRepository) ConsumeLoginTokenByTokenHash(ctx context.Context, tokenHash []byte, consumedAt *time.Time) error {
-	if len(tokenHash) == 0 {
-		return domain.ErrInvalidLoginTokenHash
-	}
-	if consumedAt == nil || consumedAt.IsZero() {
+func (r *LoginTokenRepository) Save(ctx context.Context, token *domain.LoginToken) error {
+	consumedAt, ok := token.ConsumedAt()
+	if !ok {
 		return domain.ErrInvalidLoginTokenConsumedAt
 	}
-	if err := r.db.Exec(ctx, ConsumeLoginTokenByTokenHashQuery, tokenHash, *consumedAt); err != nil {
-		return fmt.Errorf("consuming login token: %w", err)
+	var id string
+	err := r.db.QueryRow(ctx, ConsumeLoginTokenByIDQuery, token.ID(), consumedAt).Scan(&id)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return domain.ErrLoginTokenAlreadyConsumed
+	}
+	if err != nil {
+		return fmt.Errorf("saving login token consumption: %w", err)
 	}
 	return nil
 }
 
 func scanLoginToken(row dbexec.Row, operation string) (*domain.LoginToken, error) {
 	var id, userID string
-	var tokenHash []byte
 	var expiresAt time.Time
 	var consumedAt *time.Time
-	if err := row.Scan(&id, &tokenHash, &userID, &expiresAt, &consumedAt); err != nil {
+	if err := row.Scan(&id, &userID, &expiresAt, &consumedAt); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, application.ErrLoginTokenNotFound
 		}
 		return nil, fmt.Errorf("%s: %w", operation, err)
 	}
-	token, err := domain.RehydrateLoginToken(id, tokenHash, userID, expiresAt, consumedAt)
+	token, err := domain.RehydrateLoginToken(id, userID, expiresAt, consumedAt)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", operation, err)
 	}

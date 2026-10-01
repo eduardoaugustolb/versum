@@ -2,7 +2,6 @@ package httpapi_test
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -45,29 +44,29 @@ func (r *identityUserRepository) FindUserByEmail(context.Context, identitydomain
 
 type identityLoginTokenRepository struct{ token *identitydomain.LoginToken }
 
-func (r *identityLoginTokenRepository) CreateLoginToken(_ context.Context, token *identitydomain.LoginToken) error {
+func (r *identityLoginTokenRepository) Create(_ context.Context, token *identitydomain.LoginToken, _ string) error {
 	r.token = token
 	return nil
 }
-func (r *identityLoginTokenRepository) FindLoginTokenByID(context.Context, string) (*identitydomain.LoginToken, error) {
+func (r *identityLoginTokenRepository) FindByID(context.Context, string) (*identitydomain.LoginToken, error) {
 	return nil, identityapplication.ErrLoginTokenNotFound
 }
-func (r *identityLoginTokenRepository) FindLoginTokenByTokenHash(context.Context, []byte) (*identitydomain.LoginToken, error) {
+func (r *identityLoginTokenRepository) FindByToken(context.Context, string) (*identitydomain.LoginToken, error) {
 	return nil, identityapplication.ErrLoginTokenNotFound
 }
-func (r *identityLoginTokenRepository) ConsumeLoginTokenByTokenHash(context.Context, []byte, *time.Time) error {
+func (r *identityLoginTokenRepository) Save(context.Context, *identitydomain.LoginToken) error {
 	return nil
 }
 
 type identitySessionRepository struct{}
 
-func (identitySessionRepository) CreateSession(context.Context, *identitydomain.Session) error {
+func (identitySessionRepository) CreateSession(context.Context, *identitydomain.Session, string) error {
 	return nil
 }
 func (identitySessionRepository) FindSessionByID(context.Context, string) (*identitydomain.Session, error) {
 	return nil, nil
 }
-func (identitySessionRepository) FindSessionBySecretHash(context.Context, []byte) (*identitydomain.Session, error) {
+func (identitySessionRepository) FindSessionBySecret(context.Context, string) (*identitydomain.Session, error) {
 	return nil, nil
 }
 func (identitySessionRepository) ListSessionsByUserID(context.Context, string) ([]identitydomain.Session, error) {
@@ -101,15 +100,6 @@ type identityTokenGenerator struct{}
 
 func (identityTokenGenerator) GenerateLoginToken() (string, error) { return "raw-token", nil }
 
-type identityTokenHasher struct{}
-
-func (identityTokenHasher) Hash(value string) ([]byte, error) {
-	if value != "raw-token" {
-		return nil, errors.New("unexpected token")
-	}
-	return []byte("hashed-token"), nil
-}
-
 type identityIDGenerator struct{ next int }
 
 func (g *identityIDGenerator) Generate() string {
@@ -135,7 +125,7 @@ func newIdentityAccessHandler(t *testing.T) (*httptest.ResponseRecorder, http.Ha
 	uow := &identityUnitOfWork{repositories: identityports.IdentityAccessUnitOfWorkRepositories{
 		Users: users, LoginTokens: tokens, Sessions: identitySessionRepository{}, Outbox: outbox,
 	}}
-	useCase, err := identitycommands.NewRequestMagicLink(uow, identityTokenGenerator{}, identityTokenHasher{}, &identityIDGenerator{}, identityClock{}, policy.DefaultMagicLinkPolicy)
+	useCase, err := identitycommands.NewRequestMagicLink(uow, identityTokenGenerator{}, &identityIDGenerator{}, identityClock{}, policy.DefaultMagicLinkPolicy)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -240,4 +230,16 @@ func TestRequestMagicLinkEndpointRejectsInvalidContentType(t *testing.T) {
 	if recorder.Code != http.StatusBadRequest {
 		t.Fatalf("expected 400, got %d", recorder.Code)
 	}
+}
+
+func (r identitySessionRepository) LockSessionsByUserID(context.Context, string) error { return nil }
+func (r identitySessionRepository) SaveRotation(context.Context, *identitydomain.Session) error {
+	return nil
+}
+func (r identitySessionRepository) RevokeSessionFamily(context.Context, string, string, time.Time) error {
+	return nil
+}
+
+func (r identitySessionRepository) SaveUsage(context.Context, *identitydomain.Session) error {
+	return nil
 }
