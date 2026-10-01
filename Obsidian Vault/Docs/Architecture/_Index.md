@@ -19,6 +19,7 @@ Trilha técnica para entender o sistema antes de implementar uma funcionalidade.
 1. [[Docs/Architecture/Visão Geral|Visão geral]] — fronteiras e responsabilidades.
 2. [[Docs/Architecture/Autenticação e Sessões|Autenticação e sessões]] — identidade e dispositivos.
 3. [[Docs/Architecture/Sincronização Offline|Sincronização offline]] — consistência entre aparelhos.
+4. [[Docs/Architecture/Privacidade e Consentimento|Privacidade e consentimento]] — comportamento LGPD do app.
 
 > [!note] Limite da seção
 > Esta área descreve decisões estáveis. Detalhes de uma entrega específica vão

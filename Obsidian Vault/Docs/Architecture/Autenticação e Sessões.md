@@ -15,6 +15,16 @@ related: ["[[Rules/02 - Segurança]]"]
 
 🏠 [[_Index|Home]] › 📚 [[Docs/_Index|Documentação]] › 📐 [[Docs/Architecture/_Index|Arquitetura]] › **Autenticação**
 
+## Estado atual e desenho aprovado
+
+Em 2026-10-01, apenas solicitação e persistência transacional estão integradas
+ao HTTP. O evento atual contém IDs cifrados, sem segredo recuperável para
+entrega; worker, consumo e sessão HTTP ainda precisam ser implementados.
+Cookies, deep links, gestão externa de chaves, proteção de réplicas/backups
+e controles do deploy abaixo são requisitos, não evidências de execução.
+
+## Comportamento alvo
+
 Magic link é a única forma de entrada do MVP. O token é de uso único, expira em
 pouco tempo e é armazenado apenas como hash. No web, a sessão usa cookie
 `httpOnly`. No Android, um deep link troca o magic link por uma sessão revogável
@@ -33,6 +43,12 @@ dedicado se a operação exigir isolamento ou escala independente. O token bruto
 necessário para a URL existe apenas em payload cifrado do evento. Consulte a
 [[Docs/Decisions/003 - Outbox para Magic Links|ADR da outbox]].
 
+Conta opcional do app gratuito: base art. 7º, V para dados comuns necessários
+ao acordo/pedido de acesso, sem venda ou captação. Leitura pública sem conta.
+Pedido referencia termos versionados; confirmar e-mail antes de ativar conta.
+Informação de privacidade e termos não são consentimento geral. Ver
+[[Docs/Architecture/Privacidade e Consentimento|Privacidade e consentimento]].
+
 ## Regras
 
 - Uma sessão pertence a um dispositivo e pode ser revogada.
@@ -42,7 +58,8 @@ necessário para a URL existe apenas em payload cifrado do evento. Consulte a
   com backoff e observabilidade de falhas.
 - Dados pessoais não entram em logs, métricas, traces ou backups sem a mesma
   proteção de cifragem e controle de acesso.
-- Download offline, progresso, push e qualquer dado pessoal exigem autenticação.
+- Progresso sincronizado, push e operações pessoais exigem autenticação.
+  Download de conteúdo público tem contrato próprio do cliente Android.
 - A leitura pública do catálogo no web não exige conta.
 
 ---

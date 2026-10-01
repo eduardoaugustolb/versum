@@ -15,6 +15,7 @@ next: "[[Plans/Archive/_Index]]"
 | Plano | Objetivo | Status |
 | :-- | :-- | :-- |
 | [[Plans/Active/03 - Autenticação e Sessões]] | Magic link e sessões revogáveis por dispositivo | Planejado |
+| [[Plans/Active/04 - Privacidade e Consentimento]] | Bases legais, consentimento versionado, DSAR e retenção (LGPD) | Planejado |
 
 ---
 

@@ -52,6 +52,19 @@ API. É uma responsabilidade lógica separada, mas não exige outro processo ou
 deployment. Pode ser extraído para um worker dedicado quando houver necessidade
 operacional de isolamento, disponibilidade ou escala independente.
 
+## Estado da implementação em 2026-10-01
+
+A unidade de trabalho e a publicação cifrada estão implementadas. O payload
+atual contém apenas `user_id` e `login_token_id`; o token bruto não é preservado
+para entrega. Portanto o worker ainda não consegue montar o link e esta ADR
+descreve o alvo, não uma entrega funcional já concluída. A feat/auth deve
+completar o payload protegido e o consumidor, com remoção do segredo ao deixar
+de ser necessário. Expiração impede uso; purge elimina a representação.
+
+Além do segredo, definir retenção dos metadados e vínculo à exclusão da conta.
+A outbox atual não tem FK/cascata de usuário: IDs dentro do ciphertext não
+asseguram eliminação automática (LGPD arts. 15–16, 18 e 46).
+
 ## Garantias e limites
 
 - A criação do token e o agendamento do e-mail são atômicos.

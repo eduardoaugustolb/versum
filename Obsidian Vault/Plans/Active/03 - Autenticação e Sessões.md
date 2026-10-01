@@ -9,7 +9,7 @@ tags: [versum, plans, api, go, auth, security, sessions]
 up: "[[Plans/Active/_Index|Planos Ativos]]"
 prev: "[[Plans/Active/_Index|Planos Ativos]]"
 next: "[[Plans/Archive/_Index|Arquivo]]"
-related: ["[[Docs/Architecture/Autenticação e Sessões]]", "[[Docs/Decisions/003 - Outbox para Magic Links]]", "[[Rules/02 - Segurança]]", "[[Plans/Archive/02 - Catálogo Bíblico]]"]
+related: ["[[Docs/Architecture/Autenticação e Sessões]]", "[[Docs/Architecture/Privacidade e Consentimento]]", "[[Docs/Decisions/003 - Outbox para Magic Links]]", "[[Rules/02 - Segurança]]", "[[Plans/Archive/02 - Catálogo Bíblico]]", "[[Plans/Active/04 - Privacidade e Consentimento]]"]
 ---
 
 # Autenticação e Sessões
@@ -18,8 +18,9 @@ related: ["[[Docs/Architecture/Autenticação e Sessões]]", "[[Docs/Decisions/0
 
 Implementar a identidade do MVP sem senha: a pessoa solicita um magic link,
 consome o token uma única vez e passa a ter sessões revogáveis por dispositivo.
-O catálogo continua público; progresso, sincronização, downloads offline,
-push e qualquer dado pessoal passam a depender de uma sessão autenticada.
+O catálogo continua público. Progresso sincronizado, push e operações pessoais
+exigem sessão válida; baixar conteúdo público não implica, por si só, coleta
+sensível. O cliente Android e seu contrato de download ficam em plano próprio.
 
 ## Decisões do MVP
 
@@ -63,6 +64,19 @@ push e qualquer dado pessoal passam a depender de uma sessão autenticada.
 - [x] Base temporal: porta `Clock`, `SystemClock` em UTC, TTL configurável e
   `RequestMagicLink` testado com relógio fixo.
 
+### Retrato da branch em 2026-10-01
+
+`feat/auth` implementa solicitação de magic link, proteção de e-mail, hashes,
+limitação por Redis e publicação transacional do evento. O payload atual da
+outbox contém apenas `user_id`/`login_token_id`: o token bruto é descartado,
+logo o worker ainda não consegue construir o link. Entrega, consumo HTTP e
+ciclo de sessão estão pendentes. O teste local de consumo referencia
+`NewConsumeMagicLink`, ainda inexistente, e impede `go test ./...`.
+
+Os itens abaixo descrevem o alvo. Parâmetros de retry/retenção definidos no
+domínio não comprovam worker ou purge operacionais. A unidade de trabalho já
+está implementada; a entrega completa ainda precisa ser concluída.
+
 ### Próxima sequência — nesta ordem
 
 - [x] **Fixar políticas antes do schema:** decidir criação automática versus
@@ -74,7 +88,7 @@ push e qualquer dado pessoal passam a depender de uma sessão autenticada.
 - [x] **Criar migration da outbox:** id, tipo, `payload_ciphertext`, versão da
   chave, tentativas, `available_at`, lease, processamento, erro redigido e
   índices para eventos prontos.
-- [ ] **Implementar `IdentityAccessUnitOfWork`:** iniciar `pgx.Tx` e expor os
+- [x] **Implementar `IdentityAccessUnitOfWork`:** iniciar `pgx.Tx` e expor os
   repositórios de usuário, token e outbox vinculados à mesma transação.
 - [ ] **Concluir `RequestMagicLink`:** gerar token, persistir somente hash,
   cifrar o segredo de entrega e gravar o evento na mesma transação. A resposta
@@ -258,11 +272,13 @@ Cobrir, no mínimo:
 - ausência de segredos nos logs.
 - cifragem e decifragem com chave versionada, incluindo rotação sem perda de
   acesso;
-- impossibilidade de recuperar o e-mail a partir do índice cego;
+- índice cego com HMAC sob chave secreta; não tratar pseudonimização como
+  anonimização ou prometer irreversibilidade absoluta;
 - retenção, exportação e exclusão dos dados pessoais.
 
 Executar `go test ./...`, `go vet ./...` e os testes de integração com banco
-antes de marcar o plano como concluído.
+antes de marcar o plano como concluído. Integração em cache ou teste pulado
+não comprova execução contra PostgreSQL real.
 
 ## Fora deste plano
 
@@ -270,12 +286,53 @@ antes de marcar o plano como concluído.
 - recuperação de conta por suporte manual;
 - implementação do cliente Android;
 - progresso, sincronização offline, push e lembretes;
-- rate limiting distribuído e observabilidade avançada, além das interfaces
-  necessárias para não deixar o fluxo aberto.
+- observabilidade avançada; o rate limit básico distribuído via Redis já
+  existe e seu endurecimento faz parte desta branch.
 
 O desenho técnico não substitui a definição jurídica de bases legais,
 encarregado, prazos de retenção e atendimento a titulares; esses itens devem
-ser registrados antes da operação em produção.
+ser registrados antes da operação em produção — ver
+[[Plans/Active/04 - Privacidade e Consentimento|Plano 04]].
+
+## Privacidade e ciclo de vida na feat/auth
+
+O app é aberto ao público e gratuito, sem finalidade de venda ou captação.
+Leitura dispensa conta; conta opcional usa acordo de uso gratuito. Art. 7º, V
+é a base definida para dados comuns necessários ao pedido/entrega/sessão.
+Não adicionar checkbox de consentimento obrigatório de `conta_acesso`.
+Referenciar termos versionados e confirmar controle do e-mail antes de ativar
+conta; a criação automática atual deve ser ajustada. Avaliar a associação ao serviço
+religioso; se revelar convicção, selecionar hipótese do art. 11.
+
+- [ ] **Base e aviso:** registrar decisão por finalidade; disponibilizar versão
+  recuperável do aviso antes da coleta. Ciência do aviso não vira consentimento
+  por nomenclatura (LGPD arts. 7º–9º e 11).
+- [ ] **Consentimentos quando aplicáveis:** ledger por finalidade/texto, eventos
+  de concessão/revogação com ordenação determinística e retenção definida.
+  Recusa de opcionais não bloqueia acesso; não coletar preferências de módulos
+  ainda indisponíveis. IP/UA não são evidência obrigatória por lei (arts. 6º,
+  III, 8º e 18, IX).
+- [ ] **Segurança de entrada:** limitar body, rejeitar JSON concatenado, aceitar
+  media type JSON com charset, manter resposta neutra, revisar proxy confiável
+  e HMAC separado do e-mail no rate limit. Não afirmar que hash simples é
+  anonimização (arts. 12 e 46).
+- [ ] **Titulares:** conta, exportação, correção com verificação do novo e-mail
+  e exclusão autenticadas, com canal para demais direitos. Tratar exclusão de
+  outbox/cache e entrega já em andamento; a cascata atual não cobre outbox.
+  Os 15 dias do art. 19, II são para declaração completa de confirmação/acesso.
+- [ ] **Retenção:** purge parametrizado de tokens/sessões/outbox, segredo de
+  entrega removido após uso/expiração e exceções justificadas. Append-only não
+  significa conservar prova para sempre (arts. 15–16).
+- [ ] **Chaves e logs:** recifrar e-mail e outbox antes de retirar chaves; testes
+  de ausência de e-mail/token em logs, erros, métricas e traces (art. 46).
+- [ ] **Operação:** runbook de incidentes e exclusão/restauração; validar TLS,
+  acesso mínimo, fornecedores/regiões e prazos antes de convites reais (arts.
+  33–39, 46 e 48).
+
+O roteiro consolidado e seus critérios de aceite estão no
+[[Plans/Active/04 - Privacidade e Consentimento|Plano 04]]. Progresso, push,
+analytics e tratamento de menores exigem seus próprios gates antes de ativação;
+não precisam ser implementados antecipadamente como funcionalidades desta branch.
 
 ## Critérios de conclusão
 
@@ -286,6 +343,8 @@ ser registrados antes da operação em produção.
 - A sessão criada pode ser validada, expirada e revogada por dispositivo.
 - Rotas privadas rejeitam requisições sem sessão válida.
 - O catálogo público permanece funcionando sem conta.
+- Titular consegue consultar, corrigir, exportar e solicitar exclusão com
+  efeitos sobre tokens, sessões, outbox e cache; purge tem testes de execução.
 - Migrations, testes, configuração e documentação de operação estão versionados.
 
 ---
