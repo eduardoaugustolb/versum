@@ -10,6 +10,7 @@ var (
 	ErrUserAlreadyExists       = errors.New("user already exists")
 	ErrSessionNotFound         = errors.New("session not found")
 	ErrSessionAlreadyExists    = errors.New("session already exists")
+	ErrSessionExpired          = errors.New("session expired")
 	ErrLoginTokenNotFound      = errors.New("login token not found")
 	ErrLoginTokenAlreadyExists = errors.New("login token already exists")
 	ErrInvalidMagicLinkTTL     = errors.New("invalid magic link ttl")

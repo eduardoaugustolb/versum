@@ -2,6 +2,7 @@ package commands_test
 
 import (
 	"context"
+	"sort"
 	"time"
 
 	"github.com/eduardoaugustolb/versum/api/internal/clock"
@@ -151,14 +152,23 @@ func (f *FakeLoginTokenRepository) Save(_ context.Context, _ *domain.LoginToken)
 }
 
 // FakeSessionRepository é o mock universal de identityports.SessionRepository.
+type FakeSessionFamilyRevocation struct {
+	UserID    string
+	FamilyID  string
+	RevokedAt time.Time
+}
+
 type FakeSessionRepository struct {
-	FindBySecretErr error
-	ByID            map[string]*domain.Session
-	BySecret        map[string]*domain.Session
-	CreatedSecrets  []string
-	CreateErr       error
-	FindByIDErr     error
-	RevokeErr       error
+	OnFindBySecret    func(context.Context, string) (*domain.Session, error)
+	ListErr           error
+	RevokeFamilyCalls []FakeSessionFamilyRevocation
+	FindBySecretErr   error
+	ByID              map[string]*domain.Session
+	BySecret          map[string]*domain.Session
+	CreatedSecrets    []string
+	CreateErr         error
+	FindByIDErr       error
+	RevokeErr         error
 
 	Created     []*domain.Session
 	CreateCalls int
@@ -193,7 +203,10 @@ func (f *FakeSessionRepository) FindSessionByID(_ context.Context, id string) (*
 	return nil, identityports.ErrSessionNotFound
 }
 
-func (f *FakeSessionRepository) FindSessionBySecret(_ context.Context, secret string) (*domain.Session, error) {
+func (f *FakeSessionRepository) FindSessionBySecret(ctx context.Context, secret string) (*domain.Session, error) {
+	if f.OnFindBySecret != nil {
+		return f.OnFindBySecret(ctx, secret)
+	}
 	if f.FindBySecretErr != nil {
 		return nil, f.FindBySecretErr
 	}
@@ -203,8 +216,18 @@ func (f *FakeSessionRepository) FindSessionBySecret(_ context.Context, secret st
 	return nil, identityports.ErrSessionNotFound
 }
 
-func (f *FakeSessionRepository) ListSessionsByUserID(_ context.Context, _ string) ([]domain.Session, error) {
-	return nil, nil
+func (f *FakeSessionRepository) ListSessionsByUserID(_ context.Context, userID string) ([]domain.Session, error) {
+	if f.ListErr != nil {
+		return nil, f.ListErr
+	}
+	sessions := []domain.Session{}
+	for _, session := range f.ByID {
+		if session.UserID() == userID {
+			sessions = append(sessions, *session)
+		}
+	}
+	sort.Slice(sessions, func(i, j int) bool { return sessions[i].ID() < sessions[j].ID() })
+	return sessions, nil
 }
 
 func (f *FakeSessionRepository) RevokeSession(_ context.Context, sessionID string, _ *time.Time) error {
@@ -303,7 +326,27 @@ func (f FakeLoginTokenGenerator) GenerateLoginToken() (string, error) {
 
 func (r *FakeSessionRepository) LockSessionsByUserID(context.Context, string) error  { return nil }
 func (r *FakeSessionRepository) SaveRotation(context.Context, *domain.Session) error { return nil }
-func (r *FakeSessionRepository) RevokeSessionFamily(context.Context, string, string, time.Time) error {
+func (r *FakeSessionRepository) RevokeSessionFamily(_ context.Context, userID, familyID string, revokedAt time.Time) error {
+	r.RevokeFamilyCalls = append(r.RevokeFamilyCalls, FakeSessionFamilyRevocation{UserID: userID, FamilyID: familyID, RevokedAt: revokedAt})
+	if r.RevokeErr != nil {
+		return r.RevokeErr
+	}
+	if userID == "" {
+		return domain.ErrInvalidSessionUserID
+	}
+	if familyID == "" {
+		return domain.ErrInvalidSessionFamilyID
+	}
+	if revokedAt.IsZero() {
+		return domain.ErrInvalidSessionRevokedAt
+	}
+	for _, session := range r.ByID {
+		if session.UserID() == userID && session.FamilyID() == familyID {
+			if err := session.Revoke(revokedAt); err != nil {
+				return err
+			}
+		}
+	}
 	return nil
 }
 
