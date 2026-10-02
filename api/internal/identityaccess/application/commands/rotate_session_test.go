@@ -77,11 +77,11 @@ func (u *rotationUow) WithinTransaction(_ context.Context, fn func(application.I
 
 func TestRotateSessionSuccessAndReuseCommitsFamilyRevocation(t *testing.T) {
 	now := time.Now().UTC()
-	old, _ := domain.NewSession("old", "user", "family", domain.SessionClient{}, now.Add(time.Hour), now)
+	old, _ := domain.NewSession("old", "user", "family", "", "", now.Add(time.Hour), now)
 	repo := &rotationSessions{FakeSessionRepository: FakeSessionRepository{BySecret: map[string]*domain.Session{"old-secret": old}}}
 	uow := &rotationUow{repos: application.IdentityAccessUnitOfWorkRepositories{Sessions: repo}}
 	uc := commands.NewRotateSession(uow, sessionSecrets{secret: "new-secret"}, &FakeIDGenerator{IDs: []string{"next"}}, FakeClock{NowTime: now})
-	got, err := uc.Execute(t.Context(), "old-secret", domain.SessionClient{IPAddress: "192.0.2.1", UserAgent: "browser"})
+	got, err := uc.Execute(t.Context(), "old-secret", "192.0.2.1", "browser")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -92,7 +92,7 @@ func TestRotateSessionSuccessAndReuseCommitsFamilyRevocation(t *testing.T) {
 		t.Fatal("rotation must lock, re-read and commit")
 	}
 	uow.committed = false
-	got, err = uc.Execute(t.Context(), "old-secret", domain.SessionClient{})
+	got, err = uc.Execute(t.Context(), "old-secret", "", "")
 	if got != nil || !errors.Is(err, domain.ErrSessionReused) {
 		t.Fatalf("expected reuse, got %v", err)
 	}
@@ -109,12 +109,12 @@ func TestRotateSessionFailurePaths(t *testing.T) {
 	now := time.Now().UTC()
 	for _, name := range []string{"not found", "lookup", "lock", "reread", "expired", "revoked", "generation", "empty secret", "same secret", "invalid client", "same id", "create", "save", "begin", "commit", "family revoke"} {
 		t.Run(name, func(t *testing.T) {
-			old, _ := domain.NewSession("old", "user", "family", domain.SessionClient{}, now.Add(time.Hour), now)
+			old, _ := domain.NewSession("old", "user", "family", "", "", now.Add(time.Hour), now)
 			repo := &rotationSessions{FakeSessionRepository: FakeSessionRepository{BySecret: map[string]*domain.Session{"old-secret": old}}}
 			uow := &rotationUow{repos: application.IdentityAccessUnitOfWorkRepositories{Sessions: repo}}
 			generator := sessionSecrets{secret: "new-secret"}
 			ids := &FakeIDGenerator{IDs: []string{"next"}}
-			client := domain.SessionClient{}
+			ipAddress, userAgent := "", ""
 			at := now
 			want := failure
 			switch name {
@@ -142,7 +142,7 @@ func TestRotateSessionFailurePaths(t *testing.T) {
 				generator.secret = "old-secret"
 				want = application.ErrInvalidSessionSecret
 			case "invalid client":
-				client.IPAddress = "invalid"
+				ipAddress = "invalid"
 				want = domain.ErrInvalidSessionIPAddress
 			case "same id":
 				ids.IDs = []string{"old"}
@@ -156,12 +156,12 @@ func TestRotateSessionFailurePaths(t *testing.T) {
 			case "commit":
 				uow.commitErr = failure
 			case "family revoke":
-				next, _ := domain.NewSession("next", "user", "family", domain.SessionClient{}, old.ExpiresAt(), now)
+				next, _ := domain.NewSession("next", "user", "family", "", "", old.ExpiresAt(), now)
 				old.ReplaceWith(next, now)
 				repo.revokeFamilyErr = failure
 			}
 			uc := commands.NewRotateSession(uow, generator, ids, FakeClock{NowTime: at})
-			got, err := uc.Execute(t.Context(), "old-secret", client)
+			got, err := uc.Execute(t.Context(), "old-secret", ipAddress, userAgent)
 			if got != nil || !errors.Is(err, want) {
 				t.Fatalf("want %v and no credential, got %+v, %v", want, got, err)
 			}
@@ -174,12 +174,12 @@ func TestRotateSessionFailurePaths(t *testing.T) {
 
 func TestRotateSessionRechecksStateAfterLock(t *testing.T) {
 	now := time.Now().UTC()
-	before, _ := domain.NewSession("old", "user", "family", domain.SessionClient{}, now.Add(time.Hour), now)
-	after, _ := domain.RehydrateSession("old", "user", "family", domain.SessionClient{}, &now, &now, before.ExpiresAt(), "other-successor")
+	before, _ := domain.NewSession("old", "user", "family", "", "", now.Add(time.Hour), now)
+	after, _ := domain.RehydrateSession("old", "user", "family", "", "", &now, &now, before.ExpiresAt(), "other-successor")
 	repo := &rotationSessions{FakeSessionRepository: FakeSessionRepository{BySecret: map[string]*domain.Session{"secret": before}}, afterLock: after}
 	uow := &rotationUow{repos: application.IdentityAccessUnitOfWorkRepositories{Sessions: repo}}
 	uc := commands.NewRotateSession(uow, sessionSecrets{secret: "new"}, &FakeIDGenerator{}, FakeClock{NowTime: now})
-	if _, err := uc.Execute(t.Context(), "secret", domain.SessionClient{}); !errors.Is(err, domain.ErrSessionReused) {
+	if _, err := uc.Execute(t.Context(), "secret", "", ""); !errors.Is(err, domain.ErrSessionReused) {
 		t.Fatal(err)
 	}
 	if !uow.committed || repo.CreateCalls != 0 || repo.familyRevocations != 1 {

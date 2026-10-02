@@ -26,7 +26,7 @@ func TestLoginTokenRepositoryTranslatesUniqueViolationOnCreate(t *testing.T) {
 
 func TestSessionRepositoryTranslatesUniqueViolationOnCreate(t *testing.T) {
 	now := time.Now()
-	session, err := domain.NewSession("session-1", "user-1", "family-1", domain.SessionClient{}, now.Add(time.Hour), now)
+	session, err := domain.NewSession("session-1", "user-1", "family-1", "", "", now.Add(time.Hour), now)
 	if err != nil {
 		t.Fatal(err)
 	}

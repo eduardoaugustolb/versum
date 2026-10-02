@@ -1,17 +1,9 @@
 package domain
 
 import (
-	"net/netip"
 	"strings"
 	"time"
 )
-
-// SessionClient describes the client observed when this session was issued.
-// These attributes are risk signals, not proof of possession of a credential.
-type SessionClient struct {
-	IPAddress string
-	UserAgent string
-}
 
 type Session struct {
 	id, userID, familyID  string
@@ -21,14 +13,14 @@ type Session struct {
 	replacedBySessionID   string
 }
 
-func NewSession(id, userID, familyID string, client SessionClient, expiresAt, now time.Time) (*Session, error) {
+func NewSession(id, userID, familyID, ipAddress, userAgent string, expiresAt, now time.Time) (*Session, error) {
 	if now.IsZero() || !expiresAt.After(now) {
 		return nil, ErrInvalidSessionExpiresAt
 	}
-	return RehydrateSession(id, userID, familyID, client, nil, nil, expiresAt, "")
+	return RehydrateSession(id, userID, familyID, ipAddress, userAgent, nil, nil, expiresAt, "")
 }
 
-func RehydrateSession(id, userID, familyID string, client SessionClient, revokedAt, lastUsedAt *time.Time, expiresAt time.Time, replacedBySessionID string) (*Session, error) {
+func RehydrateSession(id, userID, familyID, ipAddress, userAgent string, revokedAt, lastUsedAt *time.Time, expiresAt time.Time, replacedBySessionID string) (*Session, error) {
 	if strings.TrimSpace(id) == "" {
 		return nil, ErrInvalidSessionID
 	}
@@ -50,15 +42,9 @@ func RehydrateSession(id, userID, familyID string, client SessionClient, revoked
 	if replacedBySessionID != "" && (strings.TrimSpace(replacedBySessionID) == "" || replacedBySessionID == id || revokedAt == nil) {
 		return nil, ErrInvalidSessionReplacement
 	}
-	if client.IPAddress != "" {
-		addr, err := netip.ParseAddr(client.IPAddress)
-		if err != nil || addr.Zone() != "" {
-			return nil, ErrInvalidSessionIPAddress
-		}
-		client.IPAddress = addr.Unmap().String()
-	}
-	if len(client.UserAgent) > 1024 || strings.ContainsAny(client.UserAgent, "\r\n\x00") {
-		return nil, ErrInvalidSessionUserAgent
+	client, err := newSessionClient(ipAddress, userAgent)
+	if err != nil {
+		return nil, err
 	}
 	return &Session{id: id, userID: userID, familyID: familyID, client: client, revokedAt: cloneTime(revokedAt), lastUsedAt: cloneTime(lastUsedAt), expiresAt: expiresAt.UTC(), replacedBySessionID: replacedBySessionID}, nil
 }
@@ -66,8 +52,8 @@ func RehydrateSession(id, userID, familyID string, client SessionClient, revoked
 func (s *Session) ID() string        { return s.id }
 func (s *Session) UserID() string    { return s.userID }
 func (s *Session) FamilyID() string  { return s.familyID }
-func (s *Session) IPAddress() string { return s.client.IPAddress }
-func (s *Session) UserAgent() string { return s.client.UserAgent }
+func (s *Session) IPAddress() string { return s.client.IPAddress() }
+func (s *Session) UserAgent() string { return s.client.UserAgent() }
 func (s *Session) ReplacedBySessionID() (string, bool) {
 	return s.replacedBySessionID, s.replacedBySessionID != ""
 }

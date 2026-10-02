@@ -26,7 +26,7 @@ func TestNewSession(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			session, err := domain.NewSession(tt.id, tt.userID, "family-1", domain.SessionClient{}, tt.expiresAt, now)
+			session, err := domain.NewSession(tt.id, tt.userID, "family-1", "", "", tt.expiresAt, now)
 			if !errors.Is(err, tt.wantErr) {
 				t.Fatalf("expected error %v, got %v", tt.wantErr, err)
 			}
@@ -40,7 +40,7 @@ func TestNewSession(t *testing.T) {
 func TestSessionRehydrateOptionalState(t *testing.T) {
 	now := time.Date(2026, time.January, 1, 12, 0, 0, 0, time.UTC)
 	expiresAt := now.Add(time.Hour)
-	session, err := domain.RehydrateSession("session-1", "user-1", "family-1", domain.SessionClient{}, nil, nil, expiresAt, "")
+	session, err := domain.RehydrateSession("session-1", "user-1", "family-1", "", "", nil, nil, expiresAt, "")
 	if err != nil {
 		t.Fatalf("rehydration of active session failed: %v", err)
 	}
@@ -53,7 +53,7 @@ func TestSessionRehydrateOptionalState(t *testing.T) {
 
 	revokedAt := now.Add(10 * time.Minute)
 	usedAt := now.Add(5 * time.Minute)
-	revoked, err := domain.RehydrateSession("session-1", "user-1", "family-1", domain.SessionClient{}, &revokedAt, &usedAt, expiresAt, "")
+	revoked, err := domain.RehydrateSession("session-1", "user-1", "family-1", "", "", &revokedAt, &usedAt, expiresAt, "")
 	if err != nil {
 		t.Fatalf("rehydration of revoked session failed: %v", err)
 	}
@@ -65,17 +65,17 @@ func TestSessionRehydrateOptionalState(t *testing.T) {
 	}
 
 	zero := time.Time{}
-	if _, err := domain.RehydrateSession("session-1", "user-1", "family-1", domain.SessionClient{}, &zero, nil, expiresAt, ""); !errors.Is(err, domain.ErrInvalidSessionRevokedAt) {
+	if _, err := domain.RehydrateSession("session-1", "user-1", "family-1", "", "", &zero, nil, expiresAt, ""); !errors.Is(err, domain.ErrInvalidSessionRevokedAt) {
 		t.Fatalf("expected zero revoked_at error, got %v", err)
 	}
-	if _, err := domain.RehydrateSession("session-1", "user-1", "family-1", domain.SessionClient{}, nil, &zero, expiresAt, ""); !errors.Is(err, domain.ErrInvalidSessionLastUsedAt) {
+	if _, err := domain.RehydrateSession("session-1", "user-1", "family-1", "", "", nil, &zero, expiresAt, ""); !errors.Is(err, domain.ErrInvalidSessionLastUsedAt) {
 		t.Fatalf("expected zero used_at error, got %v", err)
 	}
 }
 
 func TestSessionValidityAndUse(t *testing.T) {
 	now := time.Date(2026, time.January, 1, 12, 0, 0, 0, time.UTC)
-	session, err := domain.NewSession("session-1", "user-1", "family-1", domain.SessionClient{}, now.Add(time.Hour), now)
+	session, err := domain.NewSession("session-1", "user-1", "family-1", "", "", now.Add(time.Hour), now)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -98,7 +98,7 @@ func TestSessionValidityAndUse(t *testing.T) {
 func TestSessionRehydrateCopiesTimestamps(t *testing.T) {
 	now := time.Date(2026, time.January, 1, 12, 0, 0, 0, time.UTC)
 	usedAt, revokedAt := now, now.Add(time.Minute)
-	session, err := domain.RehydrateSession("session-1", "user-1", "family-1", domain.SessionClient{}, &revokedAt, &usedAt, now.Add(time.Hour), "")
+	session, err := domain.RehydrateSession("session-1", "user-1", "family-1", "", "", &revokedAt, &usedAt, now.Add(time.Hour), "")
 	if err != nil {
 		t.Fatal(err)
 	}

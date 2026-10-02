@@ -71,7 +71,7 @@ func (e *sessionExecutor) Query(_ context.Context, _ string, args ...any) (dbexe
 
 func TestSessionRepositoryCreatesAndFindsWithSecret(t *testing.T) {
 	now := time.Now().UTC()
-	session, err := domain.NewSession("session-1", "user-1", "family-1", domain.SessionClient{}, now.Add(time.Hour), now)
+	session, err := domain.NewSession("session-1", "user-1", "family-1", "", "", now.Add(time.Hour), now)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -110,7 +110,7 @@ func TestSessionRepositoryCreatesAndFindsWithSecret(t *testing.T) {
 
 func TestSessionRepositoryPersistsAndRehydratesOptionalState(t *testing.T) {
 	now := time.Now().UTC()
-	session, err := domain.NewSession("session-1", "user-1", "family-1", domain.SessionClient{}, now.Add(time.Hour), now)
+	session, err := domain.NewSession("session-1", "user-1", "family-1", "", "", now.Add(time.Hour), now)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -247,7 +247,7 @@ func TestSessionRepositoryRevokesAndPreservesWriteErrors(t *testing.T) {
 	for _, writeErr := range []error{nil, failure} {
 		db := &lookupExecutor{execErr: writeErr}
 		repo := NewSessionRepository(db)
-		session, err := domain.NewSession("session", "user", "family-1", domain.SessionClient{}, now.Add(time.Hour), now)
+		session, err := domain.NewSession("session", "user", "family-1", "", "", now.Add(time.Hour), now)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -275,8 +275,8 @@ func (r sessionIDRow) Scan(dest ...any) error { *dest[0].(*string) = r.id; retur
 
 func TestSessionRepositoryRotationPersistenceAndErrors(t *testing.T) {
 	now := time.Now().UTC()
-	old, _ := domain.NewSession("old", "user", "family", domain.SessionClient{}, now.Add(time.Hour), now)
-	next, _ := domain.NewSession("next", "user", "family", domain.SessionClient{}, old.ExpiresAt(), now)
+	old, _ := domain.NewSession("old", "user", "family", "", "", now.Add(time.Hour), now)
+	next, _ := domain.NewSession("next", "user", "family", "", "", old.ExpiresAt(), now)
 	if err := old.ReplaceWith(next, now); err != nil {
 		t.Fatal(err)
 	}
@@ -358,7 +358,7 @@ func TestSessionRepositoryRehydratesRotationAndClient(t *testing.T) {
 
 func TestSessionRepositorySavesUsageConditionally(t *testing.T) {
 	now := time.Now().UTC()
-	session, _ := domain.NewSession("session", "user", "family", domain.SessionClient{}, now.Add(time.Hour), now)
+	session, _ := domain.NewSession("session", "user", "family", "", "", now.Add(time.Hour), now)
 	repo := NewSessionRepository(&lookupExecutor{})
 	if err := repo.SaveUsage(t.Context(), session); !errors.Is(err, domain.ErrInvalidSessionLastUsedAt) {
 		t.Fatal(err)
@@ -387,7 +387,7 @@ func TestSessionRepositorySavesUsageConditionally(t *testing.T) {
 
 func TestSessionRepositoryRejectsCreationOfReplacedSession(t *testing.T) {
 	now := time.Now().UTC()
-	session, _ := domain.RehydrateSession("old", "user", "family", domain.SessionClient{}, &now, &now, now.Add(time.Hour), "next")
+	session, _ := domain.RehydrateSession("old", "user", "family", "", "", &now, &now, now.Add(time.Hour), "next")
 	if err := NewSessionRepository(&lookupExecutor{}).CreateSession(t.Context(), session, "secret"); !errors.Is(err, domain.ErrInvalidSessionReplacement) {
 		t.Fatal(err)
 	}

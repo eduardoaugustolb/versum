@@ -28,7 +28,7 @@ func NewConsumeMagicLink(uow application.IdentityAccessUnitOfWork, secrets appli
 
 // Execute consumes a single-use link and issues an independent session family.
 // The bearer credential is returned only after the transaction commits.
-func (uc *ConsumeMagicLink) Execute(ctx context.Context, token string, client domain.SessionClient) (*IssuedSession, error) {
+func (uc *ConsumeMagicLink) Execute(ctx context.Context, token string, ipAddress, userAgent string) (*IssuedSession, error) {
 	if token == "" {
 		return nil, application.ErrInvalidLoginTokenSecret
 	}
@@ -51,7 +51,7 @@ func (uc *ConsumeMagicLink) Execute(ctx context.Context, token string, client do
 		}
 		sessionID := uc.idGenerator.Generate()
 		familyID := uc.idGenerator.Generate()
-		session, err := domain.NewSession(sessionID, loginToken.UserID(), familyID, client, now.Add(uc.sessionTTL), now)
+		session, err := domain.NewSession(sessionID, loginToken.UserID(), familyID, ipAddress, userAgent, now.Add(uc.sessionTTL), now)
 		if err != nil {
 			return err
 		}

@@ -32,7 +32,7 @@ func TestConsumeMagicLinkPersistsSessionAndRejectsReuse(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	got, err := uc.Execute(ctx, "link-secret", domain.SessionClient{IPAddress: "2001:db8::1", UserAgent: "integration-browser"})
+	got, err := uc.Execute(ctx, "link-secret", "2001:db8::1", "integration-browser")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -58,7 +58,7 @@ func TestConsumeMagicLinkPersistsSessionAndRejectsReuse(t *testing.T) {
 	if !consumed.IsConsumed() {
 		t.Fatal("token consumption was not committed")
 	}
-	if result, err := uc.Execute(ctx, "link-secret", domain.SessionClient{}); result != nil || !errors.Is(err, domain.ErrLoginTokenAlreadyConsumed) {
+	if result, err := uc.Execute(ctx, "link-secret", "", ""); result != nil || !errors.Is(err, domain.ErrLoginTokenAlreadyConsumed) {
 		t.Fatalf("expected consumed-token error: %v", err)
 	}
 	all, err := sessions.ListSessionsByUserID(ctx, user.ID())
@@ -86,7 +86,7 @@ func TestConsumeMagicLinkRollsBackTokenOnSessionConflict(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if result, err := uc.Execute(ctx, "link-secret", domain.SessionClient{}); result != nil || !errors.Is(err, application.ErrSessionAlreadyExists) {
+	if result, err := uc.Execute(ctx, "link-secret", "", ""); result != nil || !errors.Is(err, application.ErrSessionAlreadyExists) {
 		t.Fatalf("expected session conflict: %v", err)
 	}
 	restored, err := tokens.FindByID(ctx, token.ID())
@@ -108,7 +108,7 @@ func TestConsumeMagicLinkRollsBackTokenOnSessionConflict(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err := retry.Execute(ctx, "link-secret", domain.SessionClient{}); err != nil {
+	if _, err := retry.Execute(ctx, "link-secret", "", ""); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -128,7 +128,7 @@ func TestConsumeMagicLinkConcurrentConsumptionIssuesOneSession(t *testing.T) {
 	start := make(chan struct{})
 	results := make(chan error, 2)
 	for range 2 {
-		go func() { <-start; _, err := uc.Execute(ctx, "link-secret", domain.SessionClient{}); results <- err }()
+		go func() { <-start; _, err := uc.Execute(ctx, "link-secret", "", ""); results <- err }()
 	}
 	close(start)
 	first, second := <-results, <-results
@@ -163,7 +163,7 @@ func TestConsumeMagicLinkRejectsExpiredAndMissingTokens(t *testing.T) {
 		secret string
 		want   error
 	}{{"expired-secret", domain.ErrLoginTokenExpired}, {"missing", application.ErrLoginTokenNotFound}} {
-		if got, err := uc.Execute(ctx, tt.secret, domain.SessionClient{}); got != nil || !errors.Is(err, tt.want) {
+		if got, err := uc.Execute(ctx, tt.secret, "", ""); got != nil || !errors.Is(err, tt.want) {
 			t.Fatalf("want %v, got %v", tt.want, err)
 		}
 	}

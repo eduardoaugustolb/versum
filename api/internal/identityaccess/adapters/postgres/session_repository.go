@@ -129,7 +129,7 @@ func scanSession(row dbexec.Row, operation string) (*domain.Session, error) {
 	if replacement != nil {
 		replacedBy = *replacement
 	}
-	session, err := domain.RehydrateSession(id, userID, familyID, domain.SessionClient{IPAddress: ipAddress, UserAgent: userAgent}, revokedAt, lastUsedAt, expiresAt, replacedBy)
+	session, err := domain.RehydrateSession(id, userID, familyID, ipAddress, userAgent, revokedAt, lastUsedAt, expiresAt, replacedBy)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", operation, err)
 	}

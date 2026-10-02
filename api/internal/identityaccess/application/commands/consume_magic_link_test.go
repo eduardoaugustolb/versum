@@ -34,7 +34,7 @@ func TestConsumeMagicLinkCreatesSessionAndConsumesToken(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	got, err := uc.Execute(t.Context(), "link-secret", domain.SessionClient{IPAddress: "192.0.2.1", UserAgent: "browser"})
+	got, err := uc.Execute(t.Context(), "link-secret", "192.0.2.1", "browser")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -53,7 +53,7 @@ func TestConsumeMagicLinkCreatesSessionAndConsumesToken(t *testing.T) {
 	if at, ok := token.ConsumedAt(); !ok || !at.Equal(now) {
 		t.Fatal("token not consumed")
 	}
-	if _, err := uc.Execute(t.Context(), "link-secret", domain.SessionClient{}); !errors.Is(err, domain.ErrLoginTokenAlreadyConsumed) {
+	if _, err := uc.Execute(t.Context(), "link-secret", "", ""); !errors.Is(err, domain.ErrLoginTokenAlreadyConsumed) {
 		t.Fatal(err)
 	}
 	if sessions.CreateCalls != 1 {
@@ -83,7 +83,7 @@ func TestConsumeMagicLinkFailures(t *testing.T) {
 			ids := &FakeIDGenerator{IDs: []string{"session", "family"}}
 			at := now
 			input := "link-secret"
-			client := domain.SessionClient{}
+			ipAddress, userAgent := "", ""
 			want := failure
 			switch name {
 			case "empty token":
@@ -118,10 +118,10 @@ func TestConsumeMagicLinkFailures(t *testing.T) {
 				ids.IDs = []string{"session", ""}
 				want = domain.ErrInvalidSessionFamilyID
 			case "invalid ip":
-				client.IPAddress = "invalid"
+				ipAddress = "invalid"
 				want = domain.ErrInvalidSessionIPAddress
 			case "invalid agent":
-				client.UserAgent = "browser\nheader"
+				userAgent = "browser\nheader"
 				want = domain.ErrInvalidSessionUserAgent
 			case "save":
 				tokens.SaveErr = failure
@@ -136,7 +136,7 @@ func TestConsumeMagicLinkFailures(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			got, err := uc.Execute(t.Context(), input, client)
+			got, err := uc.Execute(t.Context(), input, ipAddress, userAgent)
 			if got != nil || !errors.Is(err, want) {
 				t.Fatalf("want %v and no credential, got %+v, %v", want, got, err)
 			}

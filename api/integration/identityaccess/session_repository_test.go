@@ -37,7 +37,7 @@ func setupSessionRepository(ctx context.Context, t *testing.T) (*identityaccessp
 func newSession(t *testing.T, id string, userID string) *domain.Session {
 	t.Helper()
 	now := time.Now().UTC().Truncate(time.Microsecond)
-	session, err := domain.NewSession(id, userID, "family-1", domain.SessionClient{}, now.Add(time.Hour), now)
+	session, err := domain.NewSession(id, userID, "family-1", "", "", now.Add(time.Hour), now)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -113,11 +113,11 @@ func TestSessionRepositoryConcurrentRotationRevokesFamily(t *testing.T) {
 	ctx := t.Context()
 	repo, db, _, user := setupSessionRepository(ctx, t)
 	now := time.Now().UTC().Truncate(time.Microsecond)
-	original, err := domain.NewSession("rotation-original", user.ID(), "rotation-family", domain.SessionClient{IPAddress: "192.0.2.1", UserAgent: "browser"}, now.Add(time.Hour), now)
+	original, err := domain.NewSession("rotation-original", user.ID(), "rotation-family", "192.0.2.1", "browser", now.Add(time.Hour), now)
 	if err != nil {
 		t.Fatal(err)
 	}
-	independent, err := domain.NewSession("rotation-independent", user.ID(), "independent-family", domain.SessionClient{}, now.Add(time.Hour), now)
+	independent, err := domain.NewSession("rotation-independent", user.ID(), "independent-family", "", "", now.Add(time.Hour), now)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -134,7 +134,7 @@ func TestSessionRepositoryConcurrentRotationRevokesFamily(t *testing.T) {
 	for range 2 {
 		go func() {
 			<-start
-			_, err := uc.Execute(ctx, "rotation-secret", domain.SessionClient{IPAddress: "2001:db8::1", UserAgent: "browser"})
+			_, err := uc.Execute(ctx, "rotation-secret", "2001:db8::1", "browser")
 			results <- err
 		}()
 	}

@@ -29,7 +29,7 @@ func TestSessionClientAndFamilyValidation(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s, err := domain.NewSession("session", "user", tt.family, domain.SessionClient{IPAddress: tt.ip, UserAgent: tt.agent}, now.Add(time.Hour), now)
+			s, err := domain.NewSession("session", "user", tt.family, tt.ip, tt.agent, now.Add(time.Hour), now)
 			if !errors.Is(err, tt.want) {
 				t.Fatalf("want %v, got %v", tt.want, err)
 			}
@@ -38,7 +38,7 @@ func TestSessionClientAndFamilyValidation(t *testing.T) {
 			}
 		})
 	}
-	s, err := domain.NewSession("session", "user", "family", domain.SessionClient{IPAddress: "::ffff:192.0.2.1"}, now.Add(time.Hour), now)
+	s, err := domain.NewSession("session", "user", "family", "::ffff:192.0.2.1", "", now.Add(time.Hour), now)
 	if err != nil || s.IPAddress() != "192.0.2.1" {
 		t.Fatal("IPv4-mapped IPv6 must normalize")
 	}
@@ -46,8 +46,8 @@ func TestSessionClientAndFamilyValidation(t *testing.T) {
 
 func TestSessionRotationTransitions(t *testing.T) {
 	now := time.Now().UTC()
-	old, _ := domain.NewSession("old", "user", "family", domain.SessionClient{}, now.Add(time.Hour), now)
-	next, _ := domain.NewSession("next", "user", "family", domain.SessionClient{IPAddress: "192.0.2.2", UserAgent: "new browser"}, old.ExpiresAt(), now)
+	old, _ := domain.NewSession("old", "user", "family", "", "", now.Add(time.Hour), now)
+	next, _ := domain.NewSession("next", "user", "family", "192.0.2.2", "new browser", old.ExpiresAt(), now)
 	if err := old.ReplaceWith(next, now); err != nil {
 		t.Fatal(err)
 	}
@@ -81,8 +81,8 @@ func TestSessionRejectsInvalidRotationsWithoutMutation(t *testing.T) {
 	now := time.Now().UTC()
 	for _, name := range []string{"nil", "self", "other user", "other family", "revoked successor", "expired successor", "extended expiry", "used successor", "expired predecessor", "revoked predecessor", "backward time"} {
 		t.Run(name, func(t *testing.T) {
-			old, _ := domain.NewSession("old", "user", "family", domain.SessionClient{}, now.Add(time.Hour), now)
-			next, _ := domain.NewSession("next", "user", "family", domain.SessionClient{}, old.ExpiresAt(), now)
+			old, _ := domain.NewSession("old", "user", "family", "", "", now.Add(time.Hour), now)
+			next, _ := domain.NewSession("next", "user", "family", "", "", old.ExpiresAt(), now)
 			at := now
 			want := domain.ErrInvalidSessionReplacement
 			switch name {
@@ -91,16 +91,16 @@ func TestSessionRejectsInvalidRotationsWithoutMutation(t *testing.T) {
 			case "self":
 				next = old
 			case "other user":
-				next, _ = domain.NewSession("next", "other", "family", domain.SessionClient{}, old.ExpiresAt(), now)
+				next, _ = domain.NewSession("next", "other", "family", "", "", old.ExpiresAt(), now)
 			case "other family":
-				next, _ = domain.NewSession("next", "user", "other", domain.SessionClient{}, old.ExpiresAt(), now)
+				next, _ = domain.NewSession("next", "user", "other", "", "", old.ExpiresAt(), now)
 			case "revoked successor":
 				next.Revoke(now)
 			case "expired successor":
-				next, _ = domain.NewSession("next", "user", "family", domain.SessionClient{}, now.Add(time.Second), now)
+				next, _ = domain.NewSession("next", "user", "family", "", "", now.Add(time.Second), now)
 				at = now.Add(time.Second)
 			case "extended expiry":
-				next, _ = domain.NewSession("next", "user", "family", domain.SessionClient{}, old.ExpiresAt().Add(time.Second), now)
+				next, _ = domain.NewSession("next", "user", "family", "", "", old.ExpiresAt().Add(time.Second), now)
 			case "used successor":
 				next.Use(now)
 			case "expired predecessor":
@@ -132,7 +132,7 @@ func TestSessionTimeErrorsAndRehydration(t *testing.T) {
 	now := time.Now().UTC()
 	expiry := now.Add(time.Hour)
 	zero := time.Time{}
-	s, _ := domain.NewSession("session", "user", "family", domain.SessionClient{}, expiry, now)
+	s, _ := domain.NewSession("session", "user", "family", "", "", expiry, now)
 	if err := s.Use(now); err != nil {
 		t.Fatal(err)
 	}
@@ -151,7 +151,7 @@ func TestSessionTimeErrorsAndRehydration(t *testing.T) {
 	if s.IsRevoked() {
 		t.Fatal("invalid revocation mutated session")
 	}
-	if _, err := domain.NewSession("session", "user", "family", domain.SessionClient{}, expiry, zero); !errors.Is(err, domain.ErrInvalidSessionExpiresAt) {
+	if _, err := domain.NewSession("session", "user", "family", "", "", expiry, zero); !errors.Is(err, domain.ErrInvalidSessionExpiresAt) {
 		t.Fatal(err)
 	}
 	for _, tt := range []struct {
@@ -161,7 +161,7 @@ func TestSessionTimeErrorsAndRehydration(t *testing.T) {
 	}{
 		{"next", &now, &now, nil}, {"next", nil, nil, domain.ErrInvalidSessionReplacement}, {"session", &now, nil, domain.ErrInvalidSessionReplacement}, {" ", &now, nil, domain.ErrInvalidSessionReplacement}, {"", nil, &expiry, domain.ErrInvalidSessionLastUsedAt},
 	} {
-		s, err := domain.RehydrateSession("session", "user", "family", domain.SessionClient{}, tt.revoked, tt.last, expiry, tt.replacement)
+		s, err := domain.RehydrateSession("session", "user", "family", "", "", tt.revoked, tt.last, expiry, tt.replacement)
 		if !errors.Is(err, tt.want) {
 			t.Fatalf("want %v, got %v", tt.want, err)
 		}

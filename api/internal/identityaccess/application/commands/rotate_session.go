@@ -21,7 +21,7 @@ func NewRotateSession(uow application.IdentityAccessUnitOfWork, secrets applicat
 	return &RotateSession{unitOfWork: uow, secretGenerator: secrets, idGenerator: ids, clock: clock}
 }
 
-func (uc *RotateSession) Execute(ctx context.Context, secret string, client domain.SessionClient) (*IssuedSession, error) {
+func (uc *RotateSession) Execute(ctx context.Context, secret string, ipAddress, userAgent string) (*IssuedSession, error) {
 	var result *IssuedSession
 	var reused bool
 	err := uc.unitOfWork.WithinTransaction(ctx, func(repos application.IdentityAccessUnitOfWorkRepositories) error {
@@ -55,7 +55,7 @@ func (uc *RotateSession) Execute(ctx context.Context, secret string, client doma
 		if nextSecret == "" || nextSecret == secret {
 			return application.ErrInvalidSessionSecret
 		}
-		next, err := domain.NewSession(uc.idGenerator.Generate(), current.UserID(), current.FamilyID(), client, current.ExpiresAt(), now)
+		next, err := domain.NewSession(uc.idGenerator.Generate(), current.UserID(), current.FamilyID(), ipAddress, userAgent, current.ExpiresAt(), now)
 		if err != nil {
 			return err
 		}
