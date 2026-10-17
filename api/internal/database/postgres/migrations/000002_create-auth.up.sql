@@ -27,9 +27,17 @@ CREATE TABLE sessions (
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     revoked_at TIMESTAMPTZ,
     expires_at TIMESTAMPTZ NOT NULL CHECK (expires_at > created_at),
-    used_at TIMESTAMPTZ
+    last_used_at TIMESTAMPTZ,
+    family_id TEXT NOT NULL CHECK (length(trim(family_id)) > 0),
+    replaced_by_session_id TEXT REFERENCES sessions(id) DEFERRABLE INITIALLY DEFERRED,
+    ip_address TEXT NOT NULL DEFAULT '',
+    user_agent TEXT NOT NULL DEFAULT '',
+    CONSTRAINT sessions_replacement_state CHECK (replaced_by_session_id IS NULL OR (replaced_by_session_id <> id AND revoked_at IS NOT NULL)),
+    CONSTRAINT sessions_user_agent_length CHECK (octet_length(user_agent) <= 1024)
 );
 
 CREATE INDEX sessions_user_created_idx ON sessions (user_id, created_at);
-CREATE INDEX sessions_used_idx ON sessions (used_at);
+CREATE INDEX sessions_last_used_idx ON sessions (last_used_at);
 CREATE INDEX sessions_expires_idx ON sessions (expires_at);
+
+CREATE INDEX sessions_family_id_idx ON sessions (family_id);

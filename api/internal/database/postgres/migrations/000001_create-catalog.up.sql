@@ -14,3 +14,9 @@ CREATE TABLE verses (
     part SMALLINT NOT NULL CHECK (part > 0),
     PRIMARY KEY (book_id, chapter, number, part)
 );
+
+CREATE TABLE catalog_version (
+    id            SMALLINT PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+    corpus_sha256 TEXT NOT NULL CHECK (length(trim(corpus_sha256)) > 0),
+    published_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);

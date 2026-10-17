@@ -53,7 +53,7 @@ func TestRepositoryPublishesProtectedEvent(t *testing.T) {
 
 	event, err := domain.NewEvent(
 		"outbox-event-1",
-		"identityaccess.magic_link_requested",
+		"identityaccess.magic_link_requested", "",
 		[]byte("raw-secret-payload"),
 	)
 	if err != nil {
@@ -119,5 +119,38 @@ func TestRepositoryPublishesProtectedEvent(t *testing.T) {
 	}
 	if storedAvailableAt.IsZero() || storedCreatedAt.IsZero() {
 		t.Fatal("expected database timestamps")
+	}
+}
+
+func TestDeletingUserCascadesOwnedEventsAndPreservesUnownedEvents(t *testing.T) {
+	ctx := t.Context()
+	_, db, _ := setupOutboxRepository(ctx, t)
+	tx, err := db.Begin(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer tx.Rollback(ctx)
+	if err := tx.Exec(ctx, `INSERT INTO users (id, email_ciphertext, email_lookup_hmac, email_encryption_key_version, email_lookup_key_version) VALUES ($1, $2, $3, 1, 1)`, "outbox-cascade-user", []byte("email"), []byte("outbox-cascade-lookup")); err != nil {
+		t.Fatal(err)
+	}
+	repo := outboxeventpg.NewOutboxRepository(tx, testPayloadProtector{})
+	for _, owner := range []string{"outbox-cascade-user", ""} {
+		event, err := domain.NewEvent("cascade-event-"+owner, "event.type", owner, []byte("payload"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err := repo.Publish(ctx, event); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := tx.Exec(ctx, `DELETE FROM users WHERE id = $1`, "outbox-cascade-user"); err != nil {
+		t.Fatal(err)
+	}
+	var ownedCount, unownedCount int
+	if err := tx.QueryRow(ctx, `SELECT count(*) FILTER (WHERE id = 'cascade-event-outbox-cascade-user'), count(*) FILTER (WHERE id = 'cascade-event-' AND user_id IS NULL) FROM outbox_events`).Scan(&ownedCount, &unownedCount); err != nil {
+		t.Fatal(err)
+	}
+	if ownedCount != 0 || unownedCount != 1 {
+		t.Fatalf("expected owned event deleted and unowned event preserved; got %d and %d", ownedCount, unownedCount)
 	}
 }

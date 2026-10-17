@@ -9,12 +9,14 @@ import (
 	"github.com/eduardoaugustolb/versum/api/internal/clock"
 	"github.com/eduardoaugustolb/versum/api/internal/id"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
+	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application/events"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application/policy"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/domain"
 	outboxDomain "github.com/eduardoaugustolb/versum/api/internal/outboxevent/domain"
 )
 
 type RequestMagicLink struct {
+	limiter         application.EmailRequestLimiter
 	unitOfwork      application.IdentityAccessUnitOfWork
 	tokenGenerator  application.LoginTokenGenerator
 	idGenerator     id.Generator
@@ -28,11 +30,16 @@ func NewRequestMagicLink(
 	idGenerator id.Generator,
 	clock clock.Clock,
 	magicLinkPolicy policy.MagicLinkPolicy,
+	limiter application.EmailRequestLimiter,
 ) (*RequestMagicLink, error) {
-	if magicLinkPolicy.TTL <= 0 {
-		return nil, application.ErrInvalidMagicLinkTTL
+	if err := policy.ValidateMagicLinkPolicy(magicLinkPolicy); err != nil {
+		return nil, err
+	}
+	if limiter == nil {
+		return nil, application.ErrEmailRateLimitUnavailable
 	}
 	return &RequestMagicLink{
+		limiter:         limiter,
 		unitOfwork:      unitOfWork,
 		tokenGenerator:  tokenGenerator,
 		idGenerator:     idGenerator,
@@ -42,6 +49,16 @@ func NewRequestMagicLink(
 }
 
 func (uc *RequestMagicLink) Execute(ctx context.Context, email domain.Email) error {
+	if _, err := domain.ParseEmail(email.String()); err != nil {
+		return err
+	}
+	allowed, err := uc.limiter.Allow(ctx, email)
+	if err != nil {
+		return fmt.Errorf("%w: %w", application.ErrEmailRateLimitUnavailable, err)
+	}
+	if !allowed {
+		return application.ErrEmailRateLimitExceeded
+	}
 	return uc.unitOfwork.WithinTransaction(ctx, func(repositories application.IdentityAccessUnitOfWorkRepositories) error {
 		return uc.execute(ctx, email, repositories)
 	})
@@ -93,17 +110,16 @@ func (uc *RequestMagicLink) execute(ctx context.Context, email domain.Email, rep
 	}
 
 	eventID := uc.idGenerator.Generate()
-	eventType := outboxDomain.EventTypeMagicLinkRequested
+	eventType := events.MagicLinkRequested
 
 	payload, err := json.Marshal(struct {
-		UserID       string `json:"user_id"`
 		LoginTokenID string `json:"login_token_id"`
-	}{UserID: user.ID(), LoginTokenID: loginToken.ID()})
+	}{LoginTokenID: loginToken.ID()})
 	if err != nil {
 		return fmt.Errorf("encoding event payload: %w", err)
 	}
 
-	event, err := outboxDomain.NewEvent(eventID, eventType.String(), payload)
+	event, err := outboxDomain.NewEvent(eventID, eventType, user.ID(), payload)
 
 	if err != nil {
 		return fmt.Errorf("creating event: %w", err)

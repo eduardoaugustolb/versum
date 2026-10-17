@@ -96,24 +96,12 @@ func run() error {
 	}
 	defer pool.Close()
 
-	catalogVersionWriter := catalogpostgres.NewCatalogVersionRepository(postgres.NewPgxExecutor(pool))
-	publishCatalogVersion := commands.NewPublishCatalogVersion(catalogVersionWriter)
-	publishBook := commands.NewPublishBook(catalogpostgres.NewTransactionManager(pool))
-
-	if err := processBooks(ctx, bibleCorpus.Books, publishBook); err != nil {
-		return err
-	}
-
-	if err := publishCatalogVersion.Execute(ctx, commands.PublishCatalogVersionInput{
-		CorpusSHA256: corpusManifest.BibleSha256,
-	}); err != nil {
-		return fmt.Errorf("publishing catalog version: %w", err)
-	}
-
-	return nil
+	publisher := commands.NewPublishCatalog(catalogpostgres.NewTransactionManager(postgres.NewPgxExecutor(pool)))
+	return publisher.Execute(ctx, publicationInputs(bibleCorpus.Books), corpusManifest.BibleSha256)
 }
 
-func processBooks(ctx context.Context, books []Book, publishBook commands.PublishBook) error {
+func publicationInputs(books []Book) []commands.PublishBookInput {
+	inputs := make([]commands.PublishBookInput, 0, len(books))
 	for _, b := range books {
 		fmt.Println("book:", b.Name)
 		fmt.Println("order:", b.Order)
@@ -133,16 +121,13 @@ func processBooks(ctx context.Context, books []Book, publishBook commands.Publis
 			}
 		}
 
-		if err := publishBook.Execute(ctx, commands.PublishBookInput{
+		inputs = append(inputs, commands.PublishBookInput{
 			ID: b.Id, Order: b.Order, Name: b.Name, Testament: domain.Testament(b.Testament),
 			ChapterCount: len(b.Chapters), Verses: verses,
-		}); err != nil {
-			return fmt.Errorf("publishing book %q: %w", b.Id, err)
-		}
+		})
 
-		fmt.Println("book published!")
 		fmt.Println()
 	}
 
-	return nil
+	return inputs
 }

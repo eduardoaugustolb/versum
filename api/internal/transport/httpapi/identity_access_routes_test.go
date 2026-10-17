@@ -3,6 +3,8 @@ package httpapi_test
 import (
 	"context"
 	"fmt"
+	"github.com/eduardoaugustolb/versum/api/internal/cache"
+	identitycache "github.com/eduardoaugustolb/versum/api/internal/identityaccess/adapters/cache"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -26,6 +28,14 @@ import (
 type identityUserRepository struct {
 	user    *identitydomain.User
 	created *identitydomain.User
+}
+
+func (r *identityUserRepository) DeleteUser(_ context.Context, id string) error {
+	if r.user == nil || r.user.ID() != id {
+		return identityapplication.ErrUserNotFound
+	}
+	r.user = nil
+	return nil
 }
 
 func (r *identityUserRepository) CreateUser(_ context.Context, user *identitydomain.User) error {
@@ -119,22 +129,26 @@ func newIdentityAccessHandler(t *testing.T) (*httptest.ResponseRecorder, http.Ha
 	redisClient := redisclient.NewClient(&redisclient.Options{Addr: redisServer.Addr()})
 	t.Cleanup(func() { _ = redisClient.Close() })
 
+	return identityAccessHandlerWithCache(t, redisadapter.NewRedisCache(redisClient))
+}
+func identityAccessHandlerWithCache(t *testing.T, store cache.Cache) (*httptest.ResponseRecorder, http.Handler) {
+	t.Helper()
 	users := &identityUserRepository{}
 	tokens := &identityLoginTokenRepository{}
 	outbox := &identityOutboxRepository{}
 	uow := &identityUnitOfWork{repositories: identityports.IdentityAccessUnitOfWorkRepositories{
 		Users: users, LoginTokens: tokens, Sessions: identitySessionRepository{}, Outbox: outbox,
 	}}
-	useCase, err := identitycommands.NewRequestMagicLink(uow, identityTokenGenerator{}, &identityIDGenerator{}, identityClock{}, policy.DefaultMagicLinkPolicy)
+	useCase, err := identitycommands.NewRequestMagicLink(uow, identityTokenGenerator{}, &identityIDGenerator{}, identityClock{}, policy.DefaultMagicLinkPolicy, identitycache.NewEmailRequestLimiter(store))
 	if err != nil {
 		t.Fatal(err)
 	}
 	handler := httpapi.NewHandler(httpapi.Dependencies{
 		Health: health.CheckHealth{},
-		Cache:  redisadapter.NewRedisCache(redisClient),
+		Cache:  store,
 		IdentityAccess: httpapi.IdentityAccessDependencies{
 			RequestMagicLink: useCase,
-			Cache:            redisadapter.NewRedisCache(redisClient),
+			Cache:            store,
 		},
 	})
 	return httptest.NewRecorder(), handler

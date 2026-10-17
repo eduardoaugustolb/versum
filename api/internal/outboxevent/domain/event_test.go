@@ -10,7 +10,7 @@ import (
 
 func TestNewEvent(t *testing.T) {
 	payload := []byte("ciphertext")
-	event, err := domain.NewEvent("event-1", "identityaccess.magic_link_requested", payload)
+	event, err := domain.NewEvent("event-1", "identityaccess.magic_link_requested", "", payload)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -37,7 +37,7 @@ func TestNewEventRejectsInvalidData(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := domain.NewEvent(tt.id, tt.eventType, tt.payload)
+			_, err := domain.NewEvent(tt.id, tt.eventType, "", tt.payload)
 			if !errors.Is(err, tt.want) {
 				t.Fatalf("expected %v, got %v", tt.want, err)
 			}
@@ -47,7 +47,7 @@ func TestNewEventRejectsInvalidData(t *testing.T) {
 
 func TestEventDoesNotExposePayloadBackingArray(t *testing.T) {
 	payload := []byte("ciphertext")
-	event, err := domain.NewEvent("event-1", "event.type", payload)
+	event, err := domain.NewEvent("event-1", "event.type", "", payload)
 	if err != nil {
 		t.Fatal(err)
 	}

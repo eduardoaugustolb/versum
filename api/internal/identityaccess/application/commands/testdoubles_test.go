@@ -32,6 +32,7 @@ type FakeUserRepository struct {
 	ByEmail map[string]*domain.User
 
 	CreateErr      error
+	DeleteErr      error
 	FindByIDErr    error
 	FindByEmailErr error
 
@@ -39,9 +40,24 @@ type FakeUserRepository struct {
 	OnFindByEmail func(context.Context, domain.Email) (*domain.User, error)
 
 	Created          []*domain.User
+	DeleteCalls      []string
 	CreateCalls      int
 	FindByIDCalls    []string
 	FindByEmailCalls []domain.Email
+}
+
+func (f *FakeUserRepository) DeleteUser(_ context.Context, id string) error {
+	f.DeleteCalls = append(f.DeleteCalls, id)
+	if f.DeleteErr != nil {
+		return f.DeleteErr
+	}
+	user, ok := f.ByID[id]
+	if !ok {
+		return identityports.ErrUserNotFound
+	}
+	delete(f.ByID, id)
+	delete(f.ByEmail, user.Email().String())
+	return nil
 }
 
 func (f *FakeUserRepository) CreateUser(ctx context.Context, user *domain.User) error {
@@ -351,3 +367,14 @@ func (r *FakeSessionRepository) RevokeSessionFamily(_ context.Context, userID, f
 }
 
 func (r *FakeSessionRepository) SaveUsage(context.Context, *domain.Session) error { return nil }
+
+type FakeEmailRequestLimiter struct {
+	Allowed bool
+	Err     error
+	Calls   int
+}
+
+func (f *FakeEmailRequestLimiter) Allow(context.Context, domain.Email) (bool, error) {
+	f.Calls++
+	return f.Allowed, f.Err
+}

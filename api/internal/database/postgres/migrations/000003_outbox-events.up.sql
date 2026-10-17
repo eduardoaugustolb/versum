@@ -1,6 +1,7 @@
 CREATE TABLE outbox_events (
     id TEXT PRIMARY KEY,
     event_type TEXT NOT NULL,
+    user_id TEXT REFERENCES users(id) ON DELETE CASCADE,
     payload_ciphertext BYTEA NOT NULL,
     payload_key_version SMALLINT NOT NULL
         CHECK (payload_key_version > 0),
@@ -24,7 +25,7 @@ CREATE TABLE outbox_events (
         (lease_token IS NOT NULL AND leased_until IS NOT NULL)
     ),
     CHECK (NOT (processed_at IS NOT NULL AND failed_at IS NOT NULL))
-  );
+);
 
 CREATE INDEX outbox_events_ready_idx
     ON outbox_events (available_at, leased_until)
@@ -32,3 +33,5 @@ CREATE INDEX outbox_events_ready_idx
 
 CREATE INDEX outbox_events_type_created_idx
     ON outbox_events (event_type, created_at);
+
+CREATE INDEX outbox_events_user_id_idx ON outbox_events (user_id);

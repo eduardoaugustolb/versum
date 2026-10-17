@@ -58,3 +58,26 @@ func TestPublishBookPropagatesRepositoryError(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestPublishBookRejectsInconsistentCompositionBeforeWriting(t *testing.T) {
+	for _, name := range []string{"foreign book", "chapter outside book", "duplicate verse"} {
+		t.Run(name, func(t *testing.T) {
+			in := input()
+			switch name {
+			case "foreign book":
+				in.Verses[0].BookID = "ex"
+			case "chapter outside book":
+				in.Verses[0].Chapter = in.ChapterCount + 1
+			case "duplicate verse":
+				in.Verses = append(in.Verses, in.Verses[0])
+			}
+			repository := &catalogRepository{}
+			if err := commands.NewPublishBook(txManager{repository: repository}).Execute(t.Context(), in); !errors.Is(err, domain.ErrInvalidVerse) {
+				t.Fatalf("expected invalid verse, got %v", err)
+			}
+			if repository.book.ID() != "" || len(repository.verses) != 0 {
+				t.Fatal("invalid publication reached storage")
+			}
+		})
+	}
+}

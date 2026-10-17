@@ -1,5 +1,7 @@
 package domain
 
+import "strings"
+
 type Verse struct {
 	bookID  string
 	chapter int
@@ -17,7 +19,7 @@ type NewVerseParams struct {
 }
 
 func NewVerse(params NewVerseParams) (Verse, error) {
-	if params.BookID == "" || params.Chapter <= 0 || params.Number <= 0 || params.Text == "" || params.Part <= 0 {
+	if strings.TrimSpace(params.BookID) == "" || params.Chapter <= 0 || params.Number <= 0 || strings.TrimSpace(params.Text) == "" || params.Part <= 0 {
 		return Verse{}, ErrInvalidVerse
 	}
 	return Verse{bookID: params.BookID, chapter: params.Chapter, number: params.Number, text: params.Text, part: params.Part}, nil

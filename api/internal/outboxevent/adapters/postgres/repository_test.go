@@ -34,7 +34,7 @@ func (outboxPayloadProtector) Unprotect(context.Context, ports.ProtectedPayload)
 }
 
 func TestOutboxRepositoryTranslatesUniqueViolationOnPublish(t *testing.T) {
-	event, err := domain.NewEvent("event-1", "identityaccess.magic_link_requested", []byte("payload"))
+	event, err := domain.NewEvent("event-1", "identityaccess.magic_link_requested", "", []byte("payload"))
 	if err != nil {
 		t.Fatal(err)
 	}

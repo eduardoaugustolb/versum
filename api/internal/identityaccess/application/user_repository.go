@@ -11,4 +11,5 @@ type UserRepository interface {
 	CreateUser(ctx context.Context, user *domain.User) error
 	FindUserByID(ctx context.Context, id string) (*domain.User, error)
 	FindUserByEmail(ctx context.Context, email domain.Email) (*domain.User, error)
+	DeleteUser(ctx context.Context, id string) error
 }

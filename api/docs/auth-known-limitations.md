@@ -4,7 +4,7 @@ Retrato de `feat/auth` em 2026-10-01. Solicitação, persistência e publicaçã
 
 ## Entrega e consumo ainda incompletos
 
-O payload cifrado atual contém apenas `user_id` e `login_token_id`. O token bruto gerado é descartado depois do hash; não pode ser reconstruído a partir desse hash. Completar o material cifrado de entrega na mesma transação e implementar o consumidor da outbox antes de afirmar que o link é enviado. Remover o segredo quando consumido, expirado ou cancelado; metadados têm retenção própria.
+O payload cifrado atual contém apenas `login_token_id`; `user_id` fica na coluna de vínculo da outbox. O token bruto gerado é descartado depois do hash; não pode ser reconstruído a partir desse hash. Completar o material cifrado de entrega na mesma transação e implementar o consumidor da outbox antes de afirmar que o link é enviado. Remover o segredo quando consumido, expirado ou cancelado; metadados têm retenção própria.
 
 Os casos de uso `ConsumeMagicLink` e `RotateSession` existem, com emissão transacional de sessão, rotação e revogação da família ao detectar reutilização. Ainda não há integração HTTP desses casos de uso nem ciclo de cookies de sessão completo. IP e user-agent são metadados de risco, não uma prova da identidade do portador do token.
 
@@ -28,6 +28,6 @@ Ainda falta limitar o corpo antes de decodificar JSON, rejeitar documentos conca
 
 ## Retenção, direitos e operação
 
-`TokenRetention` é parâmetro, sem purge conectado. Expiração lógica e FK em tokens/sessões não eliminam automaticamente conta ou outbox. Implementar limpeza por estado, exclusão autenticada que alcance filas/cache e barreira contra entrega posterior à exclusão, exportação/correção e canal para demais direitos. Logs de erro precisam de sanitização demonstrada. Recifragem também deve cobrir outbox e dependências de backups antes de retirar chave antiga.
+A política de emissão expõe somente `TTL`. Retenção, invalidação de links anteriores e tentativas de entrega não são configurações ativas; dependem de casos de uso e workers próprios. Expiração lógica não elimina registros. `DeleteUser` revalida a sessão após bloquear o usuário na mesma transação da exclusão; as FKs eliminam tokens, sessões e eventos vinculados. A integração HTTP da exclusão, limpeza por estado, descarte de cache, barreira contra entrega concorrente, exportação/correção e canal para demais direitos continuam pendentes. Logs de erro precisam de sanitização demonstrada. Recifragem também deve cobrir outbox e dependências de backups antes de retirar chave antiga.
 
 Base do acesso comum definida: art. 7º, V para acordo gratuito de conta opcional; ver [access-contract.md](../.lgpd/access-contract.md). Ajustar criação atual para confirmar controle do e-mail antes de ativar conta. Controlador/contato, retenção, fornecedores/regiões e controles produtivos ainda exigem definição. Ciência do aviso não substitui consentimento; não adicionar gate obrigatório de `conta_acesso` por padrão. Fundamentos e pendências estão em [.lgpd/STATUS.md](../.lgpd/STATUS.md).

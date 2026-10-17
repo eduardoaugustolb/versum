@@ -1,2 +1,4 @@
+DROP TABLE IF EXISTS catalog_version;
+
 DROP TABLE IF EXISTS verses;
 DROP TABLE IF EXISTS books;

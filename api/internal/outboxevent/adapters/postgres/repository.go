@@ -36,6 +36,7 @@ func (r *OutboxRepository) Publish(ctx context.Context, event *domain.Event) err
 		event.EventType().String(),
 		protectedPayload.Ciphertext,
 		protectedPayload.KeyVersion,
+		event.UserID(),
 	)
 	if err != nil {
 		var pgErr *pgconn.PgError

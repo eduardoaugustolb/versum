@@ -2,6 +2,7 @@ package domain
 
 type Event struct {
 	id        string
+	userID    string
 	eventType EventType
 	payload   []byte
 }
@@ -9,6 +10,7 @@ type Event struct {
 func NewEvent(
 	id string,
 	rawEventType string,
+	userID string,
 	payload []byte,
 ) (*Event, error) {
 
@@ -19,6 +21,7 @@ func NewEvent(
 
 	e := &Event{
 		id:        id,
+		userID:    userID,
 		eventType: eventType,
 		payload:   append([]byte{}, payload...),
 	}
@@ -31,6 +34,7 @@ func NewEvent(
 func RehydrateEvent(
 	id string,
 	rawEventType string,
+	userID string,
 	payload []byte,
 ) (*Event, error) {
 	eventType, err := ParseEventType(rawEventType)
@@ -39,6 +43,7 @@ func RehydrateEvent(
 	}
 	e := &Event{
 		id:        id,
+		userID:    userID,
 		eventType: eventType,
 		payload:   append([]byte{}, payload...),
 	}
@@ -71,3 +76,6 @@ func (e *Event) EventType() EventType {
 func (e *Event) Payload() []byte {
 	return append([]byte{}, e.payload...)
 }
+
+// UserID returns an empty string for events that do not belong to a user.
+func (e *Event) UserID() string { return e.userID }

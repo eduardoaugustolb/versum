@@ -20,6 +20,7 @@ import (
 	"github.com/eduardoaugustolb/versum/api/internal/database/postgres"
 	"github.com/eduardoaugustolb/versum/api/internal/health"
 	"github.com/eduardoaugustolb/versum/api/internal/id"
+	identitycache "github.com/eduardoaugustolb/versum/api/internal/identityaccess/adapters/cache"
 	identitycryptography "github.com/eduardoaugustolb/versum/api/internal/identityaccess/adapters/cryptography"
 	identityaccessPg "github.com/eduardoaugustolb/versum/api/internal/identityaccess/adapters/postgres"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application/commands"
@@ -83,6 +84,7 @@ func main() {
 		uuidGenerator,
 		defaultClock,
 		magicLinkPolicy,
+		identitycache.NewEmailRequestLimiter(redisCacheClient),
 	)
 
 	if err != nil {

@@ -1,5 +1,7 @@
 package domain
 
+import "strings"
+
 type Testament string
 
 const (
@@ -24,13 +26,13 @@ type NewBookParams struct {
 }
 
 func NewBook(params NewBookParams) (Book, error) {
-	if params.ID == "" {
+	if strings.TrimSpace(params.ID) == "" {
 		return Book{}, ErrInvalidBookID
 	}
 	if params.Order <= 0 {
 		return Book{}, ErrInvalidBookOrder
 	}
-	if params.Name == "" {
+	if strings.TrimSpace(params.Name) == "" {
 		return Book{}, ErrInvalidBookName
 	}
 	if params.Testament != TestamentOld && params.Testament != TestamentNew {

@@ -40,7 +40,10 @@ func TestListBooksEndpoint(t *testing.T) {
 	}
 }
 func TestGetChapterEndpoint(t *testing.T) {
-	chapter := domain.NewChapter("gn", "Gênesis", 9, nil)
+	chapter, err := domain.NewChapter("gn", "Gênesis", 9, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
 	rec := httptest.NewRecorder()
 	router(t, booksRepository{}, chaptersRepository{chapter: chapter, found: true}).ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/books/gn/chapters/9", nil))
 	if rec.Code != http.StatusOK || rec.Body.String() != `{"book_id":"gn","book_name":"Gênesis","number":9,"verses":[]}` {
@@ -57,6 +60,14 @@ func TestGetChapterEndpointNotFound(t *testing.T) {
 func TestGetChapterEndpointInvalidNumber(t *testing.T) {
 	rec := httptest.NewRecorder()
 	router(t, booksRepository{}, chaptersRepository{}).ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/books/gn/chapters/0", nil))
+	if rec.Code != http.StatusBadRequest {
+		t.Fatalf("expected 400, got %d", rec.Code)
+	}
+}
+
+func TestGetChapterEndpointInvalidBookID(t *testing.T) {
+	rec := httptest.NewRecorder()
+	router(t, booksRepository{}, chaptersRepository{}).ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/books/%20/chapters/1", nil))
 	if rec.Code != http.StatusBadRequest {
 		t.Fatalf("expected 400, got %d", rec.Code)
 	}

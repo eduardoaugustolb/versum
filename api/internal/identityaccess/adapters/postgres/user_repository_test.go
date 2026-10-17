@@ -1,4 +1,4 @@
-package postgres
+package postgres_test
 
 import (
 	"context"
@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	dbexec "github.com/eduardoaugustolb/versum/api/internal/database"
+	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/adapters/postgres"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
 	identityports "github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/domain"
@@ -152,7 +153,7 @@ func TestUserRepositoryTranslatesOnlyMissingRows(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			repo := NewUserRepository(userRepositoryExecutor{row: errorRow{err: tt.rowErr}}, userRepositoryProtector{})
+			repo := postgres.NewUserRepository(userRepositoryExecutor{row: errorRow{err: tt.rowErr}}, userRepositoryProtector{})
 
 			_, err := repo.FindUserByID(t.Context(), "user-1")
 			if !errors.Is(err, tt.wantErr) {
@@ -163,7 +164,7 @@ func TestUserRepositoryTranslatesOnlyMissingRows(t *testing.T) {
 }
 
 func TestUserRepositoryRejectsInvalidLookupValues(t *testing.T) {
-	repo := NewUserRepository(userRepositoryExecutor{}, userRepositoryProtector{})
+	repo := postgres.NewUserRepository(userRepositoryExecutor{}, userRepositoryProtector{})
 
 	if _, err := repo.FindUserByID(t.Context(), ""); !errors.Is(err, domain.ErrInvalidUserID) {
 		t.Fatalf("expected invalid user id, got %v", err)
@@ -179,7 +180,7 @@ func TestUserRepositoryReturnsAlreadyExistsWhenInsertDoesNotReturnUser(t *testin
 	if err != nil {
 		t.Fatal(err)
 	}
-	repo := NewUserRepository(userRepositoryExecutor{row: errorRow{err: pgx.ErrNoRows}}, userRepositoryProtector{})
+	repo := postgres.NewUserRepository(userRepositoryExecutor{row: errorRow{err: pgx.ErrNoRows}}, userRepositoryProtector{})
 
 	if err := repo.CreateUser(t.Context(), user); !errors.Is(err, application.ErrUserAlreadyExists) {
 		t.Fatalf("expected already-exists error, got %v", err)
@@ -190,7 +191,7 @@ func TestUserRepositoryFindUserByEmailFallsBackToPreviousLookupKey(t *testing.T)
 	executor := &lookupExecutor{rows: []dbexec.Row{
 		userRow{id: "user-1", ciphertext: []byte("ciphertext"), lookupHMAC: []byte("old-hmac"), encryptionVersion: 1, lookupVersion: 1},
 	}}
-	repo := NewUserRepository(executor, lookupCandidateProtector{candidates: []identityports.LookupCandidate{
+	repo := postgres.NewUserRepository(executor, lookupCandidateProtector{candidates: []identityports.LookupCandidate{
 		{LookupKeyVersion: 2, LookupHMAC: []byte("current-hmac")},
 		{LookupKeyVersion: 1, LookupHMAC: []byte("old-hmac")},
 	}})
@@ -218,7 +219,7 @@ func TestUserRepositoryFindUserByEmailFallsBackToPreviousLookupKey(t *testing.T)
 
 func TestUserRepositoryFindUserByEmailStopsOnDatabaseError(t *testing.T) {
 	executor := &lookupExecutor{rows: []dbexec.Row{errorRow{err: errDatabaseUnavailable}}}
-	repo := NewUserRepository(executor, lookupCandidateProtector{candidates: []identityports.LookupCandidate{
+	repo := postgres.NewUserRepository(executor, lookupCandidateProtector{candidates: []identityports.LookupCandidate{
 		{LookupKeyVersion: 2, LookupHMAC: []byte("current-hmac")},
 		{LookupKeyVersion: 1, LookupHMAC: []byte("old-hmac")},
 	}})
@@ -240,7 +241,7 @@ func TestUserRepositoryFindUserByEmailMigratesPreviousLookupKey(t *testing.T) {
 	executor := &lookupExecutor{rows: []dbexec.Row{
 		userRow{id: "user-1", ciphertext: []byte("ciphertext"), lookupHMAC: []byte("old-hmac"), encryptionVersion: 1, lookupVersion: 1},
 	}}
-	repo := NewUserRepository(executor, lookupCandidateProtector{candidates: []identityports.LookupCandidate{
+	repo := postgres.NewUserRepository(executor, lookupCandidateProtector{candidates: []identityports.LookupCandidate{
 		{LookupKeyVersion: 2, LookupHMAC: []byte("current-hmac")},
 		{LookupKeyVersion: 1, LookupHMAC: []byte("old-hmac")},
 	}})
@@ -258,4 +259,22 @@ func TestUserRepositoryFindUserByEmailMigratesPreviousLookupKey(t *testing.T) {
 	if got := executor.execArgs[0]; len(got) != 4 || got[0] != "user-1" || string(got[1].([]byte)) != "current-hmac" || got[2] != 2 || got[3] != 1 {
 		t.Fatalf("unexpected migration args: %#v", got)
 	}
+}
+
+func TestUserRepositoryDeleteUser(t *testing.T) {
+	executor := &lookupExecutor{
+		rows: []dbexec.Row{
+			userRow{id: "user-1", ciphertext: []byte("ciphertext"), lookupHMAC: []byte("lookup-hmac"), encryptionVersion: 1, lookupVersion: 1},
+		},
+	}
+	repo := postgres.NewUserRepository(executor, nil)
+
+	err := repo.DeleteUser(t.Context(), "user-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(executor.execQuery) != 1 || !strings.Contains(executor.execQuery[0], "DELETE FROM users") {
+		t.Fatalf("expected a delete query, got %#v", executor.execQuery)
+	}
+
 }

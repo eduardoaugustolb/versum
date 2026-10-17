@@ -1,4 +1,4 @@
-package postgres
+package postgres_test
 
 import (
 	"errors"
@@ -7,9 +7,12 @@ import (
 
 	"github.com/jackc/pgx/v5/pgconn"
 
+	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/adapters/postgres"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/domain"
 )
+
+const uniqueViolationCode = "23505"
 
 func TestLoginTokenRepositoryTranslatesUniqueViolationOnCreate(t *testing.T) {
 	now := time.Now()
@@ -17,7 +20,7 @@ func TestLoginTokenRepositoryTranslatesUniqueViolationOnCreate(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	repo := NewLoginTokenRepository(userRepositoryExecutor{execErr: &pgconn.PgError{Code: uniqueViolationCode}})
+	repo := postgres.NewLoginTokenRepository(userRepositoryExecutor{execErr: &pgconn.PgError{Code: uniqueViolationCode}})
 
 	if err := repo.Create(t.Context(), token, "secret"); !errors.Is(err, application.ErrLoginTokenAlreadyExists) {
 		t.Fatalf("expected already-exists error, got %v", err)
@@ -30,7 +33,7 @@ func TestSessionRepositoryTranslatesUniqueViolationOnCreate(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	repo := NewSessionRepository(userRepositoryExecutor{execErr: &pgconn.PgError{Code: uniqueViolationCode}})
+	repo := postgres.NewSessionRepository(userRepositoryExecutor{execErr: &pgconn.PgError{Code: uniqueViolationCode}})
 
 	if err := repo.CreateSession(t.Context(), session, "secret"); !errors.Is(err, application.ErrSessionAlreadyExists) {
 		t.Fatalf("expected already-exists error, got %v", err)

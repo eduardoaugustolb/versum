@@ -28,7 +28,7 @@ func TestRevokeSessionFamily_RevokesSessionFamily(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	uc := commands.NewRevokeSessionFamily(repo, FakeClock{NowTime: now})
+	uc := commands.NewRevokeSessionFamily(&FakeUnitOfWork{Inner: application.IdentityAccessUnitOfWorkRepositories{Sessions: repo}}, FakeClock{NowTime: now})
 	if err := uc.Execute(t.Context(), "secret"); err != nil {
 		t.Fatal(err)
 	}
@@ -69,7 +69,7 @@ func TestRevokeSessionFamily_ReturnsErrorWhenSessionExpired(t *testing.T) {
 		if err := repo.CreateSession(t.Context(), session, "secret"); err != nil {
 			t.Fatal(err)
 		}
-		uc := commands.NewRevokeSessionFamily(repo, FakeClock{NowTime: now})
+		uc := commands.NewRevokeSessionFamily(&FakeUnitOfWork{Inner: application.IdentityAccessUnitOfWorkRepositories{Sessions: repo}}, FakeClock{NowTime: now})
 		if err := uc.Execute(t.Context(), "secret"); !errors.Is(err, application.ErrSessionExpired) {
 			t.Fatalf("expected expired session, got %v", err)
 		}
@@ -88,7 +88,7 @@ func TestRevokeSessionFamily_ReturnsErrorWhenSessionExpired(t *testing.T) {
 
 func TestRevokeSessionFamily_ReturnsErrorWhenSecretDoesNotExist(t *testing.T) {
 	repo := &FakeSessionRepository{}
-	uc := commands.NewRevokeSessionFamily(repo, FakeClock{})
+	uc := commands.NewRevokeSessionFamily(&FakeUnitOfWork{Inner: application.IdentityAccessUnitOfWorkRepositories{Sessions: repo}}, FakeClock{})
 	if err := uc.Execute(t.Context(), "missing"); !errors.Is(err, application.ErrSessionNotFound) {
 		t.Fatalf("expected session not found, got %v", err)
 	}
@@ -117,7 +117,7 @@ func TestRevokeSessionFamilyPropagatesRepositoryErrors(t *testing.T) {
 			case "revocation":
 				repo.RevokeErr = failure
 			}
-			uc := commands.NewRevokeSessionFamily(repo, FakeClock{NowTime: now})
+			uc := commands.NewRevokeSessionFamily(&FakeUnitOfWork{Inner: application.IdentityAccessUnitOfWorkRepositories{Sessions: repo}}, FakeClock{NowTime: now})
 			if err := uc.Execute(t.Context(), "secret"); !errors.Is(err, want) {
 				t.Fatalf("expected %v, got %v", want, err)
 			}
@@ -139,7 +139,7 @@ func TestRevokeSessionFamilyAcceptsReplacedCredential(t *testing.T) {
 		t.Fatal(err)
 	}
 	repo := &FakeSessionRepository{ByID: map[string]*domain.Session{"old": previous, "next": next}, BySecret: map[string]*domain.Session{"old-secret": previous}}
-	uc := commands.NewRevokeSessionFamily(repo, FakeClock{NowTime: now})
+	uc := commands.NewRevokeSessionFamily(&FakeUnitOfWork{Inner: application.IdentityAccessUnitOfWorkRepositories{Sessions: repo}}, FakeClock{NowTime: now})
 	if err := uc.Execute(t.Context(), "old-secret"); err != nil {
 		t.Fatal(err)
 	}

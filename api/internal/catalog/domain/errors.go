@@ -3,6 +3,7 @@ package domain
 import "errors"
 
 var (
+	ErrInvalidChapter      = errors.New("invalid chapter")
 	ErrInvalidBookID       = errors.New("invalid book id")
 	ErrInvalidBookName     = errors.New("invalid book name")
 	ErrInvalidBookOrder    = errors.New("invalid book order")

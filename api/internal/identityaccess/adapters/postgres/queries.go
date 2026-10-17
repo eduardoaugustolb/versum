@@ -7,6 +7,7 @@ const (
 	RevokeSessionFamilyQuery  = `UPDATE sessions SET revoked_at = $3 WHERE user_id = $1 AND family_id = $2 AND revoked_at IS NULL`
 
 	FindUserByIDQuery               = `SELECT id, email_ciphertext, email_lookup_hmac, email_encryption_key_version, email_lookup_key_version FROM users WHERE id = $1`
+	DeleteUserQuery                 = `DELETE FROM users WHERE id = $1`
 	FindUserByLookupCandidatesQuery = `
 		WITH lookup_candidates AS (
 			SELECT lookup_hmac, lookup_key_version, ordinality

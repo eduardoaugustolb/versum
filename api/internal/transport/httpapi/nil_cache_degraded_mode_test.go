@@ -100,14 +100,7 @@ func (b *flakyBatch) Exec(context.Context) error {
 
 func TestEmailRateLimitCacheFailureReturns503(t *testing.T) {
 	flaky := &flakyCache{succeedOn: 2}
-	handler := httpapi.NewHandler(httpapi.Dependencies{
-		Health: health.CheckHealth{},
-		Catalog: httpapi.CatalogDependencies{
-			ListBooks:  queries.NewListBooks(noopCatalogRepository{}),
-			GetChapter: queries.NewGetChapter(noopCatalogRepository{}),
-		},
-		Cache: flaky,
-	})
+	_, handler := identityAccessHandlerWithCache(t, flaky)
 
 	rec := httptest.NewRecorder()
 	request := httptest.NewRequest(http.MethodPost, "/auth/magic-link", strings.NewReader(`{"email":"ana@example.com"}`))

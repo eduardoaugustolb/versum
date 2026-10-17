@@ -104,4 +104,12 @@ func (r *UserRepository) scanProtectedUser(ctx context.Context, row dbexec.Row, 
 	return user, protected, nil
 }
 
+func (r *UserRepository) DeleteUser(ctx context.Context, id string) error {
+	err := r.db.Exec(ctx, DeleteUserQuery, id)
+	if err != nil {
+		return fmt.Errorf("deleting user: %w", err)
+	}
+	return nil
+}
+
 var _ ports.UserRepository = (*UserRepository)(nil)

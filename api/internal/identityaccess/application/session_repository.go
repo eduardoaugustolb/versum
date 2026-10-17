@@ -9,7 +9,7 @@ import (
 
 // SessionRepository persists and retrieves Session aggregates.
 type SessionRepository interface {
-	// LockSessionsByUserID serializes rotation and family revocation within a transaction.
+	// LockSessionsByUserID serializes rotation, family revocation and user deletion within a transaction.
 	LockSessionsByUserID(ctx context.Context, userID string) error
 	SaveUsage(ctx context.Context, session *domain.Session) error
 	SaveRotation(ctx context.Context, session *domain.Session) error

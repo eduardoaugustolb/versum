@@ -1,4 +1,4 @@
-package postgres
+package postgres_test
 
 import (
 	"bytes"
@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/adapters/postgres"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/domain"
 	"github.com/jackc/pgx/v5"
@@ -19,7 +20,7 @@ func TestLoginTokenRepositoryHashesSecretForCreateAndLookup(t *testing.T) {
 		t.Fatal(err)
 	}
 	db := &lookupExecutor{}
-	repo := NewLoginTokenRepository(db)
+	repo := postgres.NewLoginTokenRepository(db)
 	if err := repo.Create(t.Context(), token, "secret"); err != nil {
 		t.Fatal(err)
 	}
@@ -33,7 +34,7 @@ func TestLoginTokenRepositoryHashesSecretForCreateAndLookup(t *testing.T) {
 }
 
 func TestLoginTokenRepositoryRejectsEmptySecret(t *testing.T) {
-	repo := NewLoginTokenRepository(&lookupExecutor{})
+	repo := postgres.NewLoginTokenRepository(&lookupExecutor{})
 	if err := repo.Create(t.Context(), nil, ""); !errors.Is(err, application.ErrInvalidLoginTokenSecret) {
 		t.Fatal(err)
 	}
@@ -51,7 +52,7 @@ func TestLoginTokenRepositoryRejectsDuplicateConsumption(t *testing.T) {
 	if err := token.Consume(now); err != nil {
 		t.Fatal(err)
 	}
-	repo := NewLoginTokenRepository(userRepositoryExecutor{row: errorRow{err: pgx.ErrNoRows}})
+	repo := postgres.NewLoginTokenRepository(userRepositoryExecutor{row: errorRow{err: pgx.ErrNoRows}})
 	if err := repo.Save(t.Context(), token); !errors.Is(err, domain.ErrLoginTokenAlreadyConsumed) {
 		t.Fatal(err)
 	}

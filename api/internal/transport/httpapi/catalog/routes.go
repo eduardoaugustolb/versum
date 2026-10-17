@@ -2,21 +2,27 @@
 package catalog
 
 import (
+	"context"
 	"errors"
 	"log/slog"
 	"net/http"
 	"strconv"
 
-	"github.com/eduardoaugustolb/versum/api/internal/catalog/application/queries"
 	"github.com/eduardoaugustolb/versum/api/internal/catalog/domain"
 	"github.com/eduardoaugustolb/versum/api/internal/transport/httpapi/response"
 	"github.com/eduardoaugustolb/versum/api/internal/transport/httpapi/routing"
 )
 
 // Dependencies are the catalog use cases required by this HTTP adapter.
+type BooksLister interface {
+	Execute(context.Context) ([]domain.Book, error)
+}
+type ChapterGetter interface {
+	Execute(context.Context, string, int) (domain.Chapter, error)
+}
 type Dependencies struct {
-	ListBooks  *queries.ListBooks
-	GetChapter *queries.GetChapter
+	ListBooks  BooksLister
+	GetChapter ChapterGetter
 }
 
 // RegisterRoutes registers catalog endpoints.
@@ -55,6 +61,10 @@ func (h handler) getChapter(w http.ResponseWriter, request *http.Request) {
 
 	chapter, err := h.deps.GetChapter.Execute(request.Context(), bookID, number)
 	if err != nil {
+		if errors.Is(err, domain.ErrInvalidBookID) || errors.Is(err, domain.ErrInvalidChapter) {
+			http.Error(w, "invalid chapter request", http.StatusBadRequest)
+			return
+		}
 		if errors.Is(err, domain.ErrChapterNotFound) {
 			http.Error(w, "chapter not found", http.StatusNotFound)
 			return
