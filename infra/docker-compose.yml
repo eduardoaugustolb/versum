@@ -1,3 +1,4 @@
+name: versum_infra
 services:
   redis:
     image: redis:7
