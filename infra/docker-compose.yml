@@ -2,7 +2,6 @@ name: versum_infra
 services:
   redis:
     image: redis:7
-    container_name: redis
     restart: unless-stopped
     ports:
       - "127.0.0.1:6379:6379"
@@ -15,7 +14,6 @@ services:
       - redis_data:/data
   pg_database:
     image: postgres:16
-    container_name: pg_database
     restart: unless-stopped
     environment:
       - POSTGRES_USER=postgres
