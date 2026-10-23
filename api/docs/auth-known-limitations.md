@@ -1,10 +1,16 @@
 # Limitações conhecidas do fluxo de magic link
 
-Retrato de `feat/auth` em 2026-10-01. Solicitação, persistência e publicação transacional existem; entrega e integração HTTP do consumo ainda não estão concluídas. Este documento não comprova emissão funcional de links nem prontidão para produção. O roteiro de implementação está em [feat-auth-implementation.md](../.lgpd/feat-auth-implementation.md).
+Atualizado em 2026-10-22. Solicitação, persistência, publicação transacional, handler de entrega e worker PostgreSQL existem; integração HTTP do consumo ainda não está concluída. Não houve envio real validado no Gmail nem comprovação de prontidão para produção. O roteiro de implementação está em [feat-auth-implementation.md](../.lgpd/feat-auth-implementation.md).
 
 ## Entrega e consumo ainda incompletos
 
-O payload cifrado atual contém apenas `login_token_id`; `user_id` fica na coluna de vínculo da outbox. O token bruto gerado é descartado depois do hash; não pode ser reconstruído a partir desse hash. Completar o material cifrado de entrega na mesma transação e implementar o consumidor da outbox antes de afirmar que o link é enviado. Remover o segredo quando consumido, expirado ou cancelado; metadados têm retenção própria.
+O payload da solicitação contém `login_token_id` e o token bruto, cifrados pelo adaptador da outbox; `user_id` fica na coluna de vínculo. `login_tokens` continua persistindo somente o hash. O handler consulta pelo segredo, confere ID e titular, ignora tokens consumidos/expirados e registros excluídos, monta HTML/texto e propaga falhas do sender. O [worker](outbox-worker.md) adquire e confirma por lease no PostgreSQL, com retry limitado e cancelamento por sinal. Conclusão e falha terminal apagam o payload; consumo/expiração sem processamento pelo worker e retenção de metadados ainda precisam de limpeza própria.
+
+O construtor do handler exige um `clock.Clock` e a URL HTTPS da página web de confirmação, sem query, fragmento ou credenciais. O handler adiciona `?token=...` com encoding; o destino deve evitar logs/captura dessa URL, remover o segredo do histórico e exigir ação explícita para consumir o link, evitando consumo por scanners de e-mail. Essa página ainda não é implementada pela API.
+
+A chave de envio é `magic-link/<event_id>`. HTML/texto usam expiração absoluta e permanecem iguais nos retries com as mesmas dependências/configuração. Conforme a [documentação do Resend](https://resend.com/docs/dashboard/emails/idempotency-keys), a deduplicação dura 24 horas e exige o mesmo payload. Não alterar template, URL, remetente ou destinatário de uma entrega pendente sob a mesma chave; um rollout precisa drenar ou preservar a versão do material de entrega. A chave não substitui confirmação da outbox nem garante entrega exatamente uma vez.
+
+As verificações anteriores ao envio não são uma barreira atômica contra exclusão/consumo concorrentes. Um provedor já pode ter recebido o e-mail quando a conta for excluída; o consumo deve continuar rejeitando o link. Falta demonstrar esses interleavings em integração e sanitizar erros do provedor antes de registrar logs.
 
 Os casos de uso `ConsumeMagicLink` e `RotateSession` existem, com emissão transacional de sessão, rotação e revogação da família ao detectar reutilização. Ainda não há integração HTTP desses casos de uso nem ciclo de cookies de sessão completo. IP e user-agent são metadados de risco, não uma prova da identidade do portador do token.
 

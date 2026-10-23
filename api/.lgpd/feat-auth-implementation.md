@@ -13,7 +13,7 @@ Aceite: contrato/API/docs concordam; recusa opcional não bloqueia leitura públ
 
 ## 2. Tornar o magic link entregável
 
-- [ ] Incluir token bruto apenas dentro do payload cifrado da outbox, junto dos vínculos necessários; persistir somente hash em `login_tokens`. Hoje payload guarda apenas IDs, logo não permite envio.
+- [x] Incluir token bruto apenas dentro do payload cifrado da outbox, junto dos vínculos necessários; persistir somente hash em `login_tokens`. Implementado em 2026-10-22. Worker com lease/retry e remoção do payload ao concluir/falhar implementado; limpeza por consumo/expiração fora do worker e demais critérios abaixo continuam pendentes.
 - [ ] Manter usuário/token/evento na mesma unidade de trabalho já implementada; rollback não deixa entrega solta.
 - [ ] Implementar claim/lease, envio fora da transação, confirmação condicional pela lease, retry/backoff/limite, cancelamento e recuperação de crash. Provedor com idempotência quando disponível.
 - [ ] Não enviar token expirado/consumido ou pertencente a conta excluída. Testar interleaving entre claim, exclusão e envio; se provedor já recebeu mensagem, registrar a limitação e garantir que o link se torne inválido.
