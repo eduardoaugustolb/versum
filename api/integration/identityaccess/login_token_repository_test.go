@@ -27,7 +27,7 @@ func setupLoginTokenRepository(ctx context.Context, t *testing.T) (*identityacce
 	}
 	user := createTestUser(ctx, t, db, "token-user", "token-user@example.com")
 	t.Cleanup(func() { _ = db.Exec(context.Background(), "DELETE FROM users WHERE id = $1", user.ID()) })
-	return identityaccesspg.NewLoginTokenRepository(db), db, pool, user
+	return identityaccesspg.NewLoginTokenRepository(identityaccesspg.NewDAO(db)), db, pool, user
 }
 
 func newLoginToken(t *testing.T, id string, userID string) *domain.LoginToken {

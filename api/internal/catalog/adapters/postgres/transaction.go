@@ -21,7 +21,7 @@ func (m TransactionManager) WithinTransaction(ctx context.Context, fn func(conte
 
 	defer tx.Rollback(ctx)
 
-	if err := fn(ctx, NewRepository(tx)); err != nil {
+	if err := fn(ctx, NewRepository(NewDAO(tx))); err != nil {
 		return err
 	}
 	return tx.Commit(ctx)
@@ -33,7 +33,7 @@ func (m TransactionManager) WithinCatalogTransaction(ctx context.Context, fn fun
 		return err
 	}
 	defer tx.Rollback(ctx)
-	if err := fn(NewRepository(tx), NewCatalogVersionRepository(tx)); err != nil {
+	if err := fn(NewRepository(NewDAO(tx)), NewCatalogVersionRepository(NewDAO(tx))); err != nil {
 		return err
 	}
 	return tx.Commit(ctx)

@@ -6,11 +6,9 @@ import (
 	"github.com/eduardoaugustolb/versum/api/internal/catalog/domain"
 )
 
-// CatalogRepository persists and retrieves catalog aggregates.
+// CatalogRepository persists catalog aggregates. Read projections use CatalogReader.
 type CatalogRepository interface {
 	ReplaceBook(ctx context.Context, book domain.Book, verses []domain.Verse) error
-	ListBooks(ctx context.Context) ([]domain.Book, error)
-	FindChapter(ctx context.Context, bookID string, number int) (domain.Chapter, error)
 }
 
 type TransactionManager interface {

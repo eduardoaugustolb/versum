@@ -23,7 +23,7 @@ func (g fixedSessionID) Generate() string { return g.value }
 func TestConsumeMagicLinkPersistsSessionAndRejectsReuse(t *testing.T) {
 	ctx := t.Context()
 	sessions, db, _, user := setupSessionRepository(ctx, t)
-	tokens := identitypg.NewLoginTokenRepository(db)
+	tokens := identitypg.NewLoginTokenRepository(identitypg.NewDAO(db))
 	token := newLoginToken(t, "consume-link", user.ID())
 	if err := tokens.Create(ctx, token, "link-secret"); err != nil {
 		t.Fatal(err)
@@ -77,7 +77,7 @@ func TestConsumeMagicLinkRollsBackTokenOnSessionConflict(t *testing.T) {
 	if err := sessions.CreateSession(ctx, existing, "existing-secret"); err != nil {
 		t.Fatal(err)
 	}
-	tokens := identitypg.NewLoginTokenRepository(db)
+	tokens := identitypg.NewLoginTokenRepository(identitypg.NewDAO(db))
 	token := newLoginToken(t, "rollback-link", user.ID())
 	if err := tokens.Create(ctx, token, "link-secret"); err != nil {
 		t.Fatal(err)
@@ -116,7 +116,7 @@ func TestConsumeMagicLinkRollsBackTokenOnSessionConflict(t *testing.T) {
 func TestConsumeMagicLinkConcurrentConsumptionIssuesOneSession(t *testing.T) {
 	ctx := t.Context()
 	sessions, db, _, user := setupSessionRepository(ctx, t)
-	tokens := identitypg.NewLoginTokenRepository(db)
+	tokens := identitypg.NewLoginTokenRepository(identitypg.NewDAO(db))
 	token := newLoginToken(t, "concurrent-link", user.ID())
 	if err := tokens.Create(ctx, token, "link-secret"); err != nil {
 		t.Fatal(err)
@@ -147,7 +147,7 @@ func TestConsumeMagicLinkConcurrentConsumptionIssuesOneSession(t *testing.T) {
 func TestConsumeMagicLinkRejectsExpiredAndMissingTokens(t *testing.T) {
 	ctx := t.Context()
 	sessions, db, _, user := setupSessionRepository(ctx, t)
-	tokens := identitypg.NewLoginTokenRepository(db)
+	tokens := identitypg.NewLoginTokenRepository(identitypg.NewDAO(db))
 	token := newLoginToken(t, "expired-link", user.ID())
 	if err := tokens.Create(ctx, token, "expired-secret"); err != nil {
 		t.Fatal(err)

@@ -38,7 +38,7 @@ func TestOutboxRepositoryTranslatesUniqueViolationOnPublish(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	repo := NewOutboxRepository(outboxExecutor{err: &pgconn.PgError{Code: "23505"}}, outboxPayloadProtector{})
+	repo := NewOutboxRepository(NewDAO(outboxExecutor{err: &pgconn.PgError{Code: "23505"}}), outboxPayloadProtector{})
 
 	if err := repo.Publish(t.Context(), event); !errors.Is(err, application.ErrOutboxEventAlreadyExists) {
 		t.Fatalf("expected already-exists error, got %v", err)

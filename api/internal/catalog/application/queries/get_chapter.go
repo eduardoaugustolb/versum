@@ -7,17 +7,17 @@ import (
 	"strings"
 )
 
-type GetChapter struct{ repository ports.CatalogRepository }
+type GetChapter struct{ repository ports.CatalogReader }
 
-func NewGetChapter(repository ports.CatalogRepository) *GetChapter {
+func NewGetChapter(repository ports.CatalogReader) *GetChapter {
 	return &GetChapter{repository: repository}
 }
-func (q *GetChapter) Execute(ctx context.Context, bookID string, number int) (domain.Chapter, error) {
+func (q *GetChapter) Execute(ctx context.Context, bookID string, number int) (ports.ChapterDTO, error) {
 	if strings.TrimSpace(bookID) == "" {
-		return domain.Chapter{}, domain.ErrInvalidBookID
+		return ports.ChapterDTO{}, domain.ErrInvalidBookID
 	}
 	if number <= 0 {
-		return domain.Chapter{}, domain.ErrInvalidChapter
+		return ports.ChapterDTO{}, domain.ErrInvalidChapter
 	}
 	return q.repository.FindChapter(ctx, bookID, number)
 }

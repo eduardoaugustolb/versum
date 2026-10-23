@@ -7,19 +7,26 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
-	dbexec "github.com/eduardoaugustolb/versum/api/internal/database"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
 	ports "github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/domain"
 )
 
+type UserDAO interface {
+	InsertUser(ctx context.Context, id string, email ports.ProtectedEmail) error
+	UserByID(ctx context.Context, id string) (UserRecord, error)
+	UserByLookupCandidates(ctx context.Context, hashes [][]byte, versions []int16) (UserRecord, error)
+	UpdateUserLookup(ctx context.Context, id string, hash []byte, version, previousVersion int) error
+	DeleteUser(ctx context.Context, id string) error
+}
+
 type UserRepository struct {
-	db        dbexec.Executor
+	dao       UserDAO
 	protector ports.EmailProtector
 }
 
-func NewUserRepository(db dbexec.Executor, protector ports.EmailProtector) *UserRepository {
-	return &UserRepository{db: db, protector: protector}
+func NewUserRepository(dao UserDAO, protector ports.EmailProtector) *UserRepository {
+	return &UserRepository{dao: dao, protector: protector}
 }
 
 func (r *UserRepository) CreateUser(ctx context.Context, user *domain.User) error {
@@ -27,8 +34,7 @@ func (r *UserRepository) CreateUser(ctx context.Context, user *domain.User) erro
 	if err != nil {
 		return fmt.Errorf("protecting user email: %w", err)
 	}
-	var createdUserID string
-	if err := r.db.QueryRow(ctx, CreateUserQuery, user.ID(), protected.Ciphertext, protected.LookupHMAC, protected.EncryptionKeyVersion, protected.LookupKeyVersion).Scan(&createdUserID); err != nil {
+	if err := r.dao.InsertUser(ctx, user.ID(), protected); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return application.ErrUserAlreadyExists
 		}
@@ -41,7 +47,8 @@ func (r *UserRepository) FindUserByID(ctx context.Context, id string) (*domain.U
 	if id == "" {
 		return nil, domain.ErrInvalidUserID
 	}
-	return r.scanUser(ctx, r.db.QueryRow(ctx, FindUserByIDQuery, id), "finding user by id")
+	record, err := r.dao.UserByID(ctx, id)
+	return r.mapUser(ctx, record, err, "finding user by id")
 }
 
 func (r *UserRepository) FindUserByEmail(ctx context.Context, email domain.Email) (*domain.User, error) {
@@ -60,18 +67,16 @@ func (r *UserRepository) FindUserByEmail(ctx context.Context, email domain.Email
 		lookupKeyVersions = append(lookupKeyVersions, int16(candidate.LookupKeyVersion))
 	}
 
-	user, protected, err := r.scanProtectedUser(
-		ctx,
-		r.db.QueryRow(ctx, FindUserByLookupCandidatesQuery, lookupHMACs, lookupKeyVersions),
-		"finding user by email",
-	)
+	record, findErr := r.dao.UserByLookupCandidates(ctx, lookupHMACs, lookupKeyVersions)
+	user, err := r.mapUser(ctx, record, findErr, "finding user by email")
+	protected := record.Email
 	if err != nil {
 		return nil, err
 	}
 
 	currentCandidate := candidates[0]
 	if protected.LookupKeyVersion != currentCandidate.LookupKeyVersion {
-		if err := r.db.Exec(ctx, UpdateUserLookupKeyQuery, user.ID(), currentCandidate.LookupHMAC, currentCandidate.LookupKeyVersion, protected.LookupKeyVersion); err != nil {
+		if err := r.dao.UpdateUserLookup(ctx, user.ID(), currentCandidate.LookupHMAC, currentCandidate.LookupKeyVersion, protected.LookupKeyVersion); err != nil {
 			return nil, fmt.Errorf("migrating user email lookup key: %w", err)
 		}
 	}
@@ -79,33 +84,25 @@ func (r *UserRepository) FindUserByEmail(ctx context.Context, email domain.Email
 	return user, nil
 }
 
-func (r *UserRepository) scanUser(ctx context.Context, row dbexec.Row, operation string) (*domain.User, error) {
-	user, _, err := r.scanProtectedUser(ctx, row, operation)
-	return user, err
-}
-
-func (r *UserRepository) scanProtectedUser(ctx context.Context, row dbexec.Row, operation string) (*domain.User, ports.ProtectedEmail, error) {
-	var id string
-	var protected ports.ProtectedEmail
-	if err := row.Scan(&id, &protected.Ciphertext, &protected.LookupHMAC, &protected.EncryptionKeyVersion, &protected.LookupKeyVersion); err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, ports.ProtectedEmail{}, application.ErrUserNotFound
-		}
-		return nil, ports.ProtectedEmail{}, fmt.Errorf("%s: %w", operation, err)
+func (r *UserRepository) mapUser(ctx context.Context, record UserRecord, err error, operation string) (*domain.User, error) {
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, application.ErrUserNotFound
 	}
-	email, err := r.protector.Unprotect(ctx, protected)
 	if err != nil {
-		return nil, ports.ProtectedEmail{}, fmt.Errorf("%s: unprotecting user email: %w", operation, err)
+		return nil, fmt.Errorf("%s: %w", operation, err)
 	}
-	user, err := domain.RehydrateUser(id, email.String())
+	email, err := r.protector.Unprotect(ctx, record.Email)
 	if err != nil {
-		return nil, ports.ProtectedEmail{}, fmt.Errorf("%s: %w", operation, err)
+		return nil, fmt.Errorf("%s: unprotecting user email: %w", operation, err)
 	}
-	return user, protected, nil
+	user, err := domain.RehydrateUser(record.ID, email.String())
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", operation, err)
+	}
+	return user, nil
 }
-
 func (r *UserRepository) DeleteUser(ctx context.Context, id string) error {
-	err := r.db.Exec(ctx, DeleteUserQuery, id)
+	err := r.dao.DeleteUser(ctx, id)
 	if err != nil {
 		return fmt.Errorf("deleting user: %w", err)
 	}

@@ -3,14 +3,13 @@ package queries
 import (
 	"context"
 	ports "github.com/eduardoaugustolb/versum/api/internal/catalog/application"
-	"github.com/eduardoaugustolb/versum/api/internal/catalog/domain"
 )
 
-type ListBooks struct{ repository ports.CatalogRepository }
+type ListBooks struct{ repository ports.CatalogReader }
 
-func NewListBooks(repository ports.CatalogRepository) *ListBooks {
+func NewListBooks(repository ports.CatalogReader) *ListBooks {
 	return &ListBooks{repository: repository}
 }
-func (q *ListBooks) Execute(ctx context.Context) ([]domain.Book, error) {
+func (q *ListBooks) Execute(ctx context.Context) ([]ports.BookDTO, error) {
 	return q.repository.ListBooks(ctx)
 }

@@ -80,7 +80,7 @@ func TestSessionRepositoryCreatesAndFindsWithSecret(t *testing.T) {
 		sessionRow{id: session.ID(), userID: session.UserID(), expiresAt: session.ExpiresAt()},
 		sessionRow{id: session.ID(), userID: session.UserID(), expiresAt: session.ExpiresAt()},
 	}}
-	repo := postgres.NewSessionRepository(db)
+	repo := postgres.NewSessionRepository(postgres.NewDAO(db))
 	if err := repo.CreateSession(t.Context(), session, "secret"); err != nil {
 		t.Fatal(err)
 	}
@@ -122,7 +122,7 @@ func TestSessionRepositoryPersistsAndRehydratesOptionalState(t *testing.T) {
 	revokedAt, _ := session.RevokedAt()
 	usedAt, _ := session.LastUsedAt()
 	db := &lookupExecutor{rows: []dbexec.Row{sessionRow{id: session.ID(), userID: session.UserID(), revokedAt: &revokedAt, usedAt: &usedAt, expiresAt: session.ExpiresAt()}}}
-	repo := postgres.NewSessionRepository(db)
+	repo := postgres.NewSessionRepository(postgres.NewDAO(db))
 	if err := repo.CreateSession(t.Context(), session, "secret"); err != nil {
 		t.Fatal(err)
 	}
@@ -144,7 +144,7 @@ func TestSessionRepositoryPersistsAndRehydratesOptionalState(t *testing.T) {
 func TestSessionRepositoryRejectsInvalidArguments(t *testing.T) {
 	zero := time.Time{}
 	now := time.Now()
-	repo := postgres.NewSessionRepository(&lookupExecutor{})
+	repo := postgres.NewSessionRepository(postgres.NewDAO(&lookupExecutor{}))
 	tests := []struct {
 		name string
 		run  func() error
@@ -183,7 +183,7 @@ func TestSessionRepositoryFindErrors(t *testing.T) {
 	} {
 		t.Run(tt.name, func(t *testing.T) {
 			for _, bySecret := range []bool{false, true} {
-				repo := postgres.NewSessionRepository(userRepositoryExecutor{row: tt.row})
+				repo := postgres.NewSessionRepository(postgres.NewDAO(userRepositoryExecutor{row: tt.row}))
 				var err error
 				if bySecret {
 					_, err = repo.FindSessionBySecret(t.Context(), "secret")
@@ -202,7 +202,7 @@ func TestSessionRepositoryListsAndClosesRows(t *testing.T) {
 	now := time.Now()
 	rows := &sessionRows{rows: []dbexec.Row{sessionRow{id: "first", userID: "user", expiresAt: now}, sessionRow{id: "second", userID: "user", expiresAt: now}}}
 	db := &sessionExecutor{result: rows}
-	sessions, err := postgres.NewSessionRepository(db).ListSessionsByUserID(t.Context(), "user")
+	sessions, err := postgres.NewSessionRepository(postgres.NewDAO(db)).ListSessionsByUserID(t.Context(), "user")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -228,7 +228,7 @@ func TestSessionRepositoryListErrorsAndEmptyResult(t *testing.T) {
 	} {
 		t.Run(tt.name, func(t *testing.T) {
 			db := &sessionExecutor{result: tt.rows, queryErr: tt.queryErr}
-			sessions, err := postgres.NewSessionRepository(db).ListSessionsByUserID(t.Context(), "user")
+			sessions, err := postgres.NewSessionRepository(postgres.NewDAO(db)).ListSessionsByUserID(t.Context(), "user")
 			if !errors.Is(err, tt.want) {
 				t.Fatalf("want %v, got %v", tt.want, err)
 			}
@@ -247,7 +247,7 @@ func TestSessionRepositoryRevokesAndPreservesWriteErrors(t *testing.T) {
 	failure := errors.New("database unavailable")
 	for _, writeErr := range []error{nil, failure} {
 		db := &lookupExecutor{execErr: writeErr}
-		repo := postgres.NewSessionRepository(db)
+		repo := postgres.NewSessionRepository(postgres.NewDAO(db))
 		session, err := domain.NewSession("session", "user", "family-1", "", "", now.Add(time.Hour), now)
 		if err != nil {
 			t.Fatal(err)
@@ -293,7 +293,7 @@ func TestSessionRepositoryRotationPersistenceAndErrors(t *testing.T) {
 	} {
 		t.Run(tt.name, func(t *testing.T) {
 			db := &lookupExecutor{rows: []dbexec.Row{tt.row, tt.row}}
-			repo := postgres.NewSessionRepository(db)
+			repo := postgres.NewSessionRepository(postgres.NewDAO(db))
 			if err := repo.LockSessionsByUserID(t.Context(), "user"); !errors.Is(err, tt.lockWant) {
 				t.Fatal(err)
 			}
@@ -306,7 +306,7 @@ func TestSessionRepositoryRotationPersistenceAndErrors(t *testing.T) {
 			}
 		})
 	}
-	repo := postgres.NewSessionRepository(&lookupExecutor{})
+	repo := postgres.NewSessionRepository(postgres.NewDAO(&lookupExecutor{}))
 	if err := repo.LockSessionsByUserID(t.Context(), ""); !errors.Is(err, domain.ErrInvalidSessionUserID) {
 		t.Fatal(err)
 	}
@@ -320,14 +320,14 @@ func TestSessionRepositoryRevokesOnlyRequestedFamily(t *testing.T) {
 	failure := errors.New("database failure")
 	for _, writeErr := range []error{nil, failure} {
 		db := &lookupExecutor{execErr: writeErr}
-		if err := postgres.NewSessionRepository(db).RevokeSessionFamily(t.Context(), "user", "family", now); !errors.Is(err, writeErr) {
+		if err := postgres.NewSessionRepository(postgres.NewDAO(db)).RevokeSessionFamily(t.Context(), "user", "family", now); !errors.Is(err, writeErr) {
 			t.Fatal(err)
 		}
 		if db.execQuery[0] != postgres.RevokeSessionFamilyQuery || db.execArgs[0][0] != "user" || db.execArgs[0][1] != "family" || db.execArgs[0][2] != now {
 			t.Fatal("must scope revocation by user and family")
 		}
 	}
-	repo := postgres.NewSessionRepository(&lookupExecutor{})
+	repo := postgres.NewSessionRepository(postgres.NewDAO(&lookupExecutor{}))
 	for _, tt := range []struct {
 		user, family string
 		at           time.Time
@@ -345,7 +345,7 @@ func TestSessionRepositoryRehydratesRotationAndClient(t *testing.T) {
 	now := time.Now().UTC()
 	replacement := "next"
 	db := &lookupExecutor{rows: []dbexec.Row{sessionRow{id: "old", userID: "user", familyID: "family", ipAddress: "2001:db8::1", userAgent: "browser", revokedAt: &now, usedAt: &now, expiresAt: now.Add(time.Hour), replacement: &replacement}}}
-	got, err := postgres.NewSessionRepository(db).FindSessionByID(t.Context(), "old")
+	got, err := postgres.NewSessionRepository(postgres.NewDAO(db)).FindSessionByID(t.Context(), "old")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -360,7 +360,7 @@ func TestSessionRepositoryRehydratesRotationAndClient(t *testing.T) {
 func TestSessionRepositorySavesUsageConditionally(t *testing.T) {
 	now := time.Now().UTC()
 	session, _ := domain.NewSession("session", "user", "family", "", "", now.Add(time.Hour), now)
-	repo := postgres.NewSessionRepository(&lookupExecutor{})
+	repo := postgres.NewSessionRepository(postgres.NewDAO(&lookupExecutor{}))
 	if err := repo.SaveUsage(t.Context(), session); !errors.Is(err, domain.ErrInvalidSessionLastUsedAt) {
 		t.Fatal(err)
 	}
@@ -373,7 +373,7 @@ func TestSessionRepositorySavesUsageConditionally(t *testing.T) {
 		want error
 	}{{sessionIDRow{id: session.ID()}, nil}, {errorRow{err: pgx.ErrNoRows}, domain.ErrInvalidSessionState}, {errorRow{err: failure}, failure}} {
 		db := &lookupExecutor{rows: []dbexec.Row{tt.row}}
-		if err := postgres.NewSessionRepository(db).SaveUsage(t.Context(), session); !errors.Is(err, tt.want) {
+		if err := postgres.NewSessionRepository(postgres.NewDAO(db)).SaveUsage(t.Context(), session); !errors.Is(err, tt.want) {
 			t.Fatal(err)
 		}
 		if db.queryArgs[0][0] != session.ID() || db.queryArgs[0][1] != now {
@@ -389,7 +389,7 @@ func TestSessionRepositorySavesUsageConditionally(t *testing.T) {
 func TestSessionRepositoryRejectsCreationOfReplacedSession(t *testing.T) {
 	now := time.Now().UTC()
 	session, _ := domain.RehydrateSession("old", "user", "family", "", "", &now, &now, now.Add(time.Hour), "next")
-	if err := postgres.NewSessionRepository(&lookupExecutor{}).CreateSession(t.Context(), session, "secret"); !errors.Is(err, domain.ErrInvalidSessionReplacement) {
+	if err := postgres.NewSessionRepository(postgres.NewDAO(&lookupExecutor{})).CreateSession(t.Context(), session, "secret"); !errors.Is(err, domain.ErrInvalidSessionReplacement) {
 		t.Fatal(err)
 	}
 }

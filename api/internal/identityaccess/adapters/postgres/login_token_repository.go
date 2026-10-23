@@ -9,16 +9,22 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
-	dbexec "github.com/eduardoaugustolb/versum/api/internal/database"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
 	ports "github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/domain"
 )
 
-type LoginTokenRepository struct{ db dbexec.Executor }
+type LoginTokenDAO interface {
+	InsertLoginToken(ctx context.Context, id string, hash []byte, userID string, expiresAt time.Time, consumedAt any) error
+	LoginTokenByID(ctx context.Context, id string) (LoginTokenRecord, error)
+	LoginTokenByHash(ctx context.Context, hash []byte) (LoginTokenRecord, error)
+	ConsumeLoginToken(ctx context.Context, id string, at time.Time) error
+}
 
-func NewLoginTokenRepository(db dbexec.Executor) *LoginTokenRepository {
-	return &LoginTokenRepository{db: db}
+type LoginTokenRepository struct{ dao LoginTokenDAO }
+
+func NewLoginTokenRepository(dao LoginTokenDAO) *LoginTokenRepository {
+	return &LoginTokenRepository{dao: dao}
 }
 
 var _ ports.LoginTokenRepository = (*LoginTokenRepository)(nil)
@@ -33,7 +39,7 @@ func (r *LoginTokenRepository) Create(ctx context.Context, token *domain.LoginTo
 	if !consumedAt.IsZero() {
 		consumedAtValue = consumedAt
 	}
-	if err := r.db.Exec(ctx, CreateLoginTokenQuery, token.ID(), hash[:], token.UserID(), token.ExpiresAt(), consumedAtValue); err != nil {
+	if err := r.dao.InsertLoginToken(ctx, token.ID(), hash[:], token.UserID(), token.ExpiresAt(), consumedAtValue); err != nil {
 		if isUniqueViolation(err) {
 			return application.ErrLoginTokenAlreadyExists
 		}
@@ -46,7 +52,8 @@ func (r *LoginTokenRepository) FindByID(ctx context.Context, id string) (*domain
 	if id == "" {
 		return nil, domain.ErrInvalidLoginTokenID
 	}
-	return scanLoginToken(r.db.QueryRow(ctx, FindLoginTokenByIDQuery, id), "finding login token by id")
+	record, err := r.dao.LoginTokenByID(ctx, id)
+	return mapLoginToken(record, err, "finding login token by id")
 }
 
 func (r *LoginTokenRepository) FindByToken(ctx context.Context, secret string) (*domain.LoginToken, error) {
@@ -54,7 +61,8 @@ func (r *LoginTokenRepository) FindByToken(ctx context.Context, secret string) (
 		return nil, application.ErrInvalidLoginTokenSecret
 	}
 	hash := sha256.Sum256([]byte(secret))
-	return scanLoginToken(r.db.QueryRow(ctx, FindLoginTokenByTokenHashQuery, hash[:]), "finding login token by token")
+	record, err := r.dao.LoginTokenByHash(ctx, hash[:])
+	return mapLoginToken(record, err, "finding login token by token")
 }
 
 func (r *LoginTokenRepository) Save(ctx context.Context, token *domain.LoginToken) error {
@@ -62,8 +70,7 @@ func (r *LoginTokenRepository) Save(ctx context.Context, token *domain.LoginToke
 	if !ok {
 		return domain.ErrInvalidLoginTokenConsumedAt
 	}
-	var id string
-	err := r.db.QueryRow(ctx, ConsumeLoginTokenByIDQuery, token.ID(), consumedAt).Scan(&id)
+	err := r.dao.ConsumeLoginToken(ctx, token.ID(), consumedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return domain.ErrLoginTokenAlreadyConsumed
 	}
@@ -73,17 +80,14 @@ func (r *LoginTokenRepository) Save(ctx context.Context, token *domain.LoginToke
 	return nil
 }
 
-func scanLoginToken(row dbexec.Row, operation string) (*domain.LoginToken, error) {
-	var id, userID string
-	var expiresAt time.Time
-	var consumedAt *time.Time
-	if err := row.Scan(&id, &userID, &expiresAt, &consumedAt); err != nil {
+func mapLoginToken(record LoginTokenRecord, err error, operation string) (*domain.LoginToken, error) {
+	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, application.ErrLoginTokenNotFound
 		}
 		return nil, fmt.Errorf("%s: %w", operation, err)
 	}
-	token, err := domain.RehydrateLoginToken(id, userID, expiresAt, consumedAt)
+	token, err := domain.RehydrateLoginToken(record.ID, record.UserID, record.ExpiresAt, record.ConsumedAt)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", operation, err)
 	}

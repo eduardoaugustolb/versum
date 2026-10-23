@@ -91,7 +91,7 @@ func createTestUser(ctx context.Context, t *testing.T, db dbexec.Executor, id, r
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := identityaccesspg.NewUserRepository(db, testEmailProtector{}).CreateUser(ctx, user); err != nil {
+	if err := identityaccesspg.NewUserRepository(identityaccesspg.NewDAO(db), testEmailProtector{}).CreateUser(ctx, user); err != nil {
 		t.Fatal(err)
 	}
 	return user

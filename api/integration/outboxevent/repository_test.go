@@ -44,7 +44,7 @@ func setupOutboxRepository(ctx context.Context, t *testing.T) (*outboxeventpg.Ou
 	}
 
 	db := adapterpostgres.NewPgxExecutor(pool)
-	return outboxeventpg.NewOutboxRepository(db, testPayloadProtector{}), db, pool
+	return outboxeventpg.NewOutboxRepository(outboxeventpg.NewDAO(db), testPayloadProtector{}), db, pool
 }
 
 func TestRepositoryPublishesProtectedEvent(t *testing.T) {
@@ -133,7 +133,7 @@ func TestDeletingUserCascadesOwnedEventsAndPreservesUnownedEvents(t *testing.T) 
 	if err := tx.Exec(ctx, `INSERT INTO users (id, email_ciphertext, email_lookup_hmac, email_encryption_key_version, email_lookup_key_version) VALUES ($1, $2, $3, 1, 1)`, "outbox-cascade-user", []byte("email"), []byte("outbox-cascade-lookup")); err != nil {
 		t.Fatal(err)
 	}
-	repo := outboxeventpg.NewOutboxRepository(tx, testPayloadProtector{})
+	repo := outboxeventpg.NewOutboxRepository(outboxeventpg.NewDAO(tx), testPayloadProtector{})
 	for _, owner := range []string{"outbox-cascade-user", ""} {
 		event, err := domain.NewEvent("cascade-event-"+owner, "event.type", owner, []byte("payload"))
 		if err != nil {

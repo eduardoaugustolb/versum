@@ -31,11 +31,12 @@ func (u *UnitOfWork) WithinTransaction(ctx context.Context, f func(repositories 
 		return err
 	}
 	defer tx.Rollback(ctx)
+	dao := NewDAO(tx)
 	repositories := ports.IdentityAccessUnitOfWorkRepositories{
-		Users:       NewUserRepository(tx, u.EmailProtector),
-		LoginTokens: NewLoginTokenRepository(tx),
-		Sessions:    NewSessionRepository(tx),
-		Outbox:      outboxPg.NewOutboxRepository(tx, u.OutboxPayloadProtector),
+		Users:       NewUserRepository(dao, u.EmailProtector),
+		LoginTokens: NewLoginTokenRepository(dao),
+		Sessions:    NewSessionRepository(dao),
+		Outbox:      outboxPg.NewOutboxRepository(outboxPg.NewDAO(tx), u.OutboxPayloadProtector),
 	}
 	err = f(repositories)
 	if err != nil {

@@ -5,23 +5,24 @@ import (
 	"fmt"
 
 	ports "github.com/eduardoaugustolb/versum/api/internal/catalog/application"
-	dbexec "github.com/eduardoaugustolb/versum/api/internal/database"
 )
 
-type CatalogVersionRepository struct {
-	db dbexec.Executor
+type CatalogVersionDAO interface {
+	RecordVersion(context.Context, string) error
 }
+
+type CatalogVersionRepository struct{ dao CatalogVersionDAO }
 
 var _ ports.CatalogVersionRepository = (*CatalogVersionRepository)(nil)
 
-func NewCatalogVersionRepository(db dbexec.Executor) *CatalogVersionRepository {
+func NewCatalogVersionRepository(dao CatalogVersionDAO) *CatalogVersionRepository {
 	return &CatalogVersionRepository{
-		db: db,
+		dao: dao,
 	}
 }
 
 func (r *CatalogVersionRepository) Record(ctx context.Context, corpusSHA256 string) error {
-	if err := r.db.Exec(ctx, UpsertCatalogVersionQuery, corpusSHA256); err != nil {
+	if err := r.dao.RecordVersion(ctx, corpusSHA256); err != nil {
 		return fmt.Errorf("upserting catalog version: %w", err)
 	}
 

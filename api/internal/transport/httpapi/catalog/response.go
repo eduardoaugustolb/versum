@@ -1,6 +1,6 @@
 package catalog
 
-import "github.com/eduardoaugustolb/versum/api/internal/catalog/domain"
+import "github.com/eduardoaugustolb/versum/api/internal/catalog/application"
 
 type bookResponse struct {
 	ID           string `json:"id"`
@@ -25,15 +25,15 @@ type verseResponse struct {
 	Part    int    `json:"part"`
 }
 
-func newBookResponse(book domain.Book) bookResponse {
-	return bookResponse{ID: book.ID(), Order: book.Order(), Name: book.Name(), Testament: string(book.Testament()), ChapterCount: book.ChapterCount()}
+func newBookResponse(book application.BookDTO) bookResponse {
+	return bookResponse{ID: book.ID, Order: book.Order, Name: book.Name, Testament: string(book.Testament), ChapterCount: book.ChapterCount}
 }
 
-func newChapterResponse(chapter domain.Chapter) chapterResponse {
-	verses := chapter.Verses()
-	result := chapterResponse{BookID: chapter.BookID(), BookName: chapter.BookName(), Number: chapter.Number(), Verses: make([]verseResponse, 0, len(verses))}
+func newChapterResponse(chapter application.ChapterDTO) chapterResponse {
+	verses := chapter.Verses
+	result := chapterResponse{BookID: chapter.BookID, BookName: chapter.BookName, Number: chapter.Number, Verses: make([]verseResponse, 0, len(verses))}
 	for _, verse := range verses {
-		result.Verses = append(result.Verses, verseResponse{BookID: verse.BookID(), Chapter: verse.Chapter(), Number: verse.Number(), Text: verse.Text(), Part: verse.Part()})
+		result.Verses = append(result.Verses, verseResponse{BookID: verse.BookID, Chapter: verse.Chapter, Number: verse.Number, Text: verse.Text, Part: verse.Part})
 	}
 	return result
 }

@@ -20,7 +20,7 @@ func setupUserRepository(ctx context.Context, t *testing.T) (*identityaccessPg.U
 	}
 	t.Cleanup(pool.Close)
 
-	repo := identityaccessPg.NewUserRepository(dbExec, testEmailProtector{})
+	repo := identityaccessPg.NewUserRepository(identityaccessPg.NewDAO(dbExec), testEmailProtector{})
 
 	if err := dbExec.Exec(ctx, "DELETE FROM users WHERE id IN ($1, $2)", "test", "another-id"); err != nil {
 		t.Fatal(err)
@@ -179,7 +179,7 @@ func TestFindUserByEmailMigratesLookupKeyVersion(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	repo := identityaccessPg.NewUserRepository(dbExec, rotatingEmailProtector{})
+	repo := identityaccessPg.NewUserRepository(identityaccessPg.NewDAO(dbExec), rotatingEmailProtector{})
 	email, err := domain.ParseEmail(rawEmail)
 	if err != nil {
 		t.Fatal(err)

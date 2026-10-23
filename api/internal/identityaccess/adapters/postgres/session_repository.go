@@ -9,16 +9,28 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
-	dbexec "github.com/eduardoaugustolb/versum/api/internal/database"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
 	ports "github.com/eduardoaugustolb/versum/api/internal/identityaccess/application"
 	"github.com/eduardoaugustolb/versum/api/internal/identityaccess/domain"
 )
 
-type SessionRepository struct{ db dbexec.Executor }
+type SessionDAO interface {
+	InsertSession(ctx context.Context, id string, hash []byte, userID string, revokedAt, lastUsedAt any, expiresAt time.Time, familyID, ip, ua string) error
+	SessionByID(ctx context.Context, id string) (SessionRecord, error)
+	SessionByHash(ctx context.Context, hash []byte) (SessionRecord, error)
+	RevokeSession(ctx context.Context, id string, at time.Time) error
+	RevokeAllSessions(ctx context.Context, userID string, at time.Time) error
+	LockUser(ctx context.Context, userID string) error
+	RotateSession(ctx context.Context, id string, revokedAt, lastUsedAt time.Time, replacement string) error
+	RevokeSessionFamily(ctx context.Context, userID, familyID string, at time.Time) error
+	UpdateSessionUsage(ctx context.Context, id string, at time.Time) error
+	SessionsByUserID(ctx context.Context, userID string) ([]SessionRecord, error)
+}
 
-func NewSessionRepository(db dbexec.Executor) *SessionRepository {
-	return &SessionRepository{db: db}
+type SessionRepository struct{ dao SessionDAO }
+
+func NewSessionRepository(dao SessionDAO) *SessionRepository {
+	return &SessionRepository{dao: dao}
 }
 
 var _ ports.SessionRepository = (*SessionRepository)(nil)
@@ -40,7 +52,7 @@ func (r *SessionRepository) CreateSession(ctx context.Context, session *domain.S
 	if !lastUsedAt.IsZero() {
 		lastUsedAtValue = lastUsedAt
 	}
-	if err := r.db.Exec(ctx, CreateSessionQuery, session.ID(), hash[:], session.UserID(), revokedAtValue, lastUsedAtValue, session.ExpiresAt(), session.FamilyID(), session.IPAddress(), session.UserAgent()); err != nil {
+	if err := r.dao.InsertSession(ctx, session.ID(), hash[:], session.UserID(), revokedAtValue, lastUsedAtValue, session.ExpiresAt(), session.FamilyID(), session.IPAddress(), session.UserAgent()); err != nil {
 		if isUniqueViolation(err) {
 			return application.ErrSessionAlreadyExists
 		}
@@ -53,7 +65,8 @@ func (r *SessionRepository) FindSessionByID(ctx context.Context, id string) (*do
 	if id == "" {
 		return nil, domain.ErrInvalidSessionID
 	}
-	return scanSession(r.db.QueryRow(ctx, FindSessionByIDQuery, id), "finding session by id")
+	record, err := r.dao.SessionByID(ctx, id)
+	return mapSession(record, err, "finding session by id")
 }
 
 func (r *SessionRepository) FindSessionBySecret(ctx context.Context, secret string) (*domain.Session, error) {
@@ -61,29 +74,25 @@ func (r *SessionRepository) FindSessionBySecret(ctx context.Context, secret stri
 		return nil, application.ErrInvalidSessionSecret
 	}
 	hash := sha256.Sum256([]byte(secret))
-	return scanSession(r.db.QueryRow(ctx, FindSessionBySecretHashQuery, hash[:]), "finding session by secret")
+	record, err := r.dao.SessionByHash(ctx, hash[:])
+	return mapSession(record, err, "finding session by secret")
 }
 
 func (r *SessionRepository) ListSessionsByUserID(ctx context.Context, userID string) ([]domain.Session, error) {
 	if userID == "" {
 		return nil, domain.ErrInvalidSessionUserID
 	}
-	rows, err := r.db.Query(ctx, ListSessionsByUserIDQuery, userID)
+	records, err := r.dao.SessionsByUserID(ctx, userID)
 	if err != nil {
 		return nil, fmt.Errorf("listing sessions by user id: %w", err)
 	}
-	defer rows.Close()
-
-	sessions := []domain.Session{}
-	for rows.Next() {
-		session, err := scanSession(rows, "scanning listed session")
+	sessions := make([]domain.Session, 0, len(records))
+	for _, record := range records {
+		session, err := mapSession(record, nil, "mapping listed session")
 		if err != nil {
 			return nil, err
 		}
 		sessions = append(sessions, *session)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("iterating sessions by user id: %w", err)
 	}
 	return sessions, nil
 }
@@ -95,7 +104,7 @@ func (r *SessionRepository) RevokeSession(ctx context.Context, sessionID string,
 	if revokedAt == nil || revokedAt.IsZero() {
 		return domain.ErrInvalidSessionRevokedAt
 	}
-	if err := r.db.Exec(ctx, RevokeSessionQuery, sessionID, *revokedAt); err != nil {
+	if err := r.dao.RevokeSession(ctx, sessionID, *revokedAt); err != nil {
 		return fmt.Errorf("revoking session: %w", err)
 	}
 	return nil
@@ -108,28 +117,24 @@ func (r *SessionRepository) RevokeAllSessions(ctx context.Context, userID string
 	if revokedAt == nil || revokedAt.IsZero() {
 		return domain.ErrInvalidSessionRevokedAt
 	}
-	if err := r.db.Exec(ctx, RevokeAllSessionsQuery, userID, *revokedAt); err != nil {
+	if err := r.dao.RevokeAllSessions(ctx, userID, *revokedAt); err != nil {
 		return fmt.Errorf("revoking all sessions: %w", err)
 	}
 	return nil
 }
 
-func scanSession(row dbexec.Row, operation string) (*domain.Session, error) {
-	var id, userID, familyID, ipAddress, userAgent string
-	var replacement *string
-	var revokedAt, lastUsedAt *time.Time
-	var expiresAt time.Time
-	if err := row.Scan(&id, &userID, &revokedAt, &lastUsedAt, &expiresAt, &familyID, &ipAddress, &userAgent, &replacement); err != nil {
+func mapSession(record SessionRecord, err error, operation string) (*domain.Session, error) {
+	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, application.ErrSessionNotFound
 		}
 		return nil, fmt.Errorf("%s: %w", operation, err)
 	}
 	replacedBy := ""
-	if replacement != nil {
-		replacedBy = *replacement
+	if record.Replacement != nil {
+		replacedBy = *record.Replacement
 	}
-	session, err := domain.RehydrateSession(id, userID, familyID, ipAddress, userAgent, revokedAt, lastUsedAt, expiresAt, replacedBy)
+	session, err := domain.RehydrateSession(record.ID, record.UserID, record.FamilyID, record.IPAddress, record.UserAgent, record.RevokedAt, record.LastUsedAt, record.ExpiresAt, replacedBy)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", operation, err)
 	}
@@ -140,8 +145,7 @@ func (r *SessionRepository) LockSessionsByUserID(ctx context.Context, userID str
 	if userID == "" {
 		return domain.ErrInvalidSessionUserID
 	}
-	var id string
-	err := r.db.QueryRow(ctx, LockSessionsByUserIDQuery, userID).Scan(&id)
+	err := r.dao.LockUser(ctx, userID)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return application.ErrUserNotFound
 	}
@@ -158,8 +162,7 @@ func (r *SessionRepository) SaveRotation(ctx context.Context, session *domain.Se
 	}
 	revokedAt, _ := session.RevokedAt()
 	lastUsedAt, _ := session.LastUsedAt()
-	var id string
-	err := r.db.QueryRow(ctx, SaveSessionRotationQuery, session.ID(), revokedAt, lastUsedAt, replacement).Scan(&id)
+	err := r.dao.RotateSession(ctx, session.ID(), revokedAt, lastUsedAt, replacement)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return domain.ErrInvalidSessionState
 	}
@@ -179,7 +182,7 @@ func (r *SessionRepository) RevokeSessionFamily(ctx context.Context, userID, fam
 	if revokedAt.IsZero() {
 		return domain.ErrInvalidSessionRevokedAt
 	}
-	if err := r.db.Exec(ctx, RevokeSessionFamilyQuery, userID, familyID, revokedAt.UTC()); err != nil {
+	if err := r.dao.RevokeSessionFamily(ctx, userID, familyID, revokedAt.UTC()); err != nil {
 		return fmt.Errorf("revoking session family: %w", err)
 	}
 	return nil
@@ -193,8 +196,7 @@ func (r *SessionRepository) SaveUsage(ctx context.Context, session *domain.Sessi
 	if !session.IsValidAt(lastUsedAt) {
 		return domain.ErrInvalidSessionState
 	}
-	var id string
-	err := r.db.QueryRow(ctx, SaveSessionUsageQuery, session.ID(), lastUsedAt).Scan(&id)
+	err := r.dao.UpdateSessionUsage(ctx, session.ID(), lastUsedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return domain.ErrInvalidSessionState
 	}

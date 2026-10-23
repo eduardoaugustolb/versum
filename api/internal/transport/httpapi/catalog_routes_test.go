@@ -6,44 +6,40 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	ports "github.com/eduardoaugustolb/versum/api/internal/catalog/application"
 	"github.com/eduardoaugustolb/versum/api/internal/catalog/domain"
 )
 
-type booksRepository struct{ books []domain.Book }
+type booksRepository struct{ books []ports.BookDTO }
 
-func (r booksRepository) ReplaceBook(context.Context, domain.Book, []domain.Verse) error { return nil }
-func (r booksRepository) ListBooks(context.Context) ([]domain.Book, error)               { return r.books, nil }
-func (booksRepository) FindChapter(context.Context, string, int) (domain.Chapter, error) {
-	return domain.Chapter{}, domain.ErrChapterNotFound
+func (r booksRepository) ListBooks(context.Context) ([]ports.BookDTO, error) { return r.books, nil }
+func (booksRepository) FindChapter(context.Context, string, int) (ports.ChapterDTO, error) {
+	return ports.ChapterDTO{}, domain.ErrChapterNotFound
 }
 
 type chaptersRepository struct {
-	chapter domain.Chapter
+	chapter ports.ChapterDTO
 	found   bool
 }
 
-func (chaptersRepository) ReplaceBook(context.Context, domain.Book, []domain.Verse) error { return nil }
-func (chaptersRepository) ListBooks(context.Context) ([]domain.Book, error)               { return nil, nil }
-func (r chaptersRepository) FindChapter(context.Context, string, int) (domain.Chapter, error) {
+func (chaptersRepository) ListBooks(context.Context) ([]ports.BookDTO, error) { return nil, nil }
+func (r chaptersRepository) FindChapter(context.Context, string, int) (ports.ChapterDTO, error) {
 	if !r.found {
-		return domain.Chapter{}, domain.ErrChapterNotFound
+		return ports.ChapterDTO{}, domain.ErrChapterNotFound
 	}
 	return r.chapter, nil
 }
 
 func TestListBooksEndpoint(t *testing.T) {
-	book, _ := domain.NewBook(domain.NewBookParams{ID: "gn", Order: 1, Name: "Gênesis", Testament: domain.TestamentOld, ChapterCount: 50})
+	book := ports.BookDTO{ID: "gn", Order: 1, Name: "Gênesis", Testament: "old", ChapterCount: 50}
 	rec := httptest.NewRecorder()
-	router(t, booksRepository{[]domain.Book{book}}, chaptersRepository{}).ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/books", nil))
+	router(t, booksRepository{[]ports.BookDTO{book}}, chaptersRepository{}).ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/books", nil))
 	if rec.Code != http.StatusOK || rec.Body.String() != `[{"id":"gn","order":1,"name":"Gênesis","testament":"old","chapter_count":50}]` {
 		t.Fatalf("unexpected response: %d %s", rec.Code, rec.Body)
 	}
 }
 func TestGetChapterEndpoint(t *testing.T) {
-	chapter, err := domain.NewChapter("gn", "Gênesis", 9, nil)
-	if err != nil {
-		t.Fatal(err)
-	}
+	chapter := ports.ChapterDTO{BookID: "gn", BookName: "Gênesis", Number: 9}
 	rec := httptest.NewRecorder()
 	router(t, booksRepository{}, chaptersRepository{chapter: chapter, found: true}).ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/books/gn/chapters/9", nil))
 	if rec.Code != http.StatusOK || rec.Body.String() != `{"book_id":"gn","book_name":"Gênesis","number":9,"verses":[]}` {

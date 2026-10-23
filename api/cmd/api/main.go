@@ -16,7 +16,7 @@ import (
 	"github.com/eduardoaugustolb/versum/api/internal/catalog/application/queries"
 	"github.com/eduardoaugustolb/versum/api/internal/clock"
 	"github.com/eduardoaugustolb/versum/api/internal/config"
-	keyring2 "github.com/eduardoaugustolb/versum/api/internal/cryptography/keyring"
+	keyring "github.com/eduardoaugustolb/versum/api/internal/cryptography/keyring"
 	"github.com/eduardoaugustolb/versum/api/internal/database/postgres"
 	"github.com/eduardoaugustolb/versum/api/internal/health"
 	"github.com/eduardoaugustolb/versum/api/internal/id"
@@ -61,9 +61,9 @@ func main() {
 
 	redisCacheClient := redisCache.NewRedisCache(rdb)
 
-	catalogRepo := catalogpostgres.NewRepository(dbExecutor)
+	catalogRepo := catalogpostgres.NewDAO(dbExecutor)
 
-	keyring := keyring2.NewKeyRingStatic(cfg)
+	keyring := keyring.NewKeyRingStatic(cfg)
 	emailProtector := identitycryptography.NewAESGCMEmailProtector(keyring)
 	payloadProtector := outboxcryptography.NewAESGCMPayloadProtector(keyring)
 

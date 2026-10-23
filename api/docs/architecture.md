@@ -2,6 +2,10 @@
 
 O domínio mantém entidades e invariantes sem dependências de transporte ou persistência. A aplicação coordena casos de uso e declara portas. Adaptadores implementam essas portas; `cmd/api` compõe as implementações. Os handlers HTTP recebem interfaces pequenas e traduzem os resultados da aplicação em respostas.
 
+Queries retornam DTOs e dependem de portas de leitura, como `CatalogReader`, implementadas por DAOs. Não reconstituem agregados para montar projeções. Commands continuam usando repositórios de domínio: seus adaptadores recebem DAOs e fazem a conversão entre entidades e registros, incluindo a proteção dos campos sensíveis. SQL, scan, iteração de resultados e operações em lote ficam nos DAOs. O formato JSON público continua sendo responsabilidade do transporte HTTP.
+
+Os gerenciadores transacionais criam os DAOs com o executor da transação e os injetam nos repositórios. Separar o acesso a dados não cria transações independentes nem altera os bloqueios e updates condicionais de autenticação.
+
 ## Catálogo
 
 `PublishBook` valida o livro e a composição dos versículos antes de persistir. O domínio rejeita versículos de outro livro, capítulos acima de `ChapterCount` e identificadores duplicados de versículo. `Chapter` valida sua composição e copia os slices de entrada e saída.

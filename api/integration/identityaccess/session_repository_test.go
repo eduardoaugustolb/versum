@@ -31,7 +31,7 @@ func setupSessionRepository(ctx context.Context, t *testing.T) (*identityaccessp
 	}
 	user := createTestUser(ctx, t, db, "session-user", "session-user@example.com")
 	t.Cleanup(func() { _ = db.Exec(context.Background(), "DELETE FROM users WHERE id = $1", user.ID()) })
-	return identityaccesspg.NewSessionRepository(db), db, pool, user
+	return identityaccesspg.NewSessionRepository(identityaccesspg.NewDAO(db)), db, pool, user
 }
 
 func newSession(t *testing.T, id string, userID string) *domain.Session {

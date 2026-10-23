@@ -7,6 +7,7 @@ import (
 
 	miniredis "github.com/alicebob/miniredis/v2"
 	redisadapter "github.com/eduardoaugustolb/versum/api/internal/cache/redis"
+	ports "github.com/eduardoaugustolb/versum/api/internal/catalog/application"
 	"github.com/eduardoaugustolb/versum/api/internal/catalog/application/queries"
 	"github.com/eduardoaugustolb/versum/api/internal/catalog/domain"
 	"github.com/eduardoaugustolb/versum/api/internal/health"
@@ -16,14 +17,11 @@ import (
 
 type noopCatalogRepository struct{}
 
-func (noopCatalogRepository) ReplaceBook(context.Context, domain.Book, []domain.Verse) error {
-	return nil
-}
-func (noopCatalogRepository) ListBooks(context.Context) ([]domain.Book, error) {
+func (noopCatalogRepository) ListBooks(context.Context) ([]ports.BookDTO, error) {
 	return nil, nil
 }
-func (noopCatalogRepository) FindChapter(context.Context, string, int) (domain.Chapter, error) {
-	return domain.Chapter{}, domain.ErrChapterNotFound
+func (noopCatalogRepository) FindChapter(context.Context, string, int) (ports.ChapterDTO, error) {
+	return ports.ChapterDTO{}, domain.ErrChapterNotFound
 }
 
 func router(t *testing.T, br booksRepository, cr chaptersRepository) http.Handler {

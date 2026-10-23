@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/eduardoaugustolb/versum/api/internal/catalog/application"
 	"github.com/eduardoaugustolb/versum/api/internal/catalog/domain"
 	"github.com/eduardoaugustolb/versum/api/internal/transport/httpapi/response"
 	"github.com/eduardoaugustolb/versum/api/internal/transport/httpapi/routing"
@@ -15,10 +16,10 @@ import (
 
 // Dependencies are the catalog use cases required by this HTTP adapter.
 type BooksLister interface {
-	Execute(context.Context) ([]domain.Book, error)
+	Execute(context.Context) ([]application.BookDTO, error)
 }
 type ChapterGetter interface {
-	Execute(context.Context, string, int) (domain.Chapter, error)
+	Execute(context.Context, string, int) (application.ChapterDTO, error)
 }
 type Dependencies struct {
 	ListBooks  BooksLister

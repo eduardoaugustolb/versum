@@ -20,7 +20,7 @@ func TestLoginTokenRepositoryHashesSecretForCreateAndLookup(t *testing.T) {
 		t.Fatal(err)
 	}
 	db := &lookupExecutor{}
-	repo := postgres.NewLoginTokenRepository(db)
+	repo := postgres.NewLoginTokenRepository(postgres.NewDAO(db))
 	if err := repo.Create(t.Context(), token, "secret"); err != nil {
 		t.Fatal(err)
 	}
@@ -34,7 +34,7 @@ func TestLoginTokenRepositoryHashesSecretForCreateAndLookup(t *testing.T) {
 }
 
 func TestLoginTokenRepositoryRejectsEmptySecret(t *testing.T) {
-	repo := postgres.NewLoginTokenRepository(&lookupExecutor{})
+	repo := postgres.NewLoginTokenRepository(postgres.NewDAO(&lookupExecutor{}))
 	if err := repo.Create(t.Context(), nil, ""); !errors.Is(err, application.ErrInvalidLoginTokenSecret) {
 		t.Fatal(err)
 	}
@@ -52,7 +52,7 @@ func TestLoginTokenRepositoryRejectsDuplicateConsumption(t *testing.T) {
 	if err := token.Consume(now); err != nil {
 		t.Fatal(err)
 	}
-	repo := postgres.NewLoginTokenRepository(userRepositoryExecutor{row: errorRow{err: pgx.ErrNoRows}})
+	repo := postgres.NewLoginTokenRepository(postgres.NewDAO(userRepositoryExecutor{row: errorRow{err: pgx.ErrNoRows}}))
 	if err := repo.Save(t.Context(), token); !errors.Is(err, domain.ErrLoginTokenAlreadyConsumed) {
 		t.Fatal(err)
 	}

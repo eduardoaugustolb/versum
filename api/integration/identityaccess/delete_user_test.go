@@ -77,7 +77,7 @@ func TestDeletionRejectsSessionRevokedWhileWaitingForLock(t *testing.T) {
 	case <-ctx.Done():
 		t.Fatal(ctx.Err())
 	}
-	if _, err := identitypg.NewUserRepository(db, testEmailProtector{}).FindUserByID(ctx, user.ID()); err != nil {
+	if _, err := identitypg.NewUserRepository(identitypg.NewDAO(db), testEmailProtector{}).FindUserByID(ctx, user.ID()); err != nil {
 		t.Fatalf("user removed: %v", err)
 	}
 }
