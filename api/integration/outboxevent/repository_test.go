@@ -1,13 +1,17 @@
 package outboxevent_test
 
 import (
+	"bytes"
 	"context"
+	"errors"
 	"os"
+	"sync"
 	"testing"
 	"time"
 
 	dbexec "github.com/eduardoaugustolb/versum/api/internal/database"
 	adapterpostgres "github.com/eduardoaugustolb/versum/api/internal/database/postgres"
+	"github.com/eduardoaugustolb/versum/api/internal/id"
 	outboxeventpg "github.com/eduardoaugustolb/versum/api/internal/outboxevent/adapters/postgres"
 	ports "github.com/eduardoaugustolb/versum/api/internal/outboxevent/application"
 	"github.com/eduardoaugustolb/versum/api/internal/outboxevent/domain"
@@ -24,7 +28,96 @@ func (testPayloadProtector) Protect(_ context.Context, payload []byte) (ports.Pr
 }
 
 func (testPayloadProtector) Unprotect(_ context.Context, protected ports.ProtectedPayload) ([]byte, error) {
-	return protected.Ciphertext, nil
+	return bytes.TrimPrefix(protected.Ciphertext, []byte("protected:")), nil
+}
+
+func TestConcurrentDeliveryClaimsLeaseRecoveryAndPayloadErasure(t *testing.T) {
+	ctx := t.Context()
+	publisher, db, _ := setupOutboxRepository(ctx, t)
+	delivery := outboxeventpg.NewEventDeliveryRepository(outboxeventpg.NewDAO(db), testPayloadProtector{}, id.UUIDGenerator{})
+	// Integration suites share tables and must run serially against a disposable DB.
+	if err := db.Exec(ctx, "DELETE FROM outbox_events"); err != nil {
+		t.Fatal(err)
+	}
+	for _, id := range []string{"delivery-a", "delivery-b"} {
+		event, _ := domain.NewEvent(id, "delivery.test", "", []byte("secret"))
+		if err := publisher.Publish(ctx, event); err != nil {
+			t.Fatal(err)
+		}
+	}
+	now := time.Now().UTC().Add(time.Second)
+	claims := make(chan ports.ClaimedEvent, 2)
+	errs := make(chan error, 2)
+	var wg sync.WaitGroup
+	for range 2 {
+		wg.Go(func() { claim, err := delivery.Claim(ctx, now, now.Add(time.Minute)); claims <- claim; errs <- err })
+	}
+	wg.Wait()
+	close(claims)
+	close(errs)
+	for err := range errs {
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+	var acquired []ports.ClaimedEvent
+	for claim := range claims {
+		acquired = append(acquired, claim)
+		if claim.Attempt != 1 || string(claim.Event.Payload()) != "secret" {
+			t.Fatal("incorrect claim")
+		}
+	}
+	if acquired[0].Event.ID() == acquired[1].Event.ID() {
+		t.Fatal("two workers claimed the same event")
+	}
+	if _, err := delivery.Claim(ctx, now, now.Add(time.Minute)); !errors.Is(err, ports.ErrNoEventAvailable) {
+		t.Fatalf("active leases claimed: %v", err)
+	}
+	first := acquired[0]
+	if err := delivery.Complete(ctx, first.Event.ID(), "wrong-lease", now); !errors.Is(err, ports.ErrEventLeaseLost) {
+		t.Fatalf("wrong lease accepted: %v", err)
+	}
+	if err := delivery.Complete(ctx, first.Event.ID(), first.LeaseToken, now); err != nil {
+		t.Fatal(err)
+	}
+	second := acquired[1]
+	later := now.Add(time.Minute)
+	recovered, err := delivery.Claim(ctx, later, later.Add(time.Minute))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if recovered.Event.ID() != second.Event.ID() || recovered.Attempt != 2 || recovered.LeaseToken == second.LeaseToken {
+		t.Fatal("expired lease not recovered correctly")
+	}
+	if err := delivery.Complete(ctx, second.Event.ID(), second.LeaseToken, later); !errors.Is(err, ports.ErrEventLeaseLost) {
+		t.Fatalf("stale owner accepted: %v", err)
+	}
+	if err := delivery.Retry(ctx, recovered.Event.ID(), recovered.LeaseToken, later, later.Add(time.Second)); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := delivery.Claim(ctx, later, later.Add(time.Minute)); !errors.Is(err, ports.ErrNoEventAvailable) {
+		t.Fatalf("retried too early: %v", err)
+	}
+	last, err := delivery.Claim(ctx, later.Add(time.Second), later.Add(time.Minute))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if last.Attempt != 3 {
+		t.Fatal("retry attempt not counted")
+	}
+	if err := delivery.Fail(ctx, last.Event.ID(), last.LeaseToken, later.Add(time.Second)); err != nil {
+		t.Fatal(err)
+	}
+	var retained int
+	if err := db.QueryRow(ctx, "SELECT count(*) FROM outbox_events WHERE octet_length(payload_ciphertext) > 0").Scan(&retained); err != nil {
+		t.Fatal(err)
+	}
+	if retained != 0 {
+		t.Fatal("terminal deliveries retained secret payloads")
+	}
+	if _, err := delivery.Claim(ctx, later.Add(2*time.Minute), later.Add(3*time.Minute)); !errors.Is(err, ports.ErrNoEventAvailable) {
+		t.Fatalf("terminal event reclaimed: %v", err)
+	}
 }
 
 func setupOutboxRepository(ctx context.Context, t *testing.T) (*outboxeventpg.OutboxRepository, dbexec.Executor, *pgxpool.Pool) {
