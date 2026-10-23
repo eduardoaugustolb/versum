@@ -1,0 +1,12 @@
+Versum
+
+Sua leitura continua aqui.
+
+Você pediu um link para acessar sua conta no Versum. Abra este endereço para continuar, sem precisar de senha:
+
+{{.URL}}
+
+Este link funciona uma única vez e expira em {{.ExpiresAt}}.
+Não compartilhe este e-mail.
+
+Não pediu este acesso? Pode ignorar esta mensagem. O recebimento deste e-mail não concede acesso à sua conta.

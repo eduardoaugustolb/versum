@@ -58,7 +58,7 @@ func TestRequestMagicLinkUsesClockAndConfiguredTTL(t *testing.T) {
 	if outbox.Published[0].UserID() != user.ID() {
 		t.Fatalf("expected event owner %q, got %q", user.ID(), outbox.Published[0].UserID())
 	}
-	if string(outbox.Published[0].Payload()) != `{"login_token_id":"token-1"}` {
+	if string(outbox.Published[0].Payload()) != `{"login_token_id":"token-1","token":"raw-token"}` {
 		t.Fatalf("unexpected magic link payload: %s", outbox.Published[0].Payload())
 	}
 	if tokens.Created.ExpiresAt().Location() != time.UTC {

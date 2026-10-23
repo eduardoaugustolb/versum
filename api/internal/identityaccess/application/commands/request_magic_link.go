@@ -112,9 +112,10 @@ func (uc *RequestMagicLink) execute(ctx context.Context, email domain.Email, rep
 	eventID := uc.idGenerator.Generate()
 	eventType := events.MagicLinkRequested
 
-	payload, err := json.Marshal(struct {
-		LoginTokenID string `json:"login_token_id"`
-	}{LoginTokenID: loginToken.ID()})
+	payload, err := json.Marshal(events.MagicLinkRequestedPayload{
+		LoginTokenID: loginToken.ID(),
+		Token:        loginTokenRaw,
+	})
 	if err != nil {
 		return fmt.Errorf("encoding event payload: %w", err)
 	}

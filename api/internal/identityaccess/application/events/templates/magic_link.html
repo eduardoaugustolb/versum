@@ -1,0 +1,197 @@
+<!doctype html>
+<!--
+  Brand reference: https://versum.eduardoaugusto.work/ (2026-10-22).
+  Site palette: #F4EAD8, #151513, #302F2C and amber-50 (#FFFBEB).
+  Instrument Serif / Instrument Sans use system fallbacks when unavailable.
+  Inline styles and presentation tables keep the message usable without web fonts.
+-->
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="referrer" content="no-referrer" />
+    <title>Seu acesso ao Versum</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      background-color: #f4ead8;
+      color: #302f2c;
+      font-family: &quot;Instrument Sans&quot;, Arial, Helvetica, sans-serif;
+    "
+  >
+    <div style="display: none; max-height: 0; overflow: hidden; opacity: 0">
+      Seu link de uso único para acessar sua conta no Versum.
+    </div>
+    <table
+      role="presentation"
+      width="100%"
+      cellspacing="0"
+      cellpadding="0"
+      border="0"
+      bgcolor="#f4ead8"
+    >
+      <tr>
+        <td align="center" style="padding: 32px 16px">
+          <!--[if mso]><table role="presentation" width="560"><tr><td><![endif]-->
+          <table
+            role="presentation"
+            width="100%"
+            cellspacing="0"
+            cellpadding="0"
+            border="0"
+            style="max-width: 560px; background-color: #fffbeb"
+          >
+            <tr>
+              <td
+                style="
+                  padding: 32px;
+                  background-color: #151513;
+                "
+              >
+                <p
+                  style="
+                    margin: 0;
+                    font-family: &quot;Instrument Serif&quot;, Georgia, &quot;Times New Roman&quot;, serif;
+                    font-size: 44px;
+                    line-height: 48px;
+                    font-weight: normal;
+                    letter-spacing: -1px;
+                    color: #f4ead8;
+                  "
+                >
+                  VERSUM
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 36px 32px 16px">
+                <h1
+                  style="
+                    margin: 0 0 20px;
+                    font-family: &quot;Instrument Serif&quot;, Georgia, &quot;Times New Roman&quot;, serif;
+                    font-size: 32px;
+                    line-height: 40px;
+                    font-weight: normal;
+                    color: #302f2c;
+                  "
+                >
+                  Sua leitura continua aqui.
+                </h1>
+                <p style="margin: 0 0 24px; font-size: 16px; line-height: 26px">
+                  Você pediu um link para acessar sua conta no Versum. Use o
+                  botão abaixo para continuar, sem precisar de senha.
+                </p>
+                <table
+                  role="presentation"
+                  cellspacing="0"
+                  cellpadding="0"
+                  border="0"
+                >
+                  <tr>
+                    <td
+                      bgcolor="#302f2c"
+                      style="border-radius: 2px; mso-padding-alt: 16px 28px"
+                    >
+                      <a
+                        href="{{.URL}}"
+                        rel="noreferrer"
+                        style="
+                          display: inline-block;
+                          padding: 16px 28px;
+                          border: 1px solid #302f2c;
+                          border-radius: 2px;
+                          color: #fffbeb;
+                          font-size: 16px;
+                          line-height: 22px;
+                          font-weight: bold;
+                          text-decoration: none;
+                        "
+                        >Acessar minha conta</a
+                      >
+                    </td>
+                  </tr>
+                </table>
+                <p
+                  style="
+                    margin: 24px 0 0;
+                    font-size: 14px;
+                    line-height: 23px;
+                    color: #625e56;
+                  "
+                >
+                  Este link funciona uma única vez e expira em
+                  <strong>{{.ExpiresAt}}</strong>. Não compartilhe este e-mail.
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 16px 32px 32px">
+                <p
+                  style="
+                    margin: 0 0 10px;
+                    font-size: 13px;
+                    line-height: 21px;
+                    color: #625e56;
+                  "
+                >
+                  Se o botão não abrir, copie e cole este endereço no navegador:
+                </p>
+                <p
+                  style="
+                    margin: 0;
+                    font-size: 12px;
+                    line-height: 21px;
+                    word-break: break-all;
+                    overflow-wrap: anywhere;
+                  "
+                >
+                  <a
+                    href="{{.URL}}"
+                    rel="noreferrer"
+                    style="color: #302f2c; text-decoration: underline"
+                    >{{.URL}}</a
+                  >
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td
+                style="
+                  padding: 24px 32px;
+                  background-color: #f4ead8;
+                  border-top: 1px solid #d8cebd;
+                "
+              >
+                <p
+                  style="
+                    margin: 0;
+                    font-size: 13px;
+                    line-height: 22px;
+                    color: #625e56;
+                  "
+                >
+                  Não pediu este acesso? Pode ignorar esta mensagem. O
+                  recebimento deste e-mail não concede acesso à sua conta.
+                </p>
+              </td>
+            </tr>
+          </table>
+          <!--[if mso]></td></tr></table><![endif]-->
+          <p
+            style="
+              margin: 20px 0 0;
+              font-size: 12px;
+              line-height: 20px;
+              color: #625e56;
+            "
+          >
+            Leia a Bíblia do seu jeito, sem perder o caminho.
+          </p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
